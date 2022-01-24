@@ -5,16 +5,12 @@ import 'package:provider/provider.dart';
 
 import 'ui/explorer.dart';
 
-class SelectedComponent extends ChangeNotifier {
-  ComponentMeta? component;
+class StoryNotifier extends ChangeNotifier {
   Story? story;
 
-  void update({ComponentMeta? component, String storyName = 'Default'}) {
-    this.component = component;
-    if (component != null) {
-      story = component.stories[storyName];
-    }
-    debugPrint('Selected $story ${component.toString()}');
+  void update(Story story) {
+    this.story = story;
+    debugPrint('Selected $story ${story.toString()}');
     notifyListeners();
   }
 }
@@ -32,7 +28,7 @@ class Storybook extends StatelessWidget {
         backgroundColor: const Color.fromRGBO(246, 249, 252, 1),
         body: SafeArea(
           child: ChangeNotifierProvider(
-            create: (_) => SelectedComponent(),
+            create: (_) => StoryNotifier(),
             builder: (BuildContext context, Widget? child) => Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -48,9 +44,7 @@ class Storybook extends StatelessWidget {
                     child: Card(
                       elevation: 2,
                       color: Colors.white,
-                      child: context.watch<SelectedComponent>().component != null
-                          ? const ComponentView()
-                          : const SizedBox(),
+                      child: context.watch<StoryNotifier>().story != null ? const ComponentView() : const SizedBox(),
                     ),
                   ),
                 ),

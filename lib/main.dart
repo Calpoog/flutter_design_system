@@ -9,74 +9,104 @@ void main() {
   runApp(const MyApp());
 }
 
+final ComponentMeta textComponent = ComponentMeta(
+  name: 'Text',
+  builder: (BuildContext context, Arguments args) => Text(args.value('text')),
+  argTypes: {
+    'text': ArgType<String>(
+      name: 'text',
+      description: 'The text to display',
+      isRequired: true,
+    ),
+  },
+  stories: [
+    Story(
+      name: 'Text',
+      args: {
+        'text': 'Some text',
+      },
+    ),
+  ],
+);
+
+const baseArgs = {
+  'text': 'Default',
+  'color': Colors.red,
+  'shape': 'Stadium',
+};
+
 final ComponentMeta buttonComponent = ComponentMeta(
   name: 'Button',
-  builder: (BuildContext context, Args args, ComponentActions actions) {
+  builder: (BuildContext context, Arguments args) {
     return SizedBox(
       width: 200,
       child: TextButton(
-        child: Text(args.value<String>('text')!),
-        onPressed: () => actions.fire('onPressed', [1, 'asdf']),
+        child: Text(args.value('text')),
+        onPressed: () {},
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(args.value<Color>('color')!),
-          shape: MaterialStateProperty.all<OutlinedBorder>(args.value<OutlinedBorder>('shape')!),
-          alignment: args.value<AlignmentGeometry>('align'),
+          backgroundColor: MaterialStateProperty.all<Color>(args.value('color')),
+          shape: MaterialStateProperty.all<OutlinedBorder>(args.value('shape')),
+          alignment: args.value('align'),
         ),
       ),
     );
   },
-)
-  ..define<String>(
-    name: 'text',
-    description: 'The button text',
-    isRequired: true,
-  )
-  ..define<Color>(
-    name: 'color',
-    description: 'The button color',
-    defaultValue: Colors.red,
-    isRequired: true,
-  )
-  ..define<OutlinedBorder>(
-    name: 'shape',
-    description: 'The button shape',
-    defaultValue: 'Stadium',
-    isRequired: true,
-    control: SelectControl<OutlinedBorder>(
-      options: {
+  argTypes: {
+    'text': ArgType<String>(
+      name: 'text',
+      description: 'The button text',
+      isRequired: true,
+    ),
+    'color': ArgType<Color>(
+      name: 'color',
+      description: 'The button color',
+      defaultValue: Colors.red,
+      isRequired: true,
+    ),
+    'shape': ArgType<OutlinedBorder>(
+      name: 'shape',
+      description: 'The button shape',
+      isRequired: true,
+      defaultMapped: 'Stadium',
+      mapping: {
         'Stadium': const StadiumBorder(),
         'Rounded': const RoundedRectangleBorder(),
       },
+      control: Controls().radio(),
     ),
-  )
-  ..define<AlignmentGeometry>(
-    name: 'align',
-    description: 'The alignment of the text inside the button',
-    control: SelectControl<AlignmentGeometry>(
-      options: {
+    'align': ArgType<AlignmentGeometry>(
+      name: 'align',
+      description: 'The alignment of the text inside the button',
+      mapping: {
         'Left': Alignment.centerLeft,
         'Right': Alignment.centerRight,
         'Center': Alignment.center,
       },
     ),
-  )
-  ..action<void Function()?>(
-    name: 'onPressed',
-    description: 'The callback for when the button is pressed',
-  )
-  ..story(name: 'Default', args: const {
-    'text': 'Default',
-    'color': Colors.red,
-    'shape': 'Stadium',
-  })
-  ..story(name: 'Primary', extend: 'Default', args: const {
-    'text': 'Primary',
-    'color': Colors.blue,
-  })
-  ..story(name: 'Secondary', extend: 'Default', args: const {
-    'text': 'Secondary',
-    'color': Colors.green,
-  });
+  },
+  stories: [
+    Story(
+      name: 'Default',
+      args: baseArgs,
+    ),
+    Story(
+      name: 'Primary',
+      args: Map.of(baseArgs)
+        ..addAll(const {
+          'text': 'Primary',
+          'color': Colors.blue,
+        }),
+    ),
+    Story(
+      name: 'Secondary',
+      args: Map.of(baseArgs)
+        ..addAll(const {
+          'text': 'Secondary',
+          'color': Colors.green,
+        }),
+    ),
+  ],
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -90,6 +120,7 @@ class MyApp extends StatelessWidget {
             name: 'Widgets',
             children: [
               Component(buttonComponent),
+              Component(textComponent),
             ],
           )
         ])

@@ -11,17 +11,17 @@ class ComponentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SelectedComponent selected = context.watch<SelectedComponent>();
-    final ComponentMeta component = selected.component!;
-    final Args args = selected.story!.args;
-    return ChangeNotifierProvider.value(
-      value: args,
+    final StoryNotifier selected = context.watch<StoryNotifier>();
+
+    return ChangeNotifierProvider(
+      lazy: false,
+      create: (context) => ArgsNotifier(selected),
       child: KeyedSubtree(
-        key: ValueKey('${component.name}-${selected.story!.name}'),
+        key: ValueKey('${selected.story!.component.name}-${selected.story!.name}'),
         child: Column(
           children: [
             Expanded(
-              child: ComponentCanvas(component),
+              child: ComponentCanvas(selected.story!),
             ),
             const ControlsPanel(),
           ],

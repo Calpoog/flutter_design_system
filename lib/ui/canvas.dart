@@ -1,25 +1,20 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/storybook.dart';
 import 'package:provider/provider.dart';
 import '../component.dart';
 
 class ComponentCanvas extends StatelessWidget {
-  const ComponentCanvas(this.component, {Key? key}) : super(key: key);
+  const ComponentCanvas(this.story, {Key? key}) : super(key: key);
 
-  final ComponentMeta component;
+  final Story story;
 
   @override
   Widget build(BuildContext context) {
-    context.watch<Args>();
+    final Arguments args = context.watch<ArgsNotifier>().args!;
     return Container(
       padding: const EdgeInsets.all(20),
       child: SizedBox(
         child: Center(
-          child: component.builder(
-            context,
-            context.read<SelectedComponent>().story!.args,
-            component.createActions(),
-          ),
+          child: story.builder != null ? story.builder!(context, args) : story.component.builder!(context, args),
         ),
       ),
     );

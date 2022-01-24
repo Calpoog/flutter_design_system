@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/storybook.dart';
+import '../component.dart';
+import '../storybook.dart';
 import 'package:provider/provider.dart';
 
 class ControlsPanel extends StatelessWidget {
@@ -7,7 +8,7 @@ class ControlsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SelectedComponent selected = context.read<SelectedComponent>();
+    final Story story = context.read<StoryNotifier>().story!;
     return Column(
       children: [
         Row(
@@ -29,7 +30,7 @@ class ControlsPanel extends StatelessWidget {
             ),
           ],
         ),
-        for (final arg in selected.component!.args.values)
+        for (final arg in story.component.argTypes.values)
           Row(
             children: [
               Expanded(
@@ -45,7 +46,7 @@ class ControlsPanel extends StatelessWidget {
                 child: Text(arg.defaultValue.runtimeType.toString()),
               ),
               Expanded(
-                child: arg.control.build(context, selected.story!.initial[arg.control.name]),
+                child: arg.control(arg, story.args[arg.name]).build(context),
               ),
             ],
           ),

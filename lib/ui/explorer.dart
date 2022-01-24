@@ -44,28 +44,38 @@ class Component extends Organized {
   Widget build(BuildContext context) {
     return component.stories.length > 1
         ? Column(
-            children: [for (final storyName in component.stories.keys) Selectable(component, storyName)],
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(component.name),
+              Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Column(
+                  children: [
+                    for (final story in component.stories) Selectable(story),
+                  ],
+                ),
+              ),
+            ],
           )
-        : Selectable(component, component.stories.keys.first);
+        : Selectable(component.stories.first);
   }
 }
 
 class Selectable extends Organized {
-  const Selectable(this.component, this.storyName, {Key? key}) : super(key: key);
+  const Selectable(this.story, {Key? key}) : super(key: key);
 
-  final ComponentMeta component;
-  final String storyName;
+  final Story story;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.read<SelectedComponent>().update(component: component, storyName: storyName);
+        context.read<StoryNotifier>().update(story);
       },
       child: Row(
         children: [
           const Icon(Icons.crop_square_outlined),
-          Text(storyName),
+          Text(story.name),
         ],
       ),
     );
@@ -88,7 +98,10 @@ class Folder extends Organized {
             Text(name),
           ],
         ),
-        ...children,
+        Padding(
+          padding: EdgeInsets.only(left: 20),
+          child: Column(children: children),
+        ),
       ],
     );
   }
