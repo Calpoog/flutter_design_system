@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/component.dart';
-import 'package:flutter_storybook/controls.dart';
 
+import 'models/arguments.dart';
+import 'models/component.dart';
+import 'models/controls.dart';
+import 'models/story.dart';
 import 'storybook.dart';
 import 'ui/explorer.dart';
 

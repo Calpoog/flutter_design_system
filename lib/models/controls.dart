@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'component.dart';
+import 'arguments.dart';
 
 typedef ControlBuilder = Control Function(ArgType, dynamic);
 
@@ -52,6 +52,7 @@ class TextControl extends Control<String> {
   Widget build(BuildContext context) {
     final ArgsNotifier args = context.read<ArgsNotifier>();
     return TextFormField(
+      style: const TextStyle(fontSize: 14),
       initialValue: initial,
       onChanged: (String value) {
         args.update(argType.name, value);
@@ -68,7 +69,7 @@ abstract class OptionsControl<T> extends Control<T> {
     // ignore: unnecessary_this
   })  : this.options = options ?? argType.mapping ?? {},
         super(argType: argType, initial: initial) {
-    assert(this.options != null, 'No options provided and ArgType has no mapping');
+    assert((options ?? argType.mapping) != null, 'No options provided and ArgType has no mapping');
   }
 
   final Map<String, T> options;
@@ -86,6 +87,8 @@ class RadioControl<T> extends OptionsControl<T> {
       children: options.entries
           .map(
             (option) => RadioListTile<T>(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
               title: Text(option.key),
               value: option.value,
               groupValue: argsNotifier.args!.value(name),

@@ -1,10 +1,11 @@
-import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/storybook.dart';
-import 'package:flutter_storybook/ui/canvas.dart';
-import 'package:flutter_storybook/ui/controls_panel.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_storybook/ui/docs.dart';
 import 'package:provider/provider.dart';
 
-import '../component.dart';
+import '../models/story.dart';
+import '../models/arguments.dart';
+import 'canvas.dart';
+import 'panel.dart';
 
 class ComponentView extends StatelessWidget {
   const ComponentView({Key? key}) : super(key: key);
@@ -14,18 +15,18 @@ class ComponentView extends StatelessWidget {
     final StoryNotifier selected = context.watch<StoryNotifier>();
 
     return ChangeNotifierProvider(
-      lazy: false,
       create: (context) => ArgsNotifier(selected),
       child: KeyedSubtree(
         key: ValueKey('${selected.story!.component.name}-${selected.story!.name}'),
-        child: Column(
-          children: [
-            Expanded(
-              child: ComponentCanvas(selected.story!),
-            ),
-            const ControlsPanel(),
-          ],
-        ),
+        child: PanelWidget(panels: [
+          Panel(name: 'Canvas', content: ComponentCanvas(selected.story!), tools: [
+            Tool(name: 'zoom in', icon: Icons.zoom_in_outlined),
+            Tool(name: 'zoom out', icon: Icons.zoom_out_outlined),
+            Tool(name: 'zoom reset', icon: Icons.youtube_searched_for_outlined),
+            Tool(name: 'backgrounds', icon: Icons.image_outlined),
+          ]),
+          Panel(name: 'Docs', content: Docs()),
+        ]),
       ),
     );
   }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
+import '../models/story.dart';
+import '../ui/text.dart';
+import '../ui/theme.dart';
+import 'package:provider/provider.dart';
 
-import '../component.dart';
-import '../storybook.dart';
+import '../models/component.dart';
 
 class Explorer extends StatelessWidget {
   const Explorer({Key? key, required this.items}) : super(key: key);
@@ -11,20 +13,64 @@ class Explorer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.read<AppTheme>();
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: const [
-                FlutterLogo(),
-                Text('Flutterbook'),
-              ],
-            ),
-            ...items,
-          ],
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          iconTheme: const IconThemeData(size: 13),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10),
+              Row(
+                children: const [
+                  FlutterLogo(
+                    size: 20,
+                  ),
+                  SizedBox(width: 10),
+                  AppText(
+                    'Flutterbook',
+                    size: 20,
+                    weight: FontWeight.w800,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Stack(
+                children: [
+                  Positioned(
+                    top: 7,
+                    left: 10,
+                    child: Icon(
+                      Icons.search_outlined,
+                      size: 16,
+                      color: theme.unselected,
+                    ),
+                  ),
+                  TextFormField(
+                    style: const TextStyle(fontSize: 13),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.fromLTRB(30, 11, 20, 11),
+                      isDense: true,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide(color: theme.unselected.withOpacity(0.4)),
+                      ),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                    ),
+                    onChanged: (String value) {},
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              ...items,
+            ],
+          ),
         ),
       ),
     );
@@ -42,43 +88,35 @@ class Component extends Organized {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.read<AppTheme>();
+    final storyNotifier = context.read<StoryNotifier>();
     return component.stories.length > 1
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(component.name),
+              _ExplorerItem(text: component.name, icon: Icons.widgets_outlined, iconColor: theme.component),
               Padding(
-                padding: EdgeInsets.only(left: 20),
+                padding: const EdgeInsets.only(left: 17),
                 child: Column(
                   children: [
-                    for (final story in component.stories) Selectable(story),
+                    for (final story in component.stories)
+                      _ExplorerItem(
+                        text: story.name,
+                        icon: Icons.bookmark_outline,
+                        iconColor: theme.story,
+                        onPressed: () => storyNotifier.update(story),
+                      ),
                   ],
                 ),
               ),
             ],
           )
-        : Selectable(component.stories.first);
-  }
-}
-
-class Selectable extends Organized {
-  const Selectable(this.story, {Key? key}) : super(key: key);
-
-  final Story story;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        context.read<StoryNotifier>().update(story);
-      },
-      child: Row(
-        children: [
-          const Icon(Icons.crop_square_outlined),
-          Text(story.name),
-        ],
-      ),
-    );
+        : _ExplorerItem(
+            text: component.stories.first.name,
+            icon: Icons.bookmark_outline,
+            iconColor: theme.story,
+            onPressed: () => storyNotifier.update(component.stories.first),
+          );
   }
 }
 
@@ -90,16 +128,16 @@ class Folder extends Organized {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.read<AppTheme>();
     return Column(
       children: [
-        Row(
-          children: [
-            const Icon(Icons.folder_outlined),
-            Text(name),
-          ],
+        _ExplorerItem(
+          text: name,
+          icon: Icons.folder_outlined,
+          iconColor: theme.folder,
         ),
         Padding(
-          padding: EdgeInsets.only(left: 20),
+          padding: const EdgeInsets.only(left: 17),
           child: Column(children: children),
         ),
       ],
@@ -115,12 +153,56 @@ class Section extends Organized {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.read<AppTheme>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(name),
+        AppText(
+          name.toUpperCase(),
+          weight: FontWeight.w800,
+          style: const TextStyle(letterSpacing: 2),
+          color: theme.unselected,
+          size: 12,
+        ),
+        const SizedBox(height: 5),
         ...children,
       ],
+    );
+  }
+}
+
+class _ExplorerItem extends Organized {
+  final IconData icon;
+  final Color? iconColor;
+  final String text;
+  final void Function()? onPressed;
+
+  const _ExplorerItem({
+    Key? key,
+    required this.text,
+    required this.icon,
+    this.iconColor,
+    this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.read<AppTheme>();
+    return GestureDetector(
+      onTap: onPressed ?? () {},
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: iconColor ?? theme.unselected,
+            ),
+            const SizedBox(width: 5),
+            AppText(text)
+          ],
+        ),
+      ),
     );
   }
 }
