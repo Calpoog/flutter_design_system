@@ -8,10 +8,24 @@ import 'models/story.dart';
 import 'ui/component_view.dart';
 import 'ui/explorer.dart';
 
+class StorybookConfig {
+  final Map<String, Size> deviceSizes;
+
+  StorybookConfig({required this.deviceSizes});
+}
+
 class Storybook extends StatelessWidget {
-  const Storybook({Key? key, required this.explorer}) : super(key: key);
+  Storybook({Key? key, required this.explorer, Map<String, Size>? deviceSizes}) : super(key: key) {
+    this.deviceSizes = deviceSizes ??
+        {
+          'Mobile ': const Size(320, 568),
+          'Large Mobile ': const Size(414, 896),
+          'Tablet': const Size(834, 1112),
+        };
+  }
 
   final List<Organized> explorer;
+  late final Map<String, Size> deviceSizes;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +33,9 @@ class Storybook extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => StoryNotifier(buttonComponent.stories.first)),
         Provider(create: (_) => AppTheme()),
+        Provider(
+          create: (_) => StorybookConfig(deviceSizes: deviceSizes),
+        ),
       ],
       builder: (context, _) {
         final theme = context.read<AppTheme>();
