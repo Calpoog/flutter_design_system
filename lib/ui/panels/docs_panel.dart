@@ -2,12 +2,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_markdown/flutter_markdown.dart' as md;
 import 'package:flutter_storybook/models/story.dart';
 import 'package:flutter_storybook/ui/panels/panel.dart';
+import 'package:flutter_storybook/ui/text.dart';
 import 'package:provider/provider.dart';
 
-final _style = MarkdownStyleSheet(
+final _style = md.MarkdownStyleSheet(
   h1: const TextStyle(fontSize: 36, fontWeight: FontWeight.w800),
   h2: const TextStyle(fontSize: 30, fontWeight: FontWeight.w900),
   h3: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
@@ -19,7 +20,6 @@ final _style = MarkdownStyleSheet(
       bottom: BorderSide(width: 1, color: Color.fromRGBO(229, 229, 229, 1)),
     ),
   ),
-  // blockSpacing: 20,
 );
 
 class DocsPanel extends Panel {
@@ -40,9 +40,10 @@ class DocsPanel extends Panel {
                   width: min(constraints.maxWidth, 800),
                   child: Padding(
                     padding: const EdgeInsets.all(30),
-                    child: MarkdownBody(
+                    child: md.MarkdownBody(
                       data: snapshot.data!,
                       styleSheet: _style,
+                      builders: {'code': CodeBuilder()},
                     ),
                   ),
                 ),
@@ -56,5 +57,12 @@ class DocsPanel extends Panel {
         );
       },
     );
+  }
+}
+
+class CodeBuilder extends md.MarkdownElementBuilder {
+  @override
+  Widget? visitElementAfter(dynamic element, TextStyle? preferredStyle) {
+    return AppCode(element.textContent);
   }
 }
