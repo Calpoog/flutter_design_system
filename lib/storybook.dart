@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/main.dart';
 import 'package:flutter_storybook/ui/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,7 @@ class Storybook extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => StoryNotifier()),
+        ChangeNotifierProvider(create: (_) => StoryNotifier(buttonComponent.stories.first)),
         Provider(create: (_) => AppTheme()),
       ],
       builder: (context, _) {

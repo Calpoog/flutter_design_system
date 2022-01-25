@@ -39,6 +39,8 @@ class Story {
 class StoryNotifier extends ChangeNotifier {
   Story? story;
 
+  StoryNotifier(this.story);
+
   void update(Story story) {
     this.story = story;
     debugPrint('Selected $story ${story.toString()}');

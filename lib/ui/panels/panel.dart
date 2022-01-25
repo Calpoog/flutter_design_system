@@ -9,20 +9,24 @@ class Tool {
 
   final String name;
   final IconData icon;
-  final void Function()? onPressed;
+  final void Function(BuildContext context)? onPressed;
   final Widget? popup;
 }
 
-class Panel {
-  Panel({required this.name, required this.content, List<Tool>? tools}) : tools = tools ?? [];
+abstract class Panel extends StatelessWidget {
+  Panel({
+    required this.name,
+    List<Tool>? tools,
+    Key? key,
+  })  : tools = tools ?? [],
+        super(key: key);
 
   final String name;
   final List<Tool> tools;
-  final Widget content;
 }
 
-class PanelWidget extends StatelessWidget {
-  PanelWidget({
+class PanelGroup extends StatelessWidget {
+  PanelGroup({
     Key? key,
     required this.panels,
     List<Tool>? tools,
@@ -62,13 +66,17 @@ class PanelWidget extends StatelessWidget {
                     // Expanded(child: const SizedBox()),
                     for (final tool in currentPanel.tools)
                       AppIconButton(
-                        onPressed: tool.onPressed ?? () {},
+                        onPressed: () {
+                          if (tool.onPressed != null) tool.onPressed!(context);
+                        },
                         icon: tool.icon,
                       ),
                     const Expanded(child: SizedBox()),
                     for (final tool in tools)
                       AppIconButton(
-                        onPressed: tool.onPressed ?? () {},
+                        onPressed: () {
+                          if (tool.onPressed != null) tool.onPressed!(context);
+                        },
                         icon: tool.icon,
                       ),
                   ],
@@ -76,7 +84,7 @@ class PanelWidget extends StatelessWidget {
               ),
               Expanded(
                 child: TabBarView(
-                  children: panels.map((panel) => panel.content).toList(),
+                  children: panels,
                   physics: const NeverScrollableScrollPhysics(),
                 ),
               ),

@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_storybook/models/story.dart';
+import 'package:flutter_storybook/ui/panels/panel.dart';
 import 'package:provider/provider.dart';
 
 final _style = MarkdownStyleSheet(
@@ -16,11 +19,11 @@ final _style = MarkdownStyleSheet(
       bottom: BorderSide(width: 1, color: Color.fromRGBO(229, 229, 229, 1)),
     ),
   ),
-  blockSpacing: 20,
+  // blockSpacing: 20,
 );
 
-class Docs extends StatelessWidget {
-  const Docs({Key? key}) : super(key: key);
+class DocsPanel extends Panel {
+  DocsPanel({Key? key}) : super(name: 'Docs', key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +32,22 @@ class Docs extends StatelessWidget {
       future: rootBundle.loadString('test.md'),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.hasData) {
-          return Markdown(
-            data: snapshot.data!,
-            styleSheet: _style,
+          return LayoutBuilder(
+            builder: (_, constraints) => SingleChildScrollView(
+              primary: false,
+              child: Center(
+                child: SizedBox(
+                  width: min(constraints.maxWidth, 800),
+                  child: Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: MarkdownBody(
+                      data: snapshot.data!,
+                      styleSheet: _style,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           );
         }
 

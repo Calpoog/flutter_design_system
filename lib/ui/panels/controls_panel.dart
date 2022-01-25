@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/story.dart';
-import 'text.dart';
-import 'utils/bordered.dart';
+import '../panels/panel.dart';
+import '../../models/story.dart';
+import '../text.dart';
+import '../utils/bordered.dart';
 
-class ControlsPanel extends StatelessWidget {
-  const ControlsPanel({Key? key}) : super(key: key);
+class ControlsPanel extends Panel {
+  ControlsPanel({Key? key}) : super(name: 'Controls', key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +98,7 @@ class _Cell extends StatelessWidget {
       flex: flex,
       child: Container(
         alignment: Alignment.topLeft,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: child,
       ),
     );
