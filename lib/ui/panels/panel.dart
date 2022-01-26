@@ -59,28 +59,9 @@ class PanelGroup extends StatelessWidget {
                         ),
                       ),
                     // Expanded(child: const SizedBox()),
-                    for (final tool in currentPanel.tools)
-                      CompositedTransformTarget(
-                        link: tool.link,
-                        child: AppIconButton(
-                          onPressed: () {
-                            if (tool.onPressed != null) {
-                              tool.onPressed!(context);
-                            } else if (tool.popup != null) {
-                              showToolPopup(context: context, tool: tool);
-                            }
-                          },
-                          icon: tool.icon,
-                        ),
-                      ),
+                    for (final tool in currentPanel.tools) tool.button(context),
                     const Expanded(child: SizedBox()),
-                    for (final tool in tools)
-                      AppIconButton(
-                        onPressed: () {
-                          if (tool.onPressed != null) tool.onPressed!(context);
-                        },
-                        icon: tool.icon,
-                      ),
+                    for (final tool in tools) tool.button(context),
                   ],
                 ),
               ),

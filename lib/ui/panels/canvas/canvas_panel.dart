@@ -62,16 +62,8 @@ class CanvasPanel extends Panel {
               icon: Icons.youtube_searched_for_outlined,
               onPressed: (context) => context.read<DeviceNotifier>().setZoom(1.0),
             ),
-            Tool(
-              name: 'backgrounds',
-              icon: Icons.image_outlined,
-              popup: backgroundPopup,
-            ),
-            Tool(
-              name: 'deviceSize',
-              icon: Icons.devices_outlined,
-              popup: devicePopup,
-            ),
+            BackgroundTool(),
+            DevicesTool(),
           ],
         );
 
@@ -167,7 +159,7 @@ class _AddOnsState extends State<AddOns> {
               tools: [
                 Tool(
                   name: 'close',
-                  icon: Icons.close_outlined,
+                  icon: addOnsOpen ? Icons.expand_more : Icons.expand_less,
                   onPressed: (_) => setState(() => addOnsOpen = !addOnsOpen),
                 ),
               ],

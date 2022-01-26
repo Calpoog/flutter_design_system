@@ -1,16 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/storybook.dart';
+import 'package:flutter_storybook/ui/utils/icon_button.dart';
 import 'package:flutter_storybook/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 class Tool {
-  Tool({required this.name, required this.icon, this.onPressed, this.popup}) : link = LayerLink();
+  Tool({
+    Key? key,
+    required this.name,
+    required this.icon,
+    this.onPressed,
+  }) : link = LayerLink();
 
   final String name;
   final IconData icon;
   final void Function(BuildContext context)? onPressed;
-  final WidgetBuilder? popup;
   final LayerLink link;
+
+  Widget popup(BuildContext context) => const SizedBox();
+
+  Widget button(BuildContext context) {
+    return CompositedTransformTarget(
+      link: link,
+      child: AppIconButton(
+        onPressed: () {
+          if (onPressed != null) {
+            context.read<OverlayNotifier>().close();
+            onPressed!(context);
+          } else {
+            showToolPopup(context: context, tool: this);
+          }
+        },
+        icon: icon,
+      ),
+    );
+  }
+}
+
+class ActionTool extends Tool {
+  ActionTool({
+    required String name,
+    required IconData icon,
+    required void Function(BuildContext context) onPressed,
+  }) : super(name: name, icon: icon, onPressed: onPressed);
 }
 
 const double _kPopupWidth = 200.0;
@@ -49,7 +81,7 @@ void showToolPopup({required BuildContext context, required Tool tool}) {
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               child: Material(
                 color: theme.foreground,
-                child: tool.popup!(context),
+                child: tool.popup(context),
               ),
             ),
           ),
