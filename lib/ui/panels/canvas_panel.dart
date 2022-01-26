@@ -30,6 +30,97 @@ class DeviceNotifier extends ChangeNotifier {
   }
 }
 
+class BackgroundNotifier extends ChangeNotifier {
+  Color color = Colors.white;
+
+  update(Color color) {
+    this.color = color;
+    notifyListeners();
+  }
+}
+
+Widget _backgroundPopup(BuildContext context) {
+  final overlay = context.read<OverlayNotifier>();
+  final theme = context.read<AppTheme>();
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    children: context
+        .read<StorybookConfig>()
+        .backgrounds
+        .entries
+        .map(
+          (entry) => _buildPopupListTile(
+            context,
+            child: AppText.body(entry.key),
+            trailing: Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                color: entry.value,
+                border: Border.all(color: theme.backgroundDark),
+              ),
+            ),
+            onTap: () {
+              context.read<BackgroundNotifier>().update(entry.value);
+              overlay.close();
+            },
+          ),
+        )
+        .toList(),
+  );
+}
+
+Widget _devicePopup(BuildContext context) {
+  final device = context.read<DeviceNotifier>();
+  final overlay = context.read<OverlayNotifier>();
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      _buildPopupListTile(
+        context,
+        child: const AppText.body('Reset viewport'),
+        onTap: () {
+          device.setSize(null);
+          overlay.close();
+        },
+      ),
+      ...context
+          .read<StorybookConfig>()
+          .deviceSizes
+          .entries
+          .map(
+            (entry) => _buildPopupListTile(
+              context,
+              child: AppText.body(entry.key),
+              onTap: () {
+                device.setSize(entry.value);
+                overlay.close();
+              },
+            ),
+          )
+          .toList(),
+    ],
+  );
+}
+
+Widget _buildPopupListTile(
+  BuildContext context, {
+  required Widget child,
+  void Function()? onTap,
+  Widget? trailing,
+}) {
+  return ListTile(
+    title: child,
+    hoverColor: context.read<AppTheme>().background,
+    dense: true,
+    onTap: onTap,
+    trailing: trailing,
+  );
+}
+
 class CanvasPanel extends Panel {
   CanvasPanel({Key? key})
       : super(
@@ -51,39 +142,15 @@ class CanvasPanel extends Panel {
               icon: Icons.youtube_searched_for_outlined,
               onPressed: (context) => context.read<DeviceNotifier>().setZoom(1.0),
             ),
-            Tool(name: 'backgrounds', icon: Icons.image_outlined),
+            Tool(
+              name: 'backgrounds',
+              icon: Icons.image_outlined,
+              popup: _backgroundPopup,
+            ),
             Tool(
               name: 'deviceSize',
               icon: Icons.devices_outlined,
-              popup: (context, close) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    title: const AppText.body('Reset viewport'),
-                    dense: true,
-                    onTap: () {
-                      context.read<DeviceNotifier>().setSize(null);
-                      close();
-                    },
-                  ),
-                  ...context
-                      .read<StorybookConfig>()
-                      .deviceSizes
-                      .entries
-                      .map(
-                        (entry) => ListTile(
-                          title: AppText.body(entry.key),
-                          dense: true,
-                          onTap: () {
-                            context.read<DeviceNotifier>().setSize(entry.value);
-                            close();
-                          },
-                        ),
-                      )
-                      .toList(),
-                ],
-              ),
+              popup: _devicePopup,
             ),
           ],
         );
@@ -115,28 +182,33 @@ class _ScalableCanvas extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.read<AppTheme>();
     final device = context.watch<DeviceNotifier>();
-    const duration = Duration(milliseconds: 200);
+    final story = context.read<StoryNotifier>().story!;
+    const duration = Duration(milliseconds: 150);
     return LayoutBuilder(
       builder: (context, constraints) => SingleChildScrollView(
         primary: false,
         child: Container(
-          color: theme.border,
+          color: theme.backgroundDark,
           alignment: Alignment.topCenter,
           child: AnimatedContainer(
+            padding: story.componentPadding ??
+                story.component.componentPadding ??
+                context.read<StorybookConfig>().componentPadding,
+            clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.watch<BackgroundNotifier>().color,
               border: device.size != null
                   ? Border.all(
-                      color: context.read<AppTheme>().body,
+                      color: theme.body,
                     )
                   : null,
             ),
             duration: duration,
             width: device.size?.width ?? constraints.maxWidth,
             height: device.size?.height ?? constraints.maxHeight,
-            padding: const EdgeInsets.all(20),
             alignment: Alignment.topLeft,
             child: AnimatedScale(
+              alignment: Alignment.topLeft,
               duration: duration,
               scale: device.zoom,
               child: child,

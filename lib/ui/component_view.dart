@@ -18,6 +18,7 @@ class ComponentView extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => ArgsNotifier(selected)),
         ChangeNotifierProvider(create: (context) => DeviceNotifier()),
+        ChangeNotifierProvider(create: (context) => BackgroundNotifier()),
       ],
       child: KeyedSubtree(
         key: ValueKey('${selected.story!.component.name}-${selected.story!.name}'),

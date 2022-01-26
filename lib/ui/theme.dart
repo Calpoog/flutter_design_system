@@ -6,6 +6,7 @@ class AppTheme {
   final Color selected;
   final Color body;
   final Color background;
+  final Color backgroundDark;
   final Color border;
   final Color code;
   final Color story;
@@ -14,6 +15,7 @@ class AppTheme {
 
   AppTheme({
     this.background = const Color.fromRGBO(246, 249, 252, 1),
+    this.backgroundDark = const Color.fromRGBO(127, 127, 127, 1),
     this.foreground = const Color.fromRGBO(255, 255, 255, 1),
     this.selected = const Color.fromRGBO(30, 167, 253, 1),
     this.unselected = const Color.fromRGBO(153, 153, 153, 1),

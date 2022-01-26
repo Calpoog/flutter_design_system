@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/storybook.dart';
 import 'package:flutter_storybook/ui/icon_button.dart';
 import 'package:flutter_storybook/ui/utils/bordered.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,7 @@ class Tool {
   final String name;
   final IconData icon;
   final void Function(BuildContext context)? onPressed;
-  final Widget Function(BuildContext context, void Function() close)? popup;
+  final WidgetBuilder? popup;
   final LayerLink _link;
 }
 
@@ -29,7 +30,7 @@ abstract class Panel extends StatelessWidget {
   final List<Tool> tools;
 }
 
-class PanelGroup extends StatefulWidget {
+class PanelGroup extends StatelessWidget {
   PanelGroup({
     Key? key,
     required this.panels,
@@ -39,20 +40,12 @@ class PanelGroup extends StatefulWidget {
 
   final List<Panel> panels;
   final List<Tool> tools;
-
-  @override
-  State<PanelGroup> createState() => _PanelGroupState();
-}
-
-class _PanelGroupState extends State<PanelGroup> {
-  OverlayEntry? overlayEntry;
-  double popupWidth = 200;
+  final double popupWidth = 200;
 
   void showToolPopup(BuildContext panelContext, Tool tool) {
-    if (overlayEntry != null) overlayEntry!.remove();
-
+    final overlay = panelContext.read<OverlayNotifier>();
     final link = tool._link;
-    overlayEntry = OverlayEntry(
+    final entry = OverlayEntry(
       builder: (BuildContext context) {
         final theme = context.read<AppTheme>();
         return Positioned(
@@ -61,41 +54,45 @@ class _PanelGroupState extends State<PanelGroup> {
           child: CompositedTransformFollower(
             followerAnchor: Alignment.topCenter,
             targetAnchor: Alignment.bottomCenter,
+            offset: const Offset(0, 12),
             link: link,
-            child: Material(
-              child: Container(
-                width: popupWidth,
-                constraints: BoxConstraints.loose(Size(popupWidth, 300)),
-                decoration: BoxDecoration(
+            child: Container(
+              clipBehavior: Clip.hardEdge,
+              width: popupWidth,
+              constraints: BoxConstraints.loose(Size(popupWidth, 300)),
+              decoration: BoxDecoration(
+                border: Border.all(color: theme.border),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color.fromRGBO(0, 0, 0, 0.05),
+                    blurRadius: 5,
+                    blurStyle: BlurStyle.outer,
+                  )
+                ],
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+              ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: Material(
                   color: theme.foreground,
-                  border: Border.all(color: theme.border),
-                  boxShadow: const [
-                    BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.05), blurRadius: 5, offset: Offset(0, 5))
-                  ],
-                  borderRadius: const BorderRadius.all(Radius.circular(6)),
+                  child: tool.popup!(panelContext),
                 ),
-                child: tool.popup!(panelContext, closePopup),
               ),
             ),
           ),
         );
       },
     );
-    Overlay.of(context)!.insert(overlayEntry!);
-  }
-
-  void closePopup() {
-    overlayEntry!.remove();
-    overlayEntry = null;
+    overlay.add(panelContext, entry);
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: widget.panels.length,
+      length: panels.length,
       child: Builder(
         builder: (context) {
-          Panel currentPanel = widget.panels[DefaultTabController.of(context)!.index];
+          Panel currentPanel = panels[DefaultTabController.of(context)!.index];
           return Column(
             children: [
               Bordered.bottom(
@@ -104,7 +101,7 @@ class _PanelGroupState extends State<PanelGroup> {
                     TabBar(
                       isScrollable: true,
                       tabs: [
-                        for (final panel in widget.panels) Tab(text: panel.name),
+                        for (final panel in panels) Tab(text: panel.name),
                       ],
                     ),
                     if (currentPanel.tools.isNotEmpty)
@@ -132,7 +129,7 @@ class _PanelGroupState extends State<PanelGroup> {
                         ),
                       ),
                     const Expanded(child: SizedBox()),
-                    for (final tool in widget.tools)
+                    for (final tool in tools)
                       AppIconButton(
                         onPressed: () {
                           if (tool.onPressed != null) tool.onPressed!(context);
@@ -144,7 +141,7 @@ class _PanelGroupState extends State<PanelGroup> {
               ),
               Expanded(
                 child: TabBarView(
-                  children: widget.panels,
+                  children: panels,
                   physics: const NeverScrollableScrollPhysics(),
                 ),
               ),

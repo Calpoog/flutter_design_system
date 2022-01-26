@@ -39,6 +39,7 @@ const baseArgs = {
 
 final ComponentMeta buttonComponent = ComponentMeta(
   name: 'Button',
+  componentPadding: const EdgeInsets.all(20),
   builder: (BuildContext context, Arguments args) {
     return SizedBox(
       width: 200,

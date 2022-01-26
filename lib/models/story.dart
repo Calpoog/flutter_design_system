@@ -9,8 +9,13 @@ class Story {
   ArgsBuilder? builder;
   final ArgValues args;
   late final Arguments arguments;
+  final EdgeInsets? componentPadding;
 
-  Story({required this.name, ArgValues? args}) : this.args = Map.of(args ?? {});
+  Story({
+    required this.name,
+    ArgValues? args,
+    this.componentPadding,
+  }) : args = Map.of(args ?? {});
 
   void init(ComponentMeta component) {
     this.component = component;

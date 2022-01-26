@@ -30,6 +30,7 @@ class ComponentMeta {
   final ArgsBuilder? builder;
   final ArgValues? args;
   final ArgTypes actions = {};
+  final EdgeInsets? componentPadding;
 
   ComponentMeta({
     required this.name,
@@ -38,6 +39,7 @@ class ComponentMeta {
     this.args,
     required this.stories,
     required this.argTypes,
+    this.componentPadding,
   }) {
     for (final story in stories) {
       story.init(this);

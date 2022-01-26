@@ -9,13 +9,20 @@ import 'ui/component_view.dart';
 import 'ui/explorer.dart';
 
 class StorybookConfig {
-  final Map<String, Size> deviceSizes;
+  late final Map<String, Size> deviceSizes;
+  late final Map<String, Color> backgrounds;
+  final EdgeInsets componentPadding;
 
-  StorybookConfig({required this.deviceSizes});
-}
-
-class Storybook extends StatelessWidget {
-  Storybook({Key? key, required this.explorer, Map<String, Size>? deviceSizes}) : super(key: key) {
+  StorybookConfig({
+    Map<String, Size>? deviceSizes,
+    Map<String, Color>? backgrounds,
+    this.componentPadding = EdgeInsets.zero,
+  }) {
+    this.backgrounds = backgrounds ??
+        {
+          'Dark': Colors.black,
+          'Light': Colors.white,
+        };
     this.deviceSizes = deviceSizes ??
         {
           'Mobile ': const Size(320, 568),
@@ -23,19 +30,46 @@ class Storybook extends StatelessWidget {
           'Tablet': const Size(834, 1112),
         };
   }
+}
+
+class OverlayNotifier extends ChangeNotifier {
+  OverlayEntry? entry;
+
+  void add(BuildContext context, OverlayEntry entry) {
+    this.entry?.remove();
+    Overlay.of(context)!.insert(entry);
+    this.entry = entry;
+    notifyListeners();
+  }
+
+  void close() {
+    entry?.remove();
+    entry = null;
+    notifyListeners();
+  }
+}
+
+class Storybook extends StatelessWidget {
+  Storybook({
+    Key? key,
+    required this.explorer,
+    Map<String, Size>? deviceSizes,
+    StorybookConfig? config,
+  }) : super(key: key) {
+    this.config = config ?? StorybookConfig();
+  }
 
   final List<Organized> explorer;
-  late final Map<String, Size> deviceSizes;
+  late final StorybookConfig config;
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => StoryNotifier(buttonComponent.stories.first)),
+        ChangeNotifierProvider(create: (_) => OverlayNotifier()),
         Provider(create: (_) => AppTheme()),
-        Provider(
-          create: (_) => StorybookConfig(deviceSizes: deviceSizes),
-        ),
+        Provider.value(value: config),
       ],
       builder: (context, _) {
         final theme = context.read<AppTheme>();
@@ -71,28 +105,32 @@ class Storybook extends StatelessWidget {
           ),
           home: Scaffold(
             backgroundColor: theme.background,
-            body: SafeArea(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    width: 240,
-                    child: Explorer(
-                      items: explorer,
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Card(
-                        elevation: 2,
-                        color: Colors.white,
-                        child: context.watch<StoryNotifier>().story != null ? const ComponentView() : const SizedBox(),
+            body: GestureDetector(
+              onTap: () => context.read<OverlayNotifier>().close(),
+              child: SafeArea(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      width: 240,
+                      child: Explorer(
+                        items: explorer,
                       ),
                     ),
-                  ),
-                  // ComponentView(component: component, storyName: storyName)
-                ],
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Card(
+                          elevation: 2,
+                          color: Colors.white,
+                          child:
+                              context.watch<StoryNotifier>().story != null ? const ComponentView() : const SizedBox(),
+                        ),
+                      ),
+                    ),
+                    // ComponentView(component: component, storyName: storyName)
+                  ],
+                ),
               ),
             ),
           ),
