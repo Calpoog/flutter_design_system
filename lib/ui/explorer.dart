@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/story.dart';
-import '../ui/text.dart';
-import '../ui/theme.dart';
+import 'utils/text.dart';
+import 'utils/theme.dart';
 import 'package:provider/provider.dart';
 
 import '../models/component.dart';

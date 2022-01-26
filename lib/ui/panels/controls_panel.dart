@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../panels/panel.dart';
 import '../../models/story.dart';
-import '../text.dart';
+import '../utils/text.dart';
 import '../utils/bordered.dart';
 
 class ControlsPanel extends Panel {

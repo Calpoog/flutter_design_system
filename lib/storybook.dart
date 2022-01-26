@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/main.dart';
-import 'package:flutter_storybook/ui/theme.dart';
+import 'package:flutter_storybook/ui/utils/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -78,6 +78,7 @@ class Storybook extends StatelessWidget {
           theme: ThemeData(
             textTheme: GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
             iconTheme: IconThemeData(color: theme.unselected, size: 25),
+            listTileTheme: const ListTileThemeData(dense: true),
             inputDecorationTheme: InputDecorationTheme(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: theme.border),

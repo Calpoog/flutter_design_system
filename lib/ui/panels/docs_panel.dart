@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart' as md;
 import 'package:flutter_storybook/models/story.dart';
 import 'package:flutter_storybook/ui/panels/panel.dart';
-import 'package:flutter_storybook/ui/text.dart';
+import 'package:flutter_storybook/ui/utils/text.dart';
 import 'package:provider/provider.dart';
 
 final _style = md.MarkdownStyleSheet(

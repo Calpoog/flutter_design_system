@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/story.dart';
 import '../models/arguments.dart';
-import 'panels/canvas_panel.dart';
+import 'panels/canvas/canvas_panel.dart';
 import 'panels/panel.dart';
 import 'panels/docs_panel.dart';
 

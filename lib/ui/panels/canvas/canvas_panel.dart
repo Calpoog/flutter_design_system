@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/storybook.dart';
+import 'package:flutter_storybook/ui/panels/canvas/background_popup.dart';
+import 'package:flutter_storybook/ui/panels/canvas/device_popup.dart';
+import 'package:flutter_storybook/ui/panels/tools/tool.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/arguments.dart';
-import '../../models/story.dart';
-import '../text.dart';
-import '../theme.dart';
-import 'controls_panel.dart';
-import 'panel.dart';
-import '../utils/bordered.dart';
+import '../../../models/arguments.dart';
+import '../../../models/story.dart';
+import '../../utils/theme.dart';
+import '../controls_panel.dart';
+import '../panel.dart';
+import '../../utils/bordered.dart';
 
 class DeviceNotifier extends ChangeNotifier {
   double zoom = 1.0;
@@ -39,88 +41,6 @@ class BackgroundNotifier extends ChangeNotifier {
   }
 }
 
-Widget _backgroundPopup(BuildContext context) {
-  final overlay = context.read<OverlayNotifier>();
-  final theme = context.read<AppTheme>();
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    mainAxisSize: MainAxisSize.min,
-    children: context
-        .read<StorybookConfig>()
-        .backgrounds
-        .entries
-        .map(
-          (entry) => _buildPopupListTile(
-            context,
-            child: AppText.body(entry.key),
-            trailing: Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                color: entry.value,
-                border: Border.all(color: theme.backgroundDark),
-              ),
-            ),
-            onTap: () {
-              context.read<BackgroundNotifier>().update(entry.value);
-              overlay.close();
-            },
-          ),
-        )
-        .toList(),
-  );
-}
-
-Widget _devicePopup(BuildContext context) {
-  final device = context.read<DeviceNotifier>();
-  final overlay = context.read<OverlayNotifier>();
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      _buildPopupListTile(
-        context,
-        child: const AppText.body('Reset viewport'),
-        onTap: () {
-          device.setSize(null);
-          overlay.close();
-        },
-      ),
-      ...context
-          .read<StorybookConfig>()
-          .deviceSizes
-          .entries
-          .map(
-            (entry) => _buildPopupListTile(
-              context,
-              child: AppText.body(entry.key),
-              onTap: () {
-                device.setSize(entry.value);
-                overlay.close();
-              },
-            ),
-          )
-          .toList(),
-    ],
-  );
-}
-
-Widget _buildPopupListTile(
-  BuildContext context, {
-  required Widget child,
-  void Function()? onTap,
-  Widget? trailing,
-}) {
-  return ListTile(
-    title: child,
-    hoverColor: context.read<AppTheme>().background,
-    dense: true,
-    onTap: onTap,
-    trailing: trailing,
-  );
-}
-
 class CanvasPanel extends Panel {
   CanvasPanel({Key? key})
       : super(
@@ -145,12 +65,12 @@ class CanvasPanel extends Panel {
             Tool(
               name: 'backgrounds',
               icon: Icons.image_outlined,
-              popup: _backgroundPopup,
+              popup: backgroundPopup,
             ),
             Tool(
               name: 'deviceSize',
               icon: Icons.devices_outlined,
-              popup: _devicePopup,
+              popup: devicePopup,
             ),
           ],
         );

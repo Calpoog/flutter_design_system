@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/ui/theme.dart';
+import 'package:flutter_storybook/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 class AppIconButton extends StatefulWidget {

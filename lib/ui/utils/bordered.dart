@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import '../theme.dart';
+import 'theme.dart';
 
 class Bordered extends StatelessWidget {
   final Widget? child;
