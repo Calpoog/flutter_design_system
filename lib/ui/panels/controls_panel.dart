@@ -19,64 +19,70 @@ class ControlsPanel extends Panel {
         child: Column(
           children: [
             Bordered.bottom(
-              child: Row(
-                children: const [
-                  _Cell(
-                    flex: 2,
-                    child: AppText.title('Name'),
-                  ),
-                  _Cell(
-                    flex: 4,
-                    child: AppText.title('Description'),
-                  ),
-                  _Cell(
-                    flex: 2,
-                    child: AppText.title('Default'),
-                  ),
-                  _Cell(
-                    flex: 4,
-                    child: AppText.title('Control'),
-                  ),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  children: const [
+                    _Cell(
+                      flex: 2,
+                      child: AppText.title('Name'),
+                    ),
+                    _Cell(
+                      flex: 4,
+                      child: AppText.title('Description'),
+                    ),
+                    _Cell(
+                      flex: 2,
+                      child: AppText.title('Default'),
+                    ),
+                    _Cell(
+                      flex: 4,
+                      child: AppText.title('Control'),
+                    ),
+                  ],
+                ),
               ),
             ),
             for (final arg in story.component.argTypes.values)
               Bordered.bottom(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _Cell(
-                      flex: 2,
-                      child: Row(
-                        children: [
-                          AppText.body(
-                            arg.name,
-                            weight: FontWeight.bold,
-                          ),
-                          if (arg.isRequired) const AppText('*', color: Colors.red),
-                        ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _Cell(
+                        flex: 2,
+                        child: Row(
+                          children: [
+                            AppText.body(
+                              arg.name,
+                              weight: FontWeight.bold,
+                            ),
+                            if (arg.isRequired) const AppText('*', color: Colors.red),
+                          ],
+                        ),
                       ),
-                    ),
-                    _Cell(
-                      flex: 4,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AppText.body(arg.description),
-                          const SizedBox(height: 5),
-                          AppCode(arg.type.toString()),
-                        ],
+                      _Cell(
+                        flex: 4,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AppText.body(arg.description),
+                            const SizedBox(height: 5),
+                            AppCode(arg.type.toString()),
+                          ],
+                        ),
                       ),
-                    ),
-                    _Cell(
-                      flex: 2,
-                      child: AppCode(arg.defaultValue.runtimeType.toString()),
-                    ),
-                    _Cell(
-                      flex: 4,
-                      child: arg.control(arg, story.args[arg.name]).build(context),
-                    ),
-                  ],
+                      _Cell(
+                        flex: 2,
+                        child: AppCode(arg.defaultValue.runtimeType.toString()),
+                      ),
+                      _Cell(
+                        flex: 4,
+                        child: arg.control(arg, story.args[arg.name]).build(context),
+                      ),
+                    ],
+                  ),
                 ),
               ),
           ],

@@ -59,7 +59,7 @@ class Storybook extends StatelessWidget {
     this.config = config ?? StorybookConfig();
   }
 
-  final List<Organized> explorer;
+  final List<ExplorerItem> explorer;
   late final StorybookConfig config;
 
   @override
@@ -113,17 +113,26 @@ class Storybook extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     SizedBox(
-                      width: 240,
+                      width: 230,
                       child: Explorer(
                         items: explorer,
                       ),
                     ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Card(
-                          elevation: 2,
-                          color: Colors.white,
+                        padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromRGBO(0, 0, 0, 0.1),
+                                offset: Offset(0, 1),
+                                blurRadius: 5,
+                              )
+                            ],
+                          ),
                           child:
                               context.watch<StoryNotifier>().story != null ? const ComponentView() : const SizedBox(),
                         ),

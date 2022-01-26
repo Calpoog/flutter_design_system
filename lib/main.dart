@@ -118,14 +118,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Storybook(
       explorer: [
-        Section(name: 'Library', children: [
+        Root(name: 'Library', children: [
           Folder(
             name: 'Widgets',
             children: [
-              Component(buttonComponent),
-              Component(textComponent),
+              Component(component: buttonComponent),
+              Component(component: textComponent),
             ],
           )
+        ]),
+        Root(name: 'Something', children: [
+          Component(component: buttonComponent),
+          Component(component: textComponent),
         ])
       ],
     );
