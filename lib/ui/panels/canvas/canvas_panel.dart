@@ -12,35 +12,6 @@ import '../controls_panel.dart';
 import '../panel.dart';
 import '../../utils/bordered.dart';
 
-class DeviceNotifier extends ChangeNotifier {
-  double zoom = 1.0;
-  Size? size;
-
-  setZoom(double zoom) {
-    this.zoom = zoom;
-    notifyListeners();
-  }
-
-  adjustZoom(double amount) {
-    zoom += amount;
-    notifyListeners();
-  }
-
-  setSize(Size? size) {
-    this.size = size;
-    notifyListeners();
-  }
-}
-
-class BackgroundNotifier extends ChangeNotifier {
-  Color color = Colors.white;
-
-  update(Color color) {
-    this.color = color;
-    notifyListeners();
-  }
-}
-
 class CanvasPanel extends Panel {
   CanvasPanel({Key? key})
       : super(
@@ -61,6 +32,7 @@ class CanvasPanel extends Panel {
               name: 'zoomReset',
               icon: Icons.youtube_searched_for_outlined,
               onPressed: (context) => context.read<DeviceNotifier>().setZoom(1.0),
+              divide: true,
             ),
             BackgroundTool(),
             DevicesTool(),
@@ -96,6 +68,7 @@ class _ScalableCanvas extends StatelessWidget {
     final device = context.watch<DeviceNotifier>();
     final story = context.read<StoryNotifier>().story!;
     const duration = Duration(milliseconds: 150);
+    final hasDevice = device.size != null;
     return LayoutBuilder(
       builder: (context, constraints) => SingleChildScrollView(
         primary: false,
@@ -103,13 +76,14 @@ class _ScalableCanvas extends StatelessWidget {
           color: theme.backgroundDark,
           alignment: Alignment.topCenter,
           child: AnimatedContainer(
+            margin: EdgeInsets.symmetric(vertical: hasDevice ? 10 : 0),
             padding: story.componentPadding ??
                 story.component.componentPadding ??
                 context.read<StorybookConfig>().componentPadding,
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-              color: context.watch<BackgroundNotifier>().color,
-              border: device.size != null
+              color: context.watch<BackgroundNotifier>().color ?? Colors.white,
+              border: hasDevice
                   ? Border.all(
                       color: theme.body,
                     )

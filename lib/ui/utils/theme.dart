@@ -24,6 +24,6 @@ class AppTheme {
     this.code = const Color.fromRGBO(248, 248, 248, 1),
     this.story = const Color.fromRGBO(55, 213, 211, 1),
     this.component = const Color.fromRGBO(30, 167, 253, 1),
-    this.folder = const Color.fromRGBO(189, 30, 253, 1),
+    this.folder = const Color.fromRGBO(42, 4, 129, 1),
   });
 }

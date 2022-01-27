@@ -172,7 +172,7 @@ class Folder extends ExplorerItem {
       : super(
           name: name,
           icon: Icons.folder_outlined,
-          type: _ExplorerItemType.component,
+          type: _ExplorerItemType.folder,
           children: children,
         );
 }

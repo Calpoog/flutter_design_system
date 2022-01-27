@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/storybook.dart';
-import 'package:flutter_storybook/ui/utils/icon_button.dart';
+import 'package:flutter_storybook/ui/panels/tools/tool_button.dart';
 import 'package:flutter_storybook/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -10,19 +10,24 @@ class Tool {
     required this.name,
     required this.icon,
     this.onPressed,
+    this.divide = false,
   }) : link = LayerLink();
 
   final String name;
   final IconData icon;
+  final bool divide;
   final void Function(BuildContext context)? onPressed;
   final LayerLink link;
+
+  bool isActive(BuildContext context) => false;
 
   Widget popup(BuildContext context) => const SizedBox();
 
   Widget button(BuildContext context) {
     return CompositedTransformTarget(
       link: link,
-      child: AppIconButton(
+      child: ToolButton(
+        isActive: isActive(context),
         onPressed: () {
           if (onPressed != null) {
             context.read<OverlayNotifier>().close();

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/storybook.dart';
+import 'package:flutter_storybook/ui/panels/tools/divider.dart';
 import 'package:flutter_storybook/ui/panels/tools/tool.dart';
-import 'package:flutter_storybook/ui/utils/icon_button.dart';
 import 'package:flutter_storybook/ui/utils/bordered.dart';
-import 'package:provider/provider.dart';
-
-import '../utils/theme.dart';
 
 abstract class Panel extends StatelessWidget {
   Panel({
@@ -41,28 +37,29 @@ class PanelGroup extends StatelessWidget {
           return Column(
             children: [
               Bordered.bottom(
-                child: Row(
-                  children: [
-                    TabBar(
-                      isScrollable: true,
-                      tabs: [
-                        for (final panel in panels) Tab(text: panel.name),
-                      ],
-                    ),
-                    if (currentPanel.tools.isNotEmpty)
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Bordered.right(
-                          child: SizedBox(
-                            height: 25,
-                          ),
-                        ),
+                child: SizedBox(
+                  height: 40,
+                  child: Row(
+                    children: [
+                      TabBar(
+                        isScrollable: true,
+                        tabs: [
+                          for (final panel in panels)
+                            Tab(
+                              text: panel.name,
+                              height: 40,
+                            ),
+                        ],
                       ),
-                    // Expanded(child: const SizedBox()),
-                    for (final tool in currentPanel.tools) tool.button(context),
-                    const Expanded(child: SizedBox()),
-                    for (final tool in tools) tool.button(context),
-                  ],
+                      if (currentPanel.tools.isNotEmpty) const ToolDivider(),
+                      for (final tool in currentPanel.tools) ...[
+                        tool.button(context),
+                        if (tool.divide) const ToolDivider(),
+                      ],
+                      const Expanded(child: SizedBox()),
+                      for (final tool in tools) tool.button(context),
+                    ],
+                  ),
                 ),
               ),
               Expanded(

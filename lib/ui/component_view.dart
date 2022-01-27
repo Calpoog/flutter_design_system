@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../models/story.dart';
-import '../models/arguments.dart';
-import 'panels/canvas/canvas_panel.dart';
-import 'panels/panel.dart';
-import 'panels/docs_panel.dart';
+import 'package:flutter_storybook/ui/panels/canvas/background_popup.dart';
+import 'package:flutter_storybook/ui/panels/canvas/device_popup.dart';
+import 'package:flutter_storybook/models/story.dart';
+import 'package:flutter_storybook/models/arguments.dart';
+import 'package:flutter_storybook/ui/panels/canvas/canvas_panel.dart';
+import 'package:flutter_storybook/ui/panels/panel.dart';
+import 'package:flutter_storybook/ui/panels/docs_panel.dart';
 
 class ComponentView extends StatelessWidget {
   const ComponentView({Key? key}) : super(key: key);

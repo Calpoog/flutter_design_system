@@ -7,7 +7,7 @@ import 'package:flutter_storybook/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 class DevicesTool extends Tool {
-  DevicesTool({Key? key}) : super(key: key, name: 'devices', icon: Icons.devices_outlined);
+  DevicesTool({Key? key}) : super(key: key, name: 'devices', icon: Icons.aspect_ratio_outlined);
 
   @override
   Widget popup(BuildContext context) {
@@ -43,5 +43,25 @@ class DevicesTool extends Tool {
             .toList(),
       ],
     );
+  }
+}
+
+class DeviceNotifier extends ChangeNotifier {
+  double zoom = 1.0;
+  Size? size;
+
+  setZoom(double zoom) {
+    this.zoom = zoom;
+    notifyListeners();
+  }
+
+  adjustZoom(double amount) {
+    zoom += amount;
+    notifyListeners();
+  }
+
+  setSize(Size? size) {
+    this.size = size;
+    notifyListeners();
   }
 }
