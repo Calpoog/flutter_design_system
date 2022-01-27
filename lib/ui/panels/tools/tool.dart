@@ -43,14 +43,6 @@ class Tool {
   }
 }
 
-class ActionTool extends Tool {
-  ActionTool({
-    required String name,
-    required IconData icon,
-    required void Function(BuildContext context) onPressed,
-  }) : super(name: name, icon: icon, onPressed: onPressed);
-}
-
 const double _kPopupWidth = 200.0;
 const double _kPopupMaxHeight = 300.0;
 

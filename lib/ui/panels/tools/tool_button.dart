@@ -34,7 +34,7 @@ class ToolButton extends StatelessWidget {
             padding: const EdgeInsets.all(5.0),
             child: Container(
               alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
               constraints: const BoxConstraints(minWidth: 30),
               decoration: BoxDecoration(
                 color: theme.selected.withAlpha(isHovered ? 45 : (isActive ? 25 : 0)),
@@ -46,7 +46,7 @@ class ToolButton extends StatelessWidget {
                 children: [
                   Icon(
                     icon,
-                    size: 20,
+                    size: 18,
                     color: isActive || isHovered ? theme.selected : theme.unselected,
                   ),
                   if (text != null)
