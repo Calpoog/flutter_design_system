@@ -45,7 +45,7 @@ final ComponentMeta buttonComponent = ComponentMeta(
       width: 200,
       child: TextButton(
         child: Text(args.value('text')),
-        onPressed: args.value('disabled') ? null : () {},
+        onPressed: (args.value('disabled') ?? false) ? null : () {},
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(args.value('color')),
           shape: MaterialStateProperty.all<OutlinedBorder>(args.value('shape')),
@@ -69,17 +69,6 @@ final ComponentMeta buttonComponent = ComponentMeta(
         'Center': Alignment.center,
       },
     ),
-    'disabled': ArgType<bool>(
-      name: 'disabled',
-      description: 'A toggle',
-      defaultValue: false,
-    ),
-    'color': ArgType<Color>(
-      name: 'color',
-      description: 'The button color',
-      defaultValue: Colors.red,
-      isRequired: true,
-    ),
     'shape': ArgType<OutlinedBorder>(
       name: 'shape',
       description: 'The button shape',
@@ -87,9 +76,19 @@ final ComponentMeta buttonComponent = ComponentMeta(
       defaultMapped: 'Stadium',
       mapping: {
         'Stadium': const StadiumBorder(),
-        'Rounded': const RoundedRectangleBorder(),
+        'Rounded long lnas asslakdf jas asdkfa  niureiq q nqn wefqwe': const RoundedRectangleBorder(),
       },
       control: Controls().radio(),
+    ),
+    'disabled': ArgType<bool>(
+      name: 'disabled',
+      description: 'A toggle',
+    ),
+    'color': ArgType<Color>(
+      name: 'color',
+      description: 'The button color',
+      defaultValue: Colors.red,
+      isRequired: true,
     ),
   },
   stories: [

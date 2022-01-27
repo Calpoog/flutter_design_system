@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/models/arguments.dart';
+import 'package:flutter_storybook/ui/panels/tools/tool_button.dart';
 import 'package:provider/provider.dart';
 
 import '../panels/panel.dart';
@@ -22,22 +24,34 @@ class ControlsPanel extends Panel {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Row(
-                  children: const [
-                    _Cell(
+                  children: [
+                    const _Cell(
                       flex: 2,
                       child: AppText.title('Name'),
                     ),
-                    _Cell(
+                    const _Cell(
                       flex: 4,
                       child: AppText.title('Description'),
                     ),
-                    _Cell(
+                    const _Cell(
                       flex: 2,
                       child: AppText.title('Default'),
                     ),
                     _Cell(
                       flex: 4,
-                      child: AppText.title('Control'),
+                      child: Row(
+                        children: [
+                          const AppText.title('Control'),
+                          const Expanded(child: SizedBox()),
+                          ToolButton(
+                            icon: Icons.replay,
+                            onPressed: () {
+                              context.read<ArgsNotifier>().reset();
+                            },
+                            name: 'Reset controls',
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -75,7 +89,7 @@ class ControlsPanel extends Panel {
                       ),
                       _Cell(
                         flex: 2,
-                        child: AppCode(arg.defaultValue.runtimeType.toString()),
+                        child: AppCode(arg.defaultValue.toString()),
                       ),
                       _Cell(
                         flex: 4,

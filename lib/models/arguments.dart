@@ -25,6 +25,11 @@ class ArgsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  void reset() {
+    args!._reset();
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _storyNotifier.removeListener(_storyListener);
@@ -33,10 +38,13 @@ class ArgsNotifier extends ChangeNotifier {
 }
 
 class Arguments {
+  final ArgValues _initial;
   ArgValues _values;
   final ArgTypes _argTypes;
 
-  Arguments(this._values, this._argTypes);
+  Arguments(ArgValues values, this._argTypes)
+      : _initial = values,
+        _values = Map.of(values);
 
   T? value<T>(String name) {
     assert(_argTypes.containsKey(name), 'There is no arg definition \'$name\'');
@@ -46,6 +54,10 @@ class Arguments {
         'No value provided for required arg \'$name\' and missing default value for its argType');
 
     return _values[name] ?? arg.defaultValue;
+  }
+
+  _reset() {
+    _values = Map.of(_initial);
   }
 
   _update(String name, dynamic value) {

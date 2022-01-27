@@ -116,17 +116,29 @@ class RadioControl<T> extends OptionsControl<T> {
     return Column(
       children: options.entries
           .map(
-            (option) => SizedBox(
-              height: 30,
-              child: RadioListTile<T>(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                title: AppText(option.key),
-                value: option.value,
-                groupValue: argsNotifier.args!.value(name),
-                onChanged: (T? value) {
-                  argsNotifier.update(name, value);
-                },
+            (option) => MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Transform.translate(
+                    offset: const Offset(-7, 0),
+                    child: Radio<T>(
+                      // contentPadding: EdgeInsets.zero,
+                      // title: AppText(option.key),
+                      value: option.value,
+                      groupValue: argsNotifier.args!.value(name),
+                      onChanged: (T? value) {
+                        argsNotifier.update(name, value);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.only(top: 7.0),
+                    child: AppText(option.key),
+                  )),
+                ],
               ),
             ),
           )

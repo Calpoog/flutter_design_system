@@ -70,6 +70,7 @@ class ExplorerHeader extends StatelessWidget {
           TextFormField(
             style: const TextStyle(fontSize: 13),
             decoration: InputDecoration(
+              hintText: 'Find components',
               contentPadding: const EdgeInsets.fromLTRB(30, 11, 20, 11),
               isDense: true,
               enabledBorder: OutlineInputBorder(

@@ -78,6 +78,10 @@ class Storybook extends StatelessWidget {
           theme: ThemeData(
             textTheme: GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
             iconTheme: IconThemeData(color: theme.unselected, size: 25),
+            radioTheme: RadioThemeData(
+                fillColor: MaterialStateProperty.resolveWith(
+                    (states) => states.contains(MaterialState.selected) ? theme.selected : theme.inputBorder),
+                overlayColor: MaterialStateProperty.all(theme.selected.withOpacity(0.2))),
             outlinedButtonTheme: OutlinedButtonThemeData(
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(10, 48),

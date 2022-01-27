@@ -51,7 +51,11 @@ class AppCode extends StatelessWidget {
         border: Border.all(color: theme.border),
         borderRadius: const BorderRadius.all(Radius.circular(3)),
       ),
-      child: Text(text, style: GoogleFonts.robotoMono(fontSize: 12)),
+      child: RichText(
+        overflow: TextOverflow.ellipsis,
+        text: TextSpan(text: text, style: GoogleFonts.robotoMono(fontSize: 12)),
+        softWrap: false,
+      ),
     );
   }
 }
