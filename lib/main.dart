@@ -45,7 +45,7 @@ final ComponentMeta buttonComponent = ComponentMeta(
       width: 200,
       child: TextButton(
         child: Text(args.value('text')),
-        onPressed: () {},
+        onPressed: args.value('disabled') ? null : () {},
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(args.value('color')),
           shape: MaterialStateProperty.all<OutlinedBorder>(args.value('shape')),
@@ -59,6 +59,20 @@ final ComponentMeta buttonComponent = ComponentMeta(
       name: 'text',
       description: 'The button text',
       isRequired: true,
+    ),
+    'align': ArgType<AlignmentGeometry>(
+      name: 'align',
+      description: 'The alignment of the text inside the button',
+      mapping: {
+        'Left': Alignment.centerLeft,
+        'Right': Alignment.centerRight,
+        'Center': Alignment.center,
+      },
+    ),
+    'disabled': ArgType<bool>(
+      name: 'disabled',
+      description: 'A toggle',
+      defaultValue: false,
     ),
     'color': ArgType<Color>(
       name: 'color',
@@ -76,15 +90,6 @@ final ComponentMeta buttonComponent = ComponentMeta(
         'Rounded': const RoundedRectangleBorder(),
       },
       control: Controls().radio(),
-    ),
-    'align': ArgType<AlignmentGeometry>(
-      name: 'align',
-      description: 'The alignment of the text inside the button',
-      mapping: {
-        'Left': Alignment.centerLeft,
-        'Right': Alignment.centerRight,
-        'Center': Alignment.center,
-      },
     ),
   },
   stories: [

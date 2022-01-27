@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/ui/utils/text.dart';
+import 'package:flutter_storybook/ui/utils/theme.dart';
+import 'package:flutter_storybook/ui/utils/toggle.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'arguments.dart';
@@ -8,6 +12,7 @@ typedef ControlBuilder = Control Function(ArgType, dynamic);
 class Controls {
   ControlBuilder none() => (argType, initial) => NoControl(argType: argType);
   ControlBuilder text() => (argType, initial) => TextControl(argType: argType, initial: initial);
+  ControlBuilder boolean() => (argType, initial) => BooleanControl(argType: argType, initial: initial);
   ControlBuilder select<T>({Map<String, T>? options}) =>
       (argType, initial) => SelectControl(argType: argType, initial: initial, options: options);
   ControlBuilder radio<T>({Map<String, T>? options}) =>
@@ -20,6 +25,8 @@ class Controls {
       switch (argType.type) {
         case String:
           return text();
+        case bool:
+          return boolean();
         default:
           return none();
       }
@@ -61,6 +68,29 @@ class TextControl extends Control<String> {
   }
 }
 
+class BooleanControl extends Control<bool> {
+  BooleanControl({required ArgType argType, bool? initial}) : super(argType: argType, initial: initial);
+
+  @override
+  Widget build(BuildContext context) {
+    final ArgsNotifier argsNotifier = context.read<ArgsNotifier>();
+    final value = argsNotifier.args!.value(argType.name);
+    return value == null
+        ? OutlinedButton(
+            onPressed: () {
+              argsNotifier.update(argType.name, false);
+            },
+            child: const Text('Set boolean'),
+          )
+        : Toggle(
+            value: value,
+            onChanged: (bool value) {
+              argsNotifier.update(argType.name, value);
+            },
+          );
+  }
+}
+
 abstract class OptionsControl<T> extends Control<T> {
   OptionsControl({
     required ArgType<T> argType,
@@ -86,15 +116,18 @@ class RadioControl<T> extends OptionsControl<T> {
     return Column(
       children: options.entries
           .map(
-            (option) => RadioListTile<T>(
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              title: Text(option.key),
-              value: option.value,
-              groupValue: argsNotifier.args!.value(name),
-              onChanged: (T? value) {
-                argsNotifier.update(name, value);
-              },
+            (option) => SizedBox(
+              height: 30,
+              child: RadioListTile<T>(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                title: AppText(option.key),
+                value: option.value,
+                groupValue: argsNotifier.args!.value(name),
+                onChanged: (T? value) {
+                  argsNotifier.update(name, value);
+                },
+              ),
             ),
           )
           .toList(),
@@ -108,21 +141,41 @@ class SelectControl<T> extends OptionsControl<T> {
 
   @override
   Widget build(BuildContext context) {
-    final ArgsNotifier argsNotifier = context.watch<ArgsNotifier>();
+    final argsNotifier = context.watch<ArgsNotifier>();
+    final theme = context.watch<AppTheme>();
     final name = argType.name;
-    return DropdownButton<T>(
-      value: argsNotifier.args!.value(name),
-      items: options.entries
-          .map(
-            (option) => DropdownMenuItem<T>(
-              value: option.value,
-              child: Text(option.key),
-            ),
-          )
-          .toList(),
-      onChanged: (T? value) {
-        argsNotifier.update(name, value);
-      },
+    return SizedBox(
+      height: 40,
+      child: DropdownButtonFormField<T>(
+        value: argsNotifier.args!.value(name),
+        icon: Icon(
+          Icons.expand_more,
+          color: theme.selected,
+        ),
+        style: GoogleFonts.nunitoSans(fontSize: 14, color: theme.body),
+        decoration: InputDecoration(
+          hoverColor: theme.background,
+          focusColor: Colors.red,
+          fillColor: Colors.green,
+          contentPadding: const EdgeInsets.all(14),
+          isDense: true,
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: theme.inputBorder),
+            borderRadius: const BorderRadius.all(Radius.circular(6)),
+          ),
+        ),
+        items: options.entries
+            .map(
+              (option) => DropdownMenuItem<T>(
+                value: option.value,
+                child: Text(option.key),
+              ),
+            )
+            .toList(),
+        onChanged: (T? value) {
+          argsNotifier.update(name, value);
+        },
+      ),
     );
   }
 }

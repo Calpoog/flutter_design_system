@@ -45,7 +45,7 @@ class Arguments {
     assert(_values.containsKey(name) || arg.defaultValue != null || !arg.isRequired,
         'No value provided for required arg \'$name\' and missing default value for its argType');
 
-    return _values[name];
+    return _values[name] ?? arg.defaultValue;
   }
 
   _update(String name, dynamic value) {

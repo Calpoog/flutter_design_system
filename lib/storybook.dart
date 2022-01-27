@@ -78,13 +78,24 @@ class Storybook extends StatelessWidget {
           theme: ThemeData(
             textTheme: GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
             iconTheme: IconThemeData(color: theme.unselected, size: 25),
+            outlinedButtonTheme: OutlinedButtonThemeData(
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(10, 48),
+                side: BorderSide(color: theme.inputBorder),
+                primary: theme.body,
+                backgroundColor: theme.inputBorder.withOpacity(0.03),
+                textStyle: GoogleFonts.nunitoSans(fontWeight: FontWeight.bold),
+              ),
+            ),
+            primaryColor: theme.selected,
+            unselectedWidgetColor: theme.unselected,
             listTileTheme: const ListTileThemeData(dense: true),
             inputDecorationTheme: InputDecorationTheme(
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: theme.border),
+                borderSide: BorderSide(color: theme.inputBorder),
                 borderRadius: const BorderRadius.all(Radius.circular(6)),
               ),
-              contentPadding: const EdgeInsets.all(14),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
               isDense: true,
               border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(6))),
             ),
