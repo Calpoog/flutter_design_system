@@ -58,11 +58,51 @@ class TextControl extends Control<String> {
   @override
   Widget build(BuildContext context) {
     final ArgsNotifier args = context.read<ArgsNotifier>();
+    return StatefulBuilder(builder: (context, setState) {
+      return ResetAwareTextField(
+        name: argType.name,
+        initial: initial,
+      );
+    });
+  }
+}
+
+class ResetAwareTextField extends StatefulWidget {
+  final String? initial;
+  final String name;
+
+  const ResetAwareTextField({Key? key, this.initial, required this.name}) : super(key: key);
+
+  @override
+  _ResetAwareTextFieldState createState() => _ResetAwareTextFieldState();
+}
+
+class _ResetAwareTextFieldState extends State<ResetAwareTextField> {
+  late TextEditingController controller;
+
+  @override
+  void initState() {
+    controller = TextEditingController(text: widget.initial);
+    context.read<ArgsNotifier>().addListener(resetListener);
+    super.initState();
+  }
+
+  resetListener() {
+    final value = context.read<ArgsNotifier>().args!.value(widget.name);
+    debugPrint('$value, ${controller.text}');
+    if (value != controller.text) {
+      controller.text = value;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ArgsNotifier args = context.read<ArgsNotifier>();
     return TextFormField(
       style: const TextStyle(fontSize: 14),
-      initialValue: initial,
+      controller: controller,
       onChanged: (String value) {
-        args.update(argType.name, value);
+        args.update(widget.name, value);
       },
     );
   }
@@ -156,37 +196,40 @@ class SelectControl<T> extends OptionsControl<T> {
     final argsNotifier = context.watch<ArgsNotifier>();
     final theme = context.watch<AppTheme>();
     final name = argType.name;
-    return SizedBox(
+    final value = argsNotifier.args!.value<T>(name);
+    return Container(
       height: 40,
-      child: DropdownButtonFormField<T>(
-        value: argsNotifier.args!.value(name),
-        icon: Icon(
-          Icons.expand_more,
-          color: theme.selected,
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: theme.inputBorder,
         ),
-        style: GoogleFonts.nunitoSans(fontSize: 14, color: theme.body),
-        decoration: InputDecoration(
-          hoverColor: theme.background,
-          focusColor: Colors.red,
-          fillColor: Colors.green,
-          contentPadding: const EdgeInsets.all(14),
-          isDense: true,
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: theme.inputBorder),
-            borderRadius: const BorderRadius.all(Radius.circular(6)),
+        borderRadius: const BorderRadius.all(Radius.circular(6)),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<T>(
+          value: value,
+          isExpanded: true,
+          icon: Icon(
+            Icons.expand_more,
+            color: theme.selected,
           ),
+          // isDense: false,
+          style: GoogleFonts.nunitoSans(fontSize: 14, color: theme.body),
+          // selectedItemBuilder: (context) => options.entries.map((option) => AppCode(option.key.toString())).toList(),
+          items: options.entries
+              .map(
+                (option) => DropdownMenuItem<T>(
+                  value: option.value,
+                  child: Text(option.key),
+                ),
+              )
+              .toList(),
+          onChanged: (T? value) {
+            argsNotifier.update(name, value);
+          },
         ),
-        items: options.entries
-            .map(
-              (option) => DropdownMenuItem<T>(
-                value: option.value,
-                child: Text(option.key),
-              ),
-            )
-            .toList(),
-        onChanged: (T? value) {
-          argsNotifier.update(name, value);
-        },
       ),
     );
   }

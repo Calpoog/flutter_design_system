@@ -99,7 +99,7 @@ class Storybook extends StatelessWidget {
                 borderSide: BorderSide(color: theme.inputBorder),
                 borderRadius: const BorderRadius.all(Radius.circular(6)),
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+              // contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
               isDense: true,
               border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(6))),
             ),

@@ -34,7 +34,7 @@ final ComponentMeta textComponent = ComponentMeta(
 const baseArgs = {
   'text': 'Default',
   'color': Colors.red,
-  'shape': 'Stadium',
+  // 'shape': 'Stadium',
 };
 
 final ComponentMeta buttonComponent = ComponentMeta(
@@ -48,7 +48,7 @@ final ComponentMeta buttonComponent = ComponentMeta(
         onPressed: (args.value('disabled') ?? false) ? null : () {},
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(args.value('color')),
-          shape: MaterialStateProperty.all<OutlinedBorder>(args.value('shape')),
+          shape: args.value('shape'),
           alignment: args.value('align'),
         ),
       ),
@@ -69,14 +69,15 @@ final ComponentMeta buttonComponent = ComponentMeta(
         'Center': Alignment.center,
       },
     ),
-    'shape': ArgType<OutlinedBorder>(
+    'shape': ArgType<MaterialStateProperty<OutlinedBorder>>(
       name: 'shape',
       description: 'The button shape',
-      isRequired: true,
-      defaultMapped: 'Stadium',
+      // isRequired: true,
+      // defaultMapped: 'Stadium',
       mapping: {
-        'Stadium': const StadiumBorder(),
-        'Rounded long lnas asslakdf jas asdkfa  niureiq q nqn wefqwe': const RoundedRectangleBorder(),
+        'Stadium': MaterialStateProperty.all(const StadiumBorder()),
+        'Rounded long lnas asslakdf jas asdkfa  niureiq q nqn wefqwe':
+            MaterialStateProperty.all(const RoundedRectangleBorder()),
       },
       control: Controls().radio(),
     ),
