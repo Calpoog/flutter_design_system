@@ -6,21 +6,21 @@ import 'package:flutter_storybook/ui/utils/text.dart';
 import 'package:flutter_storybook/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
-class DevicesTool extends Tool {
-  DevicesTool({Key? key}) : super(key: key, name: 'Change preview size', icon: Icons.aspect_ratio_outlined);
+class ViewportTool extends Tool {
+  ViewportTool({Key? key}) : super(key: key, name: 'Change preview size', icon: Icons.aspect_ratio_outlined);
 
   @override
   bool isActive(BuildContext context) {
     // only need read because of the watch in button method below
-    return context.read<DeviceNotifier>().deviceName != null;
+    return context.read<ViewportNotifier>().viewportName != null;
   }
 
   @override
   Widget button(BuildContext context) {
     final theme = context.read<AppTheme>();
-    final deviceNotifier = context.watch<DeviceNotifier>();
-    final isActive = deviceNotifier.deviceName != null;
-    final size = deviceNotifier.size;
+    final viewportNotifier = context.watch<ViewportNotifier>();
+    final isActive = viewportNotifier.viewportName != null;
+    final size = viewportNotifier.size;
 
     return Row(
       children: [
@@ -29,7 +29,7 @@ class DevicesTool extends Tool {
           child: ToolButton(
             name: name,
             isActive: isActive,
-            text: deviceNotifier.deviceName,
+            text: viewportNotifier.viewportName,
             onPressed: () {
               if (onPressed != null) {
                 context.read<OverlayNotifier>().close();
@@ -52,7 +52,7 @@ class DevicesTool extends Tool {
               name: 'Change orientation',
               icon: Icons.sync_alt_outlined,
               onPressed: () {
-                deviceNotifier.setSize(deviceNotifier.deviceName!, Size(size.height, size.width));
+                viewportNotifier.setSize(viewportNotifier.viewportName!, Size(size.height, size.width));
               }),
           AppText(
             size.height.toString(),
@@ -66,7 +66,7 @@ class DevicesTool extends Tool {
 
   @override
   Widget popup(BuildContext context) {
-    final device = context.read<DeviceNotifier>();
+    final device = context.read<ViewportNotifier>();
     final overlay = context.read<OverlayNotifier>();
     final hoverColor = context.read<AppTheme>().background;
     return Column(
@@ -101,8 +101,8 @@ class DevicesTool extends Tool {
   }
 }
 
-class DeviceNotifier extends ChangeNotifier {
-  String? deviceName;
+class ViewportNotifier extends ChangeNotifier {
+  String? viewportName;
   double zoom = 1.0;
   Size? size;
 
@@ -118,13 +118,13 @@ class DeviceNotifier extends ChangeNotifier {
 
   setSize(String name, Size? size) {
     this.size = size;
-    deviceName = name;
+    viewportName = name;
     notifyListeners();
   }
 
   resetSize() {
     size = null;
-    deviceName = null;
+    viewportName = null;
     notifyListeners();
   }
 }

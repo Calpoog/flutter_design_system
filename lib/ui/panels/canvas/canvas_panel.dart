@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/storybook.dart';
 import 'package:flutter_storybook/ui/panels/canvas/background_popup.dart';
-import 'package:flutter_storybook/ui/panels/canvas/device_popup.dart';
+import 'package:flutter_storybook/ui/panels/canvas/viewport_popup.dart';
 import 'package:flutter_storybook/ui/panels/tools/tool.dart';
 import 'package:provider/provider.dart';
 
@@ -21,21 +21,21 @@ class CanvasPanel extends Panel {
             Tool(
               name: 'Zoom in',
               icon: Icons.zoom_in_outlined,
-              onPressed: (context) => context.read<DeviceNotifier>().adjustZoom(0.2),
+              onPressed: (context) => context.read<ViewportNotifier>().adjustZoom(0.2),
             ),
             Tool(
               name: 'Zoom out',
               icon: Icons.zoom_out_outlined,
-              onPressed: (context) => context.read<DeviceNotifier>().adjustZoom(-0.2),
+              onPressed: (context) => context.read<ViewportNotifier>().adjustZoom(-0.2),
             ),
             Tool(
               name: 'Reset zoom',
               icon: Icons.youtube_searched_for_outlined,
-              onPressed: (context) => context.read<DeviceNotifier>().setZoom(1.0),
+              onPressed: (context) => context.read<ViewportNotifier>().setZoom(1.0),
               divide: true,
             ),
             BackgroundTool(),
-            DevicesTool(),
+            ViewportTool(),
           ],
         );
 
@@ -65,7 +65,7 @@ class _ScalableCanvas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.read<AppTheme>();
-    final device = context.watch<DeviceNotifier>();
+    final device = context.watch<ViewportNotifier>();
     final story = context.read<StoryNotifier>().story!;
     const duration = Duration(milliseconds: 150);
     final hasDevice = device.size != null;
