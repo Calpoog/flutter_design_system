@@ -27,6 +27,7 @@ class Tool {
     return CompositedTransformTarget(
       link: link,
       child: ToolButton(
+        name: name,
         isActive: isActive(context),
         onPressed: () {
           if (onPressed != null) {

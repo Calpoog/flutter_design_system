@@ -7,7 +7,7 @@ import 'package:flutter_storybook/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 class BackgroundTool extends Tool {
-  BackgroundTool({Key? key}) : super(key: key, name: 'backgrounds', icon: Icons.image_outlined);
+  BackgroundTool({Key? key}) : super(key: key, name: 'Change background', icon: Icons.image_outlined);
 
   @override
   bool isActive(BuildContext context) {

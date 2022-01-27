@@ -19,17 +19,17 @@ class CanvasPanel extends Panel {
           key: key,
           tools: [
             Tool(
-              name: 'zoomIn',
+              name: 'Zoom in',
               icon: Icons.zoom_in_outlined,
               onPressed: (context) => context.read<DeviceNotifier>().adjustZoom(0.2),
             ),
             Tool(
-              name: 'zoomOut',
+              name: 'Zoom out',
               icon: Icons.zoom_out_outlined,
               onPressed: (context) => context.read<DeviceNotifier>().adjustZoom(-0.2),
             ),
             Tool(
-              name: 'zoomReset',
+              name: 'Reset zoom',
               icon: Icons.youtube_searched_for_outlined,
               onPressed: (context) => context.read<DeviceNotifier>().setZoom(1.0),
               divide: true,
@@ -74,6 +74,7 @@ class _ScalableCanvas extends StatelessWidget {
         primary: false,
         child: Container(
           color: theme.backgroundDark,
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
           alignment: Alignment.topCenter,
           child: AnimatedContainer(
             margin: EdgeInsets.symmetric(vertical: hasDevice ? 10 : 0),
