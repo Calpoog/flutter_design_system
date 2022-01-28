@@ -64,6 +64,9 @@ class Storybook extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme =
+        GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme.copyWith(subtitle1: TextStyle(fontSize: 14)));
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => StoryNotifier(buttonComponent.stories.first)),
@@ -76,7 +79,7 @@ class Storybook extends StatelessWidget {
         return MaterialApp(
           title: 'Flutter Demo',
           theme: ThemeData(
-            textTheme: GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
+            textTheme: textTheme,
             iconTheme: IconThemeData(color: theme.unselected, size: 25),
             radioTheme: RadioThemeData(
                 fillColor: MaterialStateProperty.resolveWith(
@@ -94,6 +97,7 @@ class Storybook extends StatelessWidget {
             primaryColor: theme.selected,
             unselectedWidgetColor: theme.unselected,
             listTileTheme: const ListTileThemeData(dense: true),
+            // errorColor: ,
             inputDecorationTheme: InputDecorationTheme(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: theme.inputBorder),

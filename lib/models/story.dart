@@ -20,7 +20,7 @@ class Story {
   void init(ComponentMeta component) {
     this.component = component;
     _updateValues(args);
-    arguments = Arguments(args, component.argTypes);
+    arguments = Arguments(args, component.argTypes, this);
   }
 
   // Validates that values adhere to ArgTypes

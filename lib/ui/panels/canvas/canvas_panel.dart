@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_storybook/storybook.dart';
 import 'package:flutter_storybook/ui/panels/canvas/background_popup.dart';
 import 'package:flutter_storybook/ui/panels/canvas/viewport_popup.dart';
 import 'package:flutter_storybook/ui/panels/tools/tool.dart';
-import 'package:provider/provider.dart';
-
-import '../../../models/arguments.dart';
-import '../../../models/story.dart';
-import '../../utils/theme.dart';
-import '../controls_panel.dart';
-import '../panel.dart';
-import '../../utils/bordered.dart';
+import 'package:flutter_storybook/models/arguments.dart';
+import 'package:flutter_storybook/models/story.dart';
+import 'package:flutter_storybook/ui/utils/theme.dart';
+import 'package:flutter_storybook/ui/panels/controls/controls_panel.dart';
+import 'package:flutter_storybook/ui/panels/panel.dart';
+import 'package:flutter_storybook/ui/utils/bordered.dart';
 
 class CanvasPanel extends Panel {
   CanvasPanel({Key? key})

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'models/arguments.dart';
 import 'models/component.dart';
-import 'models/controls.dart';
+import 'ui/panels/controls/controls/controls.dart';
 import 'models/story.dart';
 import 'storybook.dart';
 import 'ui/explorer.dart';
@@ -32,7 +32,6 @@ final ComponentMeta textComponent = ComponentMeta(
 );
 
 const baseArgs = {
-  'text': 'Default',
   'color': Colors.red,
   // 'shape': 'Stadium',
 };
@@ -44,7 +43,7 @@ final ComponentMeta buttonComponent = ComponentMeta(
     return SizedBox(
       width: 200,
       child: TextButton(
-        child: Text(args.value('text')),
+        child: Text('${args.value('text')} ${args.value('number')}'),
         onPressed: (args.value('disabled') ?? false) ? null : () {},
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(args.value('color')),
@@ -58,9 +57,14 @@ final ComponentMeta buttonComponent = ComponentMeta(
     'text': ArgType<String>(
       name: 'text',
       description: 'The button text',
+      defaultValue: 'Default',
       isRequired: true,
     ),
-    'align': ArgType<AlignmentGeometry>(
+    'number': ArgType<double?>(
+      name: 'number',
+      description: 'A number',
+    ),
+    'align': ArgType<AlignmentGeometry?>(
       name: 'align',
       description: 'The alignment of the text inside the button',
       mapping: {
@@ -73,7 +77,7 @@ final ComponentMeta buttonComponent = ComponentMeta(
       name: 'shape',
       description: 'The button shape',
       // isRequired: true,
-      // defaultMapped: 'Stadium',
+      defaultMapped: 'Stadium',
       mapping: {
         'Stadium': MaterialStateProperty.all(const StadiumBorder()),
         'Rounded long lnas asslakdf jas asdkfa  niureiq q nqn wefqwe':
@@ -81,7 +85,7 @@ final ComponentMeta buttonComponent = ComponentMeta(
       },
       control: Controls().radio(),
     ),
-    'disabled': ArgType<bool>(
+    'disabled': ArgType<bool?>(
       name: 'disabled',
       description: 'A toggle',
     ),
@@ -89,7 +93,7 @@ final ComponentMeta buttonComponent = ComponentMeta(
       name: 'color',
       description: 'The button color',
       defaultValue: Colors.red,
-      isRequired: true,
+      // isRequired: true,
     ),
   },
   stories: [
