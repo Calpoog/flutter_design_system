@@ -1,23 +1,29 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/ui/explorer.dart';
 
 import 'arguments.dart';
 import 'component.dart';
 
-class Story {
-  final String name;
-  late final ComponentMeta component;
+class Story extends ExplorerItem {
+  late final Component component;
   ArgsBuilder? builder;
   final ArgValues args;
   late final Arguments arguments;
   final EdgeInsets? componentPadding;
+  late final String path;
 
   Story({
-    required this.name,
+    required String name,
     ArgValues? args,
     this.componentPadding,
-  }) : args = Map.of(args ?? {});
+    bool? isExpanded,
+  })  : args = Map.of(args ?? {}),
+        super(
+          name: name,
+          isExpanded: isExpanded,
+        );
 
-  void init(ComponentMeta component) {
+  void init(Component component) {
     this.component = component;
     _updateValues(args);
     arguments = Arguments(args, component.argTypes, this);
@@ -38,17 +44,5 @@ class Story {
         return argType.mapping![value];
       }
     });
-  }
-}
-
-class StoryNotifier extends ChangeNotifier {
-  Story? story;
-
-  StoryNotifier(this.story);
-
-  void update(Story story) {
-    this.story = story;
-    debugPrint('Selected $story ${story.toString()}');
-    notifyListeners();
   }
 }

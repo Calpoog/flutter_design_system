@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-
-import 'models/arguments.dart';
-import 'models/component.dart';
-import 'ui/panels/controls/controls/controls.dart';
-import 'models/story.dart';
-import 'storybook.dart';
-import 'ui/explorer.dart';
+import 'package:flutter_storybook/models/arguments.dart';
+import 'package:flutter_storybook/models/component.dart';
+import 'package:flutter_storybook/ui/panels/controls/controls/controls.dart';
+import 'package:flutter_storybook/models/story.dart';
+import 'package:flutter_storybook/storybook.dart';
+import 'package:flutter_storybook/ui/explorer.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-final ComponentMeta textComponent = ComponentMeta(
+final Component textComponent = Component(
   name: 'Text',
-  builder: (BuildContext context, Arguments args) => Text(args.value('text')),
+  builder: (BuildContext context, Arguments args) => TextField(),
   argTypes: {
     'text': ArgType<String>(
       name: 'text',
@@ -36,7 +35,7 @@ const baseArgs = {
   // 'shape': 'Stadium',
 };
 
-final ComponentMeta buttonComponent = ComponentMeta(
+final buttonComponent = Component(
   name: 'Button',
   componentPadding: const EdgeInsets.all(20),
   builder: (BuildContext context, Arguments args) {
@@ -127,19 +126,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Storybook(
       explorer: [
-        Root(name: 'Library', children: [
-          Folder(
+        RootItem(name: 'Library', children: [
+          FolderItem(
             name: 'Widgets',
             children: [
-              Component(component: buttonComponent),
-              Component(component: textComponent),
+              buttonComponent,
+              textComponent,
             ],
           )
         ]),
-        Root(name: 'Something', children: [
-          Component(component: buttonComponent),
-          Component(component: textComponent),
-        ])
       ],
     );
   }

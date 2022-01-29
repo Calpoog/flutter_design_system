@@ -3,10 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart' as md;
-import 'package:flutter_storybook/models/story.dart';
 import 'package:flutter_storybook/ui/panels/panel.dart';
 import 'package:flutter_storybook/ui/utils/text.dart';
-import 'package:provider/provider.dart';
 
 final _style = md.MarkdownStyleSheet(
   h1: const TextStyle(fontSize: 36, fontWeight: FontWeight.w800),
@@ -27,7 +25,6 @@ class DocsPanel extends Panel {
 
   @override
   Widget build(BuildContext context) {
-    Story story = context.read<StoryNotifier>().story!;
     return FutureBuilder(
       future: rootBundle.loadString('test.md'),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {

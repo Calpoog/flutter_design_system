@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 class Hoverable extends StatefulWidget {
   final Widget Function(BuildContext context, bool isHovered) builder;
+  final VoidCallback? onPressed;
 
-  const Hoverable({Key? key, required this.builder}) : super(key: key);
+  const Hoverable({
+    Key? key,
+    required this.builder,
+    this.onPressed,
+  }) : super(key: key);
 
   @override
   State<Hoverable> createState() => _HoverableState();
@@ -24,7 +29,10 @@ class _HoverableState extends State<Hoverable> {
       cursor: SystemMouseCursors.click,
       onEnter: (event) => setState(() => isHovered = true),
       onExit: (event) => setState(() => isHovered = false),
-      child: widget.builder(context, isHovered),
+      child: GestureDetector(
+        onTap: widget.onPressed,
+        child: widget.builder(context, isHovered),
+      ),
     );
   }
 }

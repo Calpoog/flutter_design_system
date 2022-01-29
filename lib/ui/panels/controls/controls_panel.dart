@@ -13,7 +13,7 @@ class ControlsPanel extends Panel {
 
   @override
   Widget build(BuildContext context) {
-    final Story story = context.read<StoryNotifier>().story!;
+    final Story story = context.read<Story>();
     return SingleChildScrollView(
       primary: false,
       child: Padding(

@@ -1,12 +1,15 @@
+library storybook;
+
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/main.dart';
+import 'package:flutter_storybook/models/component.dart';
+import 'package:flutter_storybook/models/story.dart';
+import 'package:flutter_storybook/routing/story_router.dart';
+import 'package:flutter_storybook/ui/panels/canvas/background_popup.dart';
+import 'package:flutter_storybook/ui/panels/canvas/viewport_popup.dart';
 import 'package:flutter_storybook/ui/utils/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-import 'models/story.dart';
-import 'ui/component_view.dart';
-import 'ui/explorer.dart';
+import 'package:flutter_storybook/ui/explorer.dart';
 
 class StorybookConfig {
   late final Map<String, Size> deviceSizes;
@@ -49,7 +52,7 @@ class OverlayNotifier extends ChangeNotifier {
   }
 }
 
-class Storybook extends StatelessWidget {
+class Storybook extends StatefulWidget {
   Storybook({
     Key? key,
     required this.explorer,
@@ -57,114 +60,154 @@ class Storybook extends StatelessWidget {
     StorybookConfig? config,
   }) : super(key: key) {
     this.config = config ?? StorybookConfig();
+
+    _processItems(explorer, '');
   }
 
   final List<ExplorerItem> explorer;
+  final Map<String, Story> stories = {};
   late final StorybookConfig config;
+
+  // Builds the string path for each item and stores a flat list of stories for routing
+  _processItems(List<ExplorerItem> items, String path) {
+    for (int i = 0; i < items.length; i++) {
+      ExplorerItem item = items[i];
+      item.path = '$path/${item.name}';
+
+      if (item is Story) stories[item.path] = item;
+
+      if (item.children != null) {
+        _processItems(item.children!, item.path);
+      }
+    }
+  }
+
+  @override
+  State<Storybook> createState() => _StorybookState();
+}
+
+class _StorybookState extends State<Storybook> {
+  final navKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
-    final textTheme =
-        GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme.copyWith(subtitle1: TextStyle(fontSize: 14)));
+    final textTheme = GoogleFonts.nunitoSansTextTheme(
+      Theme.of(context).textTheme.copyWith(subtitle1: const TextStyle(fontSize: 14)),
+    );
+    final theme = AppTheme();
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => StoryNotifier(buttonComponent.stories.first)),
         ChangeNotifierProvider(create: (_) => OverlayNotifier()),
-        Provider(create: (_) => AppTheme()),
-        Provider.value(value: config),
+        Provider.value(value: widget.explorer),
+        Provider.value(value: theme),
+        Provider.value(value: widget.config),
       ],
-      builder: (context, _) {
-        final theme = context.read<AppTheme>();
-        return MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            textTheme: textTheme,
-            iconTheme: IconThemeData(color: theme.unselected, size: 25),
-            radioTheme: RadioThemeData(
-                fillColor: MaterialStateProperty.resolveWith(
-                    (states) => states.contains(MaterialState.selected) ? theme.selected : theme.inputBorder),
-                overlayColor: MaterialStateProperty.all(theme.selected.withOpacity(0.2))),
-            outlinedButtonTheme: OutlinedButtonThemeData(
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(10, 48),
-                side: BorderSide(color: theme.inputBorder),
-                primary: theme.body,
-                backgroundColor: theme.inputBorder.withOpacity(0.03),
-                textStyle: GoogleFonts.nunitoSans(fontWeight: FontWeight.bold),
-              ),
-            ),
-            primaryColor: theme.selected,
-            unselectedWidgetColor: theme.unselected,
-            listTileTheme: const ListTileThemeData(dense: true),
-            // errorColor: ,
-            inputDecorationTheme: InputDecorationTheme(
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: theme.inputBorder),
-                borderRadius: const BorderRadius.all(Radius.circular(6)),
-              ),
-              // contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-              isDense: true,
-              border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(6))),
-            ),
-            tabBarTheme: TabBarTheme(
-              labelPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-              indicator: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    width: 3.0,
-                    color: theme.selected,
-                  ),
-                ),
-              ),
-              labelColor: theme.selected,
-              labelStyle: GoogleFonts.nunitoSans(fontWeight: FontWeight.bold),
-              unselectedLabelColor: theme.unselected,
-              unselectedLabelStyle: GoogleFonts.nunitoSans(fontWeight: FontWeight.bold),
+      builder: (context, _) => MaterialApp(
+        title: 'Storybook',
+        theme: ThemeData(
+          textTheme: textTheme,
+          iconTheme: IconThemeData(color: theme.unselected, size: 25),
+          pageTransitionsTheme: const PageTransitionsTheme(builders: {
+            TargetPlatform.android: ZoomPageTransitionsBuilder(),
+          }),
+          radioTheme: RadioThemeData(
+              fillColor: MaterialStateProperty.resolveWith(
+                  (states) => states.contains(MaterialState.selected) ? theme.selected : theme.inputBorder),
+              overlayColor: MaterialStateProperty.all(theme.selected.withOpacity(0.2))),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size(10, 48),
+              side: BorderSide(color: theme.inputBorder),
+              primary: theme.body,
+              backgroundColor: theme.inputBorder.withOpacity(0.03),
+              textStyle: GoogleFonts.nunitoSans(fontWeight: FontWeight.bold),
             ),
           ),
-          home: Scaffold(
-            backgroundColor: theme.background,
-            body: GestureDetector(
-              onTap: () => context.read<OverlayNotifier>().close(),
-              child: SafeArea(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(
-                      width: 230,
-                      child: Explorer(
-                        items: explorer,
-                      ),
+          primaryColor: theme.selected,
+          unselectedWidgetColor: theme.unselected,
+          listTileTheme: const ListTileThemeData(dense: true),
+          // errorColor: ,
+          inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: theme.inputBorder),
+              borderRadius: const BorderRadius.all(Radius.circular(6)),
+            ),
+            // contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            isDense: true,
+            border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(6))),
+          ),
+          tabBarTheme: TabBarTheme(
+            labelPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+            indicator: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  width: 3.0,
+                  color: theme.selected,
+                ),
+              ),
+            ),
+            labelColor: theme.selected,
+            labelStyle: GoogleFonts.nunitoSans(fontWeight: FontWeight.bold),
+            unselectedLabelColor: theme.unselected,
+            unselectedLabelStyle: GoogleFonts.nunitoSans(fontWeight: FontWeight.bold),
+          ),
+        ),
+        home: Scaffold(
+          backgroundColor: theme.background,
+          body: GestureDetector(
+            onTap: () => context.read<OverlayNotifier>().close(),
+            child: SafeArea(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(
+                    width: 230,
+                    child: Explorer(
+                      items: context.read<List<ExplorerItem>>(),
+                      onStorySelected: (story) {
+                        debugPrint(story.path);
+                        navKey.currentState!.pushNamed(story.path);
+                      },
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(4)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color.fromRGBO(0, 0, 0, 0.1),
-                                offset: Offset(0, 1),
-                                blurRadius: 5,
-                              )
-                            ],
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.1),
+                              offset: Offset(0, 1),
+                              blurRadius: 5,
+                            )
+                          ],
+                        ),
+                        child: MultiProvider(
+                          providers: [
+                            ChangeNotifierProvider(create: (context) => ViewportNotifier()),
+                            ChangeNotifierProvider(create: (context) => BackgroundNotifier()),
+                          ],
+                          child: Navigator(
+                            key: navKey,
+                            initialRoute: '/',
+                            onGenerateRoute: (settings) => generateRoute(context, widget.stories, settings),
+                            reportsRouteUpdateToEngine: true,
                           ),
-                          child:
-                              context.watch<StoryNotifier>().story != null ? const ComponentView() : const SizedBox(),
                         ),
                       ),
                     ),
-                    // ComponentView(component: component, storyName: storyName)
-                  ],
-                ),
+                  ),
+                  // ComponentView(component: component, storyName: storyName)
+                ],
               ),
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

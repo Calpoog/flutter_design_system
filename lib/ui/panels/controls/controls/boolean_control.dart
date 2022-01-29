@@ -11,7 +11,7 @@ class BooleanControl extends Control<bool> {
   @override
   Widget build(BuildContext context) {
     final ArgsNotifier argsNotifier = context.read<ArgsNotifier>();
-    final value = argsNotifier.args!.value(argType.name);
+    final value = argsNotifier.args.value(argType.name);
     return NullableControl(
       argType: argType,
       initialForType: false,

@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/ui/utils/functions.dart';
 
 import '../ui/panels/controls/controls/controls.dart';
 import 'story.dart';
@@ -9,35 +8,21 @@ typedef ArgValues = Map<String, dynamic>;
 typedef ArgsBuilder = Widget Function(BuildContext context, Arguments args);
 
 class ArgsNotifier extends ChangeNotifier {
-  ArgsNotifier(this._storyNotifier) {
-    _storyListener();
-    _storyNotifier.addListener(_storyListener);
-  }
+  ArgsNotifier(this.args);
 
-  final StoryNotifier _storyNotifier;
-  Arguments? args;
+  Arguments args;
   bool isFresh = true;
 
-  void _storyListener() {
-    args = _storyNotifier.story!.arguments;
-  }
-
   void update(String name, dynamic value) {
-    args!._update(name, value);
+    args._update(name, value);
     isFresh = false;
     notifyListeners();
   }
 
   void reset() {
-    args!._reset();
+    args._reset();
     isFresh = true;
     notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    _storyNotifier.removeListener(_storyListener);
-    super.dispose();
   }
 }
 

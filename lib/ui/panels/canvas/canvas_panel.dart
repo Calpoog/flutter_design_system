@@ -40,8 +40,8 @@ class CanvasPanel extends Panel {
 
   @override
   Widget build(BuildContext context) {
-    final Arguments args = context.watch<ArgsNotifier>().args!;
-    final Story story = context.read<StoryNotifier>().story!;
+    final Arguments args = context.watch<ArgsNotifier>().args;
+    final Story story = context.read<Story>();
 
     return Column(
       children: [
@@ -65,7 +65,7 @@ class _ScalableCanvas extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.read<AppTheme>();
     final device = context.watch<ViewportNotifier>();
-    final story = context.read<StoryNotifier>().story!;
+    final story = context.read<Story>();
     const duration = Duration(milliseconds: 150);
     final hasDevice = device.size != null;
     return LayoutBuilder(
@@ -97,7 +97,7 @@ class _ScalableCanvas extends StatelessWidget {
               alignment: Alignment.topLeft,
               duration: duration,
               scale: device.zoom,
-              child: child,
+              child: Theme(data: ThemeData.fallback(), child: child),
             ),
           ),
         ),

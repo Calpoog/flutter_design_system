@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/ui/explorer.dart';
 import 'arguments.dart';
 import 'story.dart';
 
@@ -20,27 +21,27 @@ class ComponentActions {
   }
 }
 
-class ComponentMeta {
-  final String name;
+class Component extends ExplorerItem {
   final Decorator? decorator;
   final ArgTypes argTypes;
-  final List<Story> stories;
 
   // Compositional values for individual stories
   final ArgsBuilder? builder;
-  final ArgValues? args;
-  final ArgTypes actions = {};
   final EdgeInsets? componentPadding;
 
-  ComponentMeta({
-    required this.name,
+  Component({
+    required String name,
     this.builder,
     this.decorator,
-    this.args,
-    required this.stories,
     required this.argTypes,
     this.componentPadding,
-  }) {
+    required List<Story> stories,
+    bool? isExpanded,
+  }) : super(
+          name: name,
+          children: stories,
+          isExpanded: isExpanded,
+        ) {
     for (final story in stories) {
       story.init(this);
     }

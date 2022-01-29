@@ -13,16 +13,14 @@ class ComponentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final StoryNotifier selected = context.watch<StoryNotifier>();
+    final Story story = context.read<Story>();
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ArgsNotifier(selected)),
-        ChangeNotifierProvider(create: (context) => ViewportNotifier()),
-        ChangeNotifierProvider(create: (context) => BackgroundNotifier()),
+        ChangeNotifierProvider(create: (context) => ArgsNotifier(story.arguments)),
       ],
       child: KeyedSubtree(
-        key: ValueKey('${selected.story!.component.name}-${selected.story!.name}'),
+        key: ValueKey('${story.component.name}-${story.name}'),
         child: PanelGroup(panels: [
           CanvasPanel(),
           DocsPanel(),

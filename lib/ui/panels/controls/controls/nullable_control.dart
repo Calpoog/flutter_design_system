@@ -15,7 +15,7 @@ class NullableControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ArgsNotifier argsNotifier = context.read<ArgsNotifier>();
-    final value = argsNotifier.args!.value(argType.name);
+    final value = argsNotifier.args.value(argType.name);
     return value == null
         ? OutlinedButton(
             onPressed: () {
