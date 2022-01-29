@@ -152,20 +152,6 @@ class FolderItemWidget extends StatelessWidget {
   }
 }
 
-// class ComponentItem extends ExplorerItem {
-//   final ComponentMeta component;
-
-//   ComponentItem({
-//     required this.component,
-//     List<StoryItem> children,
-//     bool? isExpanded,
-//   }) : super(
-//           name: component.name,
-//           children: children,
-//           isExpanded: isExpanded,
-//         );
-// }
-
 class ComponentItemWidget extends StatelessWidget {
   final Component item;
   final int depth;
@@ -185,20 +171,6 @@ class ComponentItemWidget extends StatelessWidget {
     );
   }
 }
-
-// class StoryItem extends ExplorerItem {
-//   StoryItem({
-//     required String name,
-//     this.isSelected = false,
-//   }) : super(
-//           name: name,
-//           children: null,
-//           type: ExplorerItemType.story,
-//         );
-
-//   final bool isSelected;
-//   late final Story story;
-// }
 
 class StoryItemWidget extends StatelessWidget {
   final Story item;
@@ -291,9 +263,9 @@ class _ItemState extends State<_Item> {
               color: widget.isSelected
                   ? theme.selected
                   : isHovered
-                      ? theme.selected.withOpacity(0.2)
+                      ? theme.selected.withOpacity(0.1)
                       : null,
-              padding: EdgeInsets.fromLTRB(widget.depth * 17 + 20, 2, 20, 2),
+              padding: EdgeInsets.fromLTRB(widget.depth * 17 + 7, 2, 20, 2),
               margin: widget.margin,
               child: Row(
                 children: [
