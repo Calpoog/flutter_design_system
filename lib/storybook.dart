@@ -3,7 +3,10 @@ library storybook;
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/models/component.dart';
 import 'package:flutter_storybook/models/story.dart';
+import 'package:flutter_storybook/routing/route_parser.dart';
+import 'package:flutter_storybook/routing/router_delegate.dart';
 import 'package:flutter_storybook/routing/story_router.dart';
+import 'package:flutter_storybook/ui/component_view.dart';
 import 'package:flutter_storybook/ui/panels/canvas/background_popup.dart';
 import 'package:flutter_storybook/ui/panels/canvas/viewport_popup.dart';
 import 'package:flutter_storybook/ui/utils/theme.dart';
@@ -88,6 +91,8 @@ class Storybook extends StatefulWidget {
 
 class _StorybookState extends State<Storybook> {
   final navKey = GlobalKey<NavigatorState>();
+  final routeInformationParser = StoryRouteInformationParser();
+  late final routerDelegate = StoryRouterDelegate(stories: widget.stories, navigatorKey: navKey);
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +108,9 @@ class _StorybookState extends State<Storybook> {
         Provider.value(value: theme),
         Provider.value(value: widget.config),
       ],
-      builder: (context, _) => MaterialApp(
+      builder: (context, _) => MaterialApp.router(
+        routeInformationParser: routeInformationParser,
+        routerDelegate: routerDelegate,
         title: 'Storybook',
         theme: ThemeData(
           textTheme: textTheme,
@@ -153,58 +160,57 @@ class _StorybookState extends State<Storybook> {
             unselectedLabelStyle: GoogleFonts.nunitoSans(fontWeight: FontWeight.bold),
           ),
         ),
-        home: Scaffold(
-          backgroundColor: theme.background,
-          body: GestureDetector(
-            onTap: () => context.read<OverlayNotifier>().close(),
-            child: SafeArea(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    width: 230,
-                    child: Explorer(
-                      items: context.read<List<ExplorerItem>>(),
-                      onStorySelected: (story) {
-                        debugPrint(story.path);
-                        navKey.currentState!.pushNamed(story.path);
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(4)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color.fromRGBO(0, 0, 0, 0.1),
-                              offset: Offset(0, 1),
-                              blurRadius: 5,
-                            )
-                          ],
-                        ),
-                        child: MultiProvider(
-                          providers: [
-                            ChangeNotifierProvider(create: (context) => ViewportNotifier()),
-                            ChangeNotifierProvider(create: (context) => BackgroundNotifier()),
-                          ],
-                          child: Navigator(
-                            key: navKey,
-                            initialRoute: '/',
-                            onGenerateRoute: (settings) => generateRoute(context, widget.stories, settings),
-                            reportsRouteUpdateToEngine: true,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // ComponentView(component: component, storyName: storyName)
-                ],
+      ),
+    );
+  }
+}
+
+class StorybookHome extends StatelessWidget {
+  const StorybookHome({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.read<AppTheme>();
+    return Scaffold(
+      backgroundColor: theme.background,
+      body: GestureDetector(
+        onTap: () => context.read<OverlayNotifier>().close(),
+        child: SafeArea(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                width: 230,
+                child: Explorer(
+                  items: context.read<List<ExplorerItem>>(),
+                ),
               ),
-            ),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromRGBO(0, 0, 0, 0.1),
+                        offset: Offset(0, 1),
+                        blurRadius: 5,
+                      )
+                    ],
+                  ),
+                  child: MultiProvider(
+                    providers: [
+                      ChangeNotifierProvider(create: (context) => ViewportNotifier()),
+                      ChangeNotifierProvider(create: (context) => BackgroundNotifier()),
+                    ],
+                    child: context.read<Story?>() != null ? const ComponentView() : const SizedBox(),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -1,23 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/models/component.dart';
 import 'package:flutter_storybook/models/story.dart';
+import 'package:flutter_storybook/routing/router_delegate.dart';
 import 'package:flutter_storybook/ui/utils/hoverable.dart';
 import 'package:flutter_storybook/ui/utils/text.dart';
 import 'package:flutter_storybook/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
-class Explorer extends StatefulWidget {
+class Explorer extends StatelessWidget {
   final List<ExplorerItem> items;
-  final void Function(Story story) onStorySelected;
 
-  const Explorer({Key? key, required this.items, required this.onStorySelected}) : super(key: key);
-
-  @override
-  State<Explorer> createState() => _ExplorerState();
-}
-
-class _ExplorerState extends State<Explorer> {
-  Story? selectedStory;
+  const Explorer({Key? key, required this.items}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +19,18 @@ class _ExplorerState extends State<Explorer> {
         iconTheme: const IconThemeData(size: 12),
       ),
       child: ListView.builder(
-          itemCount: widget.items.length + 1,
+          itemCount: items.length + 1,
           itemBuilder: (context, index) {
             if (index == 0) {
               return const ExplorerHeader();
             }
-            return _buildItem(context, widget.items[index - 1], 0);
+            return _buildItem(context, items[index - 1], 0);
           }),
     );
   }
 
   _buildItem(BuildContext context, ExplorerItem item, int depth) {
+    final selectedStory = context.read<Story?>();
     Widget? child;
 
     if (item.children != null) {
@@ -53,20 +47,22 @@ class _ExplorerState extends State<Explorer> {
       case FolderItem:
         return FolderItemWidget(item: item as FolderItem, depth: depth, child: child);
       case Component:
-        return ComponentItemWidget(item: item as Component, depth: depth, child: child);
-      case Story:
-        return StoryItemWidget(
-          item: item as Story,
-          depth: depth,
-          isSelected: selectedStory == item,
-          onPressed: () {
-            setState(() {
-              selectedStory = item;
-              widget.onStorySelected(selectedStory as Story);
-            });
-          },
-        );
+        if (item.children!.length == 1 && item.children!.first.name == item.name) {
+          // Let the single story of same-name through
+          item = item.children!.first;
+        } else {
+          return ComponentItemWidget(item: item as Component, depth: depth, child: child);
+        }
     }
+
+    return StoryItemWidget(
+      item: item as Story,
+      depth: depth,
+      isSelected: selectedStory == item,
+      onPressed: () {
+        context.read<StoryRouter>().setStory(item as Story);
+      },
+    );
   }
 }
 
@@ -74,7 +70,7 @@ abstract class ExplorerItem {
   final String name;
   List<ExplorerItem>? children;
   bool isExpanded;
-  late final String path;
+  late String path;
 
   ExplorerItem({
     required this.name,

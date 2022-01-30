@@ -1,46 +1,67 @@
-// import 'package:flutter/foundation.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_storybook/models/story.dart';
-// import 'package:flutter_storybook/routing/story_path.dart';
-// import 'package:flutter_storybook/storybook.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_storybook/models/story.dart';
+import 'package:flutter_storybook/routing/story_path.dart';
+import 'package:flutter_storybook/storybook.dart';
+import 'package:flutter_storybook/ui/component_view.dart';
+import 'package:provider/provider.dart';
 
-// class StoryRouterDelegate extends RouterDelegate<StoryPath>
-//     with ChangeNotifier, PopNavigatorRouterDelegateMixin<StoryPath> {
-//   StoryRouterDelegate(this.stories) : navigatorKey = GlobalKey<NavigatorState>();
+class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<StoryRouteState> {
+  StoryRouterDelegate({required this.stories, GlobalKey<NavigatorState>? navigatorKey})
+      : navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
 
-//   @override
-//   final GlobalKey<NavigatorState> navigatorKey;
+  @override
+  final GlobalKey<NavigatorState> navigatorKey;
 
-//   final Map<String, Story> stories;
-//   Story? story;
+  final Map<String, Story> stories;
+  Story? story;
 
-//   @override
-//   StoryPath? get currentConfiguration {
-//     return StoryPath(path: story?.path, argValues: story?.args);
-//   }
+  setStory(Story story) {
+    this.story = story;
+    notifyListeners();
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Navigator(
-//       key: navigatorKey,
-//       pages: const [MaterialPage(child: StorybookHome())],
-//       onPopPage: (route, result) {
-//         if (!route.didPop(result)) {
-//           return false;
-//         }
+  @override
+  StoryRouteState? get currentConfiguration {
+    return StoryRouteState(path: story?.path, argValues: story?.args);
+  }
 
-//         // Update the list of pages by setting _selectedBook to null
-//         story = null;
-//         notifyListeners();
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      key: navigatorKey,
+      pages: [
+        MaterialPage(
+          key: ValueKey(story),
+          child: MultiProvider(
+            providers: [
+              Provider(create: (context) => StoryRouter(this)),
+              Provider.value(value: story),
+            ],
+            child: const StorybookHome(),
+          ),
+        ),
+      ],
+      onPopPage: (route, result) {
+        return false;
+      },
+    );
+  }
 
-//         return true;
-//       },
-//     );
-//   }
+  @override
+  Future<void> setNewRoutePath(StoryRouteState configuration) {
+    story = stories[configuration.path];
+    return SynchronousFuture(null);
+  }
+}
 
-//   @override
-//   Future<void> setNewRoutePath(StoryPath configuration) async {
-//     story = stories[configuration.path];
-//     // TODO put new args into the story
-//   }
-// }
+class StoryRouter {
+  final StoryRouterDelegate _delegate;
+
+  StoryRouter(StoryRouterDelegate delegate) : _delegate = delegate;
+
+  setStory(Story story) {
+    _delegate.setStory(story);
+  }
+}

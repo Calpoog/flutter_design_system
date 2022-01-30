@@ -10,7 +10,6 @@ class Story extends ExplorerItem {
   final ArgValues args;
   late final Arguments arguments;
   final EdgeInsets? componentPadding;
-  late final String path;
 
   Story({
     required String name,

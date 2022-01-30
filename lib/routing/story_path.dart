@@ -1,10 +1,8 @@
 import 'package:flutter_storybook/models/arguments.dart';
 
-class StoryPath {
-  final String? path;
-  final ArgValues? argValues;
+class StoryRouteState {
+  late final String? path;
+  late final ArgValues? argValues;
 
-  StoryPath({this.path, this.argValues});
-
-  bool get isViewingStory => path == null;
+  StoryRouteState({this.path, this.argValues});
 }

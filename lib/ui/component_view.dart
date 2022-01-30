@@ -19,13 +19,10 @@ class ComponentView extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => ArgsNotifier(story.arguments)),
       ],
-      child: KeyedSubtree(
-        key: ValueKey('${story.component.name}-${story.name}'),
-        child: PanelGroup(panels: [
-          CanvasPanel(),
-          DocsPanel(),
-        ]),
-      ),
+      child: PanelGroup(panels: [
+        CanvasPanel(),
+        DocsPanel(),
+      ]),
     );
   }
 }
