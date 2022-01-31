@@ -12,7 +12,7 @@ abstract class InheritableStorybook {
 /// A set of properties for configuring Stories that can be defined at the
 /// Component and Story level and are inherited.
 abstract class InheritableComponent {
-  final ArgsBuilder? builder;
+  final TemplateBuilder? builder;
 
   InheritableComponent({this.builder});
 }

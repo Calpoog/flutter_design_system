@@ -26,7 +26,7 @@ class Component extends ExplorerItem {
   final ArgTypes argTypes;
 
   // Compositional values for individual stories
-  final ArgsBuilder? builder;
+  final TemplateBuilder? builder;
   final EdgeInsets? componentPadding;
 
   Component({

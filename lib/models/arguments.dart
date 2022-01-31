@@ -1,40 +1,46 @@
 import 'package:flutter/widgets.dart';
-
-import '../ui/panels/controls/controls/controls.dart';
-import 'story.dart';
+import 'package:flutter_storybook/routing/router_delegate.dart';
+import 'package:flutter_storybook/ui/panels/controls/controls/controls.dart';
+import 'package:flutter_storybook/models/story.dart';
 
 typedef ArgTypes = Map<String, ArgType>;
 typedef ArgValues = Map<String, dynamic>;
-typedef ArgsBuilder = Widget Function(BuildContext context, Arguments args);
+typedef TemplateBuilder = Widget Function(BuildContext context, Arguments args);
 
-class ArgsNotifier extends ChangeNotifier {
-  ArgsNotifier(this.args);
+// class ArgsNotifier extends ChangeNotifier {
+//   ArgsNotifier(this.story, this.state);
 
-  Arguments args;
+//   final AppState state;
+//   Story story;
+//   bool isFresh = true;
+
+//   void update(String name, dynamic value) {
+//     story._updateArg(name, value);
+//     isFresh = false;
+//     notifyListeners();
+//     state.argSet();
+//   }
+
+//   void reset() {
+//     story._resetArgs();
+//     isFresh = true;
+//     notifyListeners();
+//     state.argSet();
+//   }
+// }
+
+class Arguments extends ChangeNotifier {
+  final ArgValues _values;
+  final Story _story;
+  final ArgTypes _argTypes;
+  final AppState _appState;
   bool isFresh = true;
 
-  void update(String name, dynamic value) {
-    args._update(name, value);
-    isFresh = false;
-    notifyListeners();
-  }
-
-  void reset() {
-    args._reset();
-    isFresh = true;
-    notifyListeners();
-  }
-}
-
-class Arguments {
-  final ArgValues _initial;
-  ArgValues _values;
-  final ArgTypes _argTypes;
-  final Story _story;
-
-  Arguments(ArgValues values, this._argTypes, this._story)
-      : _initial = values,
-        _values = Map.of(values);
+  Arguments(Story story, AppState appState)
+      : _story = story,
+        _argTypes = story.component.argTypes,
+        _values = story.args,
+        _appState = appState;
 
   T? value<T>(String name) {
     assert(_argTypes.containsKey(name), 'There is no arg definition \'$name\'');
@@ -46,18 +52,18 @@ class Arguments {
     return _values[name] ?? arg.defaultValue;
   }
 
-  _reset() {
-    _values = Map.of(_initial);
+  void update(String name, dynamic value) {
+    _story.updateArg(name, value);
+    isFresh = false;
+    notifyListeners();
+    _appState.argSet();
   }
 
-  _update(String name, dynamic value) {
-    _values = Map.of(_values)
-      ..update(
-        name,
-        (current) => value,
-        ifAbsent: () => value,
-      );
-    debugPrint('Updating arg $name to ${value.toString()}');
+  void reset() {
+    _story.resetArgs();
+    isFresh = true;
+    notifyListeners();
+    _appState.argSet();
   }
 }
 
@@ -83,7 +89,7 @@ class ArgType<T> {
     assert(isRequired || defaultValue != null || defaultMapped != null || null is T,
         'Arg \'$name\' is not required but has no defaultValue and is non-nullable');
 
-    this.control = control ?? Controls().choose(this);
+    this.control = control ?? Controls().choose<T>(this);
 
     if (defaultMapped != null) {
       assert(mapping != null && mapping!.containsKey(defaultMapped),

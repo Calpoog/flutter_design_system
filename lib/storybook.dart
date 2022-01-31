@@ -1,11 +1,9 @@
 library storybook;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/models/component.dart';
 import 'package:flutter_storybook/models/story.dart';
 import 'package:flutter_storybook/routing/route_parser.dart';
 import 'package:flutter_storybook/routing/router_delegate.dart';
-import 'package:flutter_storybook/routing/story_router.dart';
 import 'package:flutter_storybook/ui/component_view.dart';
 import 'package:flutter_storybook/ui/panels/canvas/background_popup.dart';
 import 'package:flutter_storybook/ui/panels/canvas/viewport_popup.dart';
@@ -91,8 +89,13 @@ class Storybook extends StatefulWidget {
 
 class _StorybookState extends State<Storybook> {
   final navKey = GlobalKey<NavigatorState>();
-  final routeInformationParser = StoryRouteInformationParser();
-  late final routerDelegate = StoryRouterDelegate(stories: widget.stories, navigatorKey: navKey);
+  final appState = AppState();
+  late final routeInformationParser = StoryRouteInformationParser();
+  late final routerDelegate = StoryRouterDelegate(
+    stories: widget.stories,
+    navigatorKey: navKey,
+    state: appState,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +107,7 @@ class _StorybookState extends State<Storybook> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => OverlayNotifier()),
+        ChangeNotifierProvider.value(value: appState),
         Provider.value(value: widget.explorer),
         Provider.value(value: theme),
         Provider.value(value: widget.config),
@@ -160,6 +164,7 @@ class _StorybookState extends State<Storybook> {
             unselectedLabelStyle: GoogleFonts.nunitoSans(fontWeight: FontWeight.bold),
           ),
         ),
+        builder: (context, child) => StorybookHome(child: child),
       ),
     );
   }
@@ -168,7 +173,10 @@ class _StorybookState extends State<Storybook> {
 class StorybookHome extends StatelessWidget {
   const StorybookHome({
     Key? key,
+    this.child,
   }) : super(key: key);
+
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +214,7 @@ class StorybookHome extends StatelessWidget {
                       ChangeNotifierProvider(create: (context) => ViewportNotifier()),
                       ChangeNotifierProvider(create: (context) => BackgroundNotifier()),
                     ],
-                    child: context.read<Story?>() != null ? const ComponentView() : const SizedBox(),
+                    child: child,
                   ),
                 ),
               ),

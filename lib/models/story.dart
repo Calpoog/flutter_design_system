@@ -1,36 +1,47 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_storybook/models/arguments.dart';
+import 'package:flutter_storybook/models/component.dart';
 import 'package:flutter_storybook/ui/explorer.dart';
 
-import 'arguments.dart';
-import 'component.dart';
-
 class Story extends ExplorerItem {
+  /// The [Component] definition this story belongs to.
   late final Component component;
-  ArgsBuilder? builder;
-  final ArgValues args;
-  late final Arguments arguments;
+
+  /// A builder for the [Story] which can use dynamic values from [Arguments]
+  /// to use interactivity from controls.
+  ///
+  /// If null, it will use the [TemplateBuilder] defined by the parent
+  /// [Component] definition.
+  final TemplateBuilder? builder;
+
+  /// The initial arg values for a story.
+  final ArgValues initial;
+
+  /// The current arg values which can change as users interact with controls.
+  late final ArgValues args;
+
+  /// Padding to put around the widget when displayed in the canvas and docs.
   final EdgeInsets? componentPadding;
 
   Story({
     required String name,
     ArgValues? args,
+    this.builder,
     this.componentPadding,
-    bool? isExpanded,
   })  : args = Map.of(args ?? {}),
-        super(
-          name: name,
-          isExpanded: isExpanded,
-        );
+        initial = Map.of(args ?? {}),
+        super(name: name);
 
-  void init(Component component) {
+  init(Component component) {
     this.component = component;
-    _updateValues(args);
-    arguments = Arguments(args, component.argTypes, this);
+    _processValues(args);
+
+    debugPrint('Story \'name\' init');
   }
 
   // Validates that values adhere to ArgTypes
   // Updates ArgValues values from String to a mapped type
-  _updateValues(ArgValues values) {
+  _processValues(ArgValues values) {
     values.updateAll((argName, value) {
       assert(component.argTypes.containsKey(argName), 'No ArgType defined for \'$argName\'');
       ArgType argType = component.argTypes[argName]!;
@@ -43,5 +54,18 @@ class Story extends ExplorerItem {
         return argType.mapping![value];
       }
     });
+  }
+
+  resetArgs() {
+    args = Map.of(initial);
+  }
+
+  updateArg(String name, dynamic value) {
+    args.update(
+      name,
+      (current) => value,
+      ifAbsent: () => value,
+    );
+    debugPrint('Updating arg $name to ${value.toString()}');
   }
 }

@@ -40,7 +40,7 @@ class CanvasPanel extends Panel {
 
   @override
   Widget build(BuildContext context) {
-    final Arguments args = context.watch<ArgsNotifier>().args;
+    final Arguments args = context.watch<Arguments>();
     final Story story = context.read<Story>();
 
     return Column(

@@ -8,40 +8,54 @@ import 'package:provider/provider.dart';
 
 class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<StoryRouteState> {
-  StoryRouterDelegate({required this.stories, GlobalKey<NavigatorState>? navigatorKey})
-      : navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
+  StoryRouterDelegate({required this.stories, GlobalKey<NavigatorState>? navigatorKey, required this.state})
+      : navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>() {
+    state.addListener(_stateListener);
+  }
 
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
+  final AppState state;
   final Map<String, Story> stories;
-  Story? story;
 
-  setStory(Story story) {
-    this.story = story;
+  _stateListener() {
     notifyListeners();
   }
 
   @override
-  StoryRouteState? get currentConfiguration {
-    return StoryRouteState(path: story?.path, argValues: story?.args);
+  void dispose() {
+    state.removeListener(_stateListener);
+    super.dispose();
   }
+
+  @override
+  StoryRouteState? get currentConfiguration {
+    return StoryRouteState(path: state.story?.path, argValues: state.story?.args);
+  }
+
+  // @override
+  // Future<bool> popRoute() {
+  //   return SynchronousFuture(false);
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Navigator(
       key: navigatorKey,
       pages: [
-        MaterialPage(
-          key: ValueKey(story),
-          child: MultiProvider(
-            providers: [
-              Provider(create: (context) => StoryRouter(this)),
-              Provider.value(value: story),
-            ],
-            child: const StorybookHome(),
+        if (state.story == null) const MaterialPage(child: SizedBox()),
+        if (state.story != null)
+          MaterialPage(
+            name: state.story!.name,
+            key: ValueKey(state.story),
+            child: MultiProvider(
+              providers: [
+                Provider.value(value: state.story),
+              ],
+              child: const ComponentView(),
+            ),
           ),
-        ),
       ],
       onPopPage: (route, result) {
         return false;
@@ -51,17 +65,21 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
 
   @override
   Future<void> setNewRoutePath(StoryRouteState configuration) {
-    story = stories[configuration.path];
+    state.setStory(stories[configuration.path]);
+    // state.story.arguments.apply(configuration.argValues);
     return SynchronousFuture(null);
   }
 }
 
-class StoryRouter {
-  final StoryRouterDelegate _delegate;
+class AppState extends ChangeNotifier {
+  Story? story;
 
-  StoryRouter(StoryRouterDelegate delegate) : _delegate = delegate;
+  setStory(Story? story) {
+    this.story = story;
+    notifyListeners();
+  }
 
-  setStory(Story story) {
-    _delegate.setStory(story);
+  argSet() {
+    notifyListeners();
   }
 }

@@ -57,6 +57,7 @@ class _NumberControlState<T> extends State<_NumberControl<T>> {
   Widget build(BuildContext context) {
     final argType = widget.argType;
     final type = widget.type;
+    final args = context.read<Arguments>();
 
     return StatefulBuilder(builder: (context, setState) {
       return Stack(
@@ -78,7 +79,7 @@ class _NumberControlState<T> extends State<_NumberControl<T>> {
               FilteringTextInputFormatter.allow(RegExp(type == double ? r'[0-9.-]' : r'[0-9.-]')),
             ],
             onChanged: (String value) {
-              context.read<ArgsNotifier>().update(argType.name, value.isEmpty ? 0 : num.parse(value));
+              args.update(argType.name, value.isEmpty ? 0 : num.parse(value));
             },
           ),
           _Incrementer(
@@ -86,7 +87,7 @@ class _NumberControlState<T> extends State<_NumberControl<T>> {
             onTap: () {
               final number = num.parse(controller.text) - 1;
               controller.text = number.toString();
-              context.read<ArgsNotifier>().update(argType.name, number);
+              args.update(argType.name, number);
             },
           ),
           _Incrementer(
@@ -94,7 +95,7 @@ class _NumberControlState<T> extends State<_NumberControl<T>> {
             onTap: () {
               final number = num.parse(controller.text) + 1;
               controller.text = number.toString();
-              context.read<ArgsNotifier>().update(argType.name, number);
+              args.update(argType.name, number);
             },
           ),
         ],

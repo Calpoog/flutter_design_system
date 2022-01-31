@@ -14,12 +14,12 @@ class NullableControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ArgsNotifier argsNotifier = context.read<ArgsNotifier>();
-    final value = argsNotifier.args.value(argType.name);
+    final args = context.read<Arguments>();
+    final value = args.value(argType.name);
     return value == null
         ? OutlinedButton(
             onPressed: () {
-              argsNotifier.update(argType.name, initialForType);
+              args.update(argType.name, initialForType);
             },
             child: Text('Set ${argType.type.toString()}'),
           )

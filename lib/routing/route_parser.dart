@@ -15,7 +15,7 @@ class StoryRouteInformationParser extends RouteInformationParser<StoryRouteState
       for (final pair in pairs) {
         final arg = pair.split(':');
         if (arg.length == 2) {
-          args[arg[0]] = args[1]!;
+          args[arg[0]] = arg[1];
         }
       }
     }

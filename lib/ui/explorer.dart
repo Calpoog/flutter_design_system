@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/models/arguments.dart';
 import 'package:flutter_storybook/models/component.dart';
 import 'package:flutter_storybook/models/story.dart';
 import 'package:flutter_storybook/routing/router_delegate.dart';
@@ -30,7 +31,7 @@ class Explorer extends StatelessWidget {
   }
 
   _buildItem(BuildContext context, ExplorerItem item, int depth) {
-    final selectedStory = context.read<Story?>();
+    final appState = context.watch<AppState>();
     Widget? child;
 
     if (item.children != null) {
@@ -58,9 +59,9 @@ class Explorer extends StatelessWidget {
     return StoryItemWidget(
       item: item as Story,
       depth: depth,
-      isSelected: selectedStory == item,
+      isSelected: appState.story == item,
       onPressed: () {
-        context.read<StoryRouter>().setStory(item as Story);
+        appState.setStory(item as Story);
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/routing/router_delegate.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_storybook/ui/panels/canvas/background_popup.dart';
 import 'package:flutter_storybook/ui/panels/canvas/viewport_popup.dart';
@@ -17,7 +18,7 @@ class ComponentView extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ArgsNotifier(story.arguments)),
+        ChangeNotifierProvider(create: (context) => Arguments(story, context.read<AppState>())),
       ],
       child: PanelGroup(panels: [
         CanvasPanel(),

@@ -26,7 +26,7 @@ class RadioControl<T> extends OptionsControl<T> {
 
   @override
   Widget build(BuildContext context) {
-    final ArgsNotifier argsNotifier = context.watch<ArgsNotifier>();
+    final args = context.watch<Arguments>();
     final name = argType.name;
     return NullableControl(
         argType: argType,
@@ -46,9 +46,9 @@ class RadioControl<T> extends OptionsControl<T> {
                             // contentPadding: EdgeInsets.zero,
                             // title: AppText(option.key),
                             value: option.value,
-                            groupValue: argsNotifier.args.value(name),
+                            groupValue: args.value(name),
                             onChanged: (T? value) {
-                              argsNotifier.update(name, value);
+                              args.update(name, value);
                             },
                           ),
                         ),
@@ -73,10 +73,10 @@ class SelectControl<T> extends OptionsControl<T> {
 
   @override
   Widget build(BuildContext context) {
-    final argsNotifier = context.watch<ArgsNotifier>();
+    final args = context.watch<Arguments>();
     final theme = context.watch<AppTheme>();
     final name = argType.name;
-    final value = argsNotifier.args.value<T>(name);
+    final value = args.value<T>(name);
     return NullableControl(
         argType: argType,
         initialForType: argType.mapping!.values.first,
@@ -108,7 +108,7 @@ class SelectControl<T> extends OptionsControl<T> {
                     )
                     .toList(),
                 onChanged: (T? value) {
-                  argsNotifier.update(name, value);
+                  args.update(name, value);
                 },
               ),
             ),

@@ -46,26 +46,26 @@ class ResetAwareTextField extends StatefulWidget {
 
 class _ResetAwareTextFieldState extends State<ResetAwareTextField> {
   late TextEditingController controller;
-  late ArgsNotifier argsNotifier;
+  late Arguments args;
 
   @override
   void initState() {
     controller = widget.controller ?? TextEditingController(text: widget.initial);
-    argsNotifier = context.read<ArgsNotifier>();
-    argsNotifier.addListener(resetListener);
+    args = context.read<Arguments>();
+    args.addListener(resetListener);
     super.initState();
   }
 
   resetListener() {
-    if (argsNotifier.isFresh) {
-      controller.text = argsNotifier.args.value(widget.name).toString();
+    if (args.isFresh) {
+      controller.text = args.value(widget.name).toString();
     }
   }
 
   @override
   void dispose() {
     controller.dispose();
-    argsNotifier.removeListener(resetListener);
+    args.removeListener(resetListener);
     super.dispose();
   }
 
@@ -84,7 +84,7 @@ class _ResetAwareTextFieldState extends State<ResetAwareTextField> {
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: widget.onChanged ??
             (String value) {
-              argsNotifier.update(widget.name, value);
+              args.update(widget.name, value);
             },
         keyboardType: widget.keyboardType,
         inputFormatters: widget.inputFormatters,

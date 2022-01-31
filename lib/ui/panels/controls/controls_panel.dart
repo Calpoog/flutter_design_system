@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_storybook/models/arguments.dart';
 import 'package:flutter_storybook/ui/panels/tools/tool_button.dart';
 import 'package:provider/provider.dart';
-
-import '../panel.dart';
-import '../../../models/story.dart';
-import '../../utils/text.dart';
-import '../../utils/bordered.dart';
+import 'package:flutter_storybook/ui/panels/panel.dart';
+import 'package:flutter_storybook/models/story.dart';
+import 'package:flutter_storybook/ui/utils/text.dart';
+import 'package:flutter_storybook/ui/utils/bordered.dart';
 
 class ControlsPanel extends Panel {
   ControlsPanel({Key? key}) : super(name: 'Controls', key: key);
@@ -46,7 +45,7 @@ class ControlsPanel extends Panel {
                           ToolButton(
                             icon: Icons.replay,
                             onPressed: () {
-                              context.read<ArgsNotifier>().reset();
+                              context.read<Arguments>().reset();
                             },
                             name: 'Reset controls',
                           ),
@@ -93,7 +92,7 @@ class ControlsPanel extends Panel {
                       ),
                       _Cell(
                         flex: 4,
-                        child: arg.control(arg, story.arguments.value(arg.name)).build(context),
+                        child: arg.control(arg, context.read<Arguments>().value(arg.name)).build(context),
                       ),
                     ],
                   ),
