@@ -18,6 +18,19 @@ abstract class OptionsControl<T> extends Control<T> {
   final Map<String, T>? _options;
 
   Map<String, T> get options => _options ?? argType.mapping ?? {};
+
+  @override
+  T deserialize(String value) {
+    if (options.containsKey(value)) {
+      return options[value]!;
+    }
+    throw ErrorDescription('Invalid mapping value \'$value\' for \'${argType.name}\' control');
+  }
+
+  @override
+  String serialize(T? value) {
+    return options.entries.firstWhere((option) => option.value == value).key;
+  }
 }
 
 class RadioControl<T> extends OptionsControl<T> {

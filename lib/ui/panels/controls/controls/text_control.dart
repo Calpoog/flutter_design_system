@@ -13,6 +13,11 @@ class TextControl extends Control<String> {
       );
     });
   }
+
+  @override
+  String deserialize(String value) {
+    return value;
+  }
 }
 
 class ResetAwareTextField extends StatefulWidget {

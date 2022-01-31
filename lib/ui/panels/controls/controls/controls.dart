@@ -39,6 +39,18 @@ abstract class Control<T> {
   late final ArgType<T> argType;
 
   Widget build(BuildContext context);
+
+  /// Takes a serialized string value of type T and deserializes (from URL).
+  T deserialize(String value);
+
+  /// Serializes the control value for use in the URL.
+  ///
+  /// Defaults to value.toString(). For custom controls that don't use a mapping
+  /// control ([RadioControl], [SelectControl]), both serialize and deserialize
+  /// will need implemented.
+  String? serialize(T value) {
+    return value?.toString();
+  }
 }
 
 class NoControl extends Control {
@@ -46,4 +58,7 @@ class NoControl extends Control {
   Widget build(BuildContext context) {
     return const SizedBox();
   }
+
+  @override
+  deserialize(String value) {}
 }

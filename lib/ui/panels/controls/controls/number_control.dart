@@ -23,6 +23,26 @@ class NumberControl<T> extends Control<T> {
       ),
     );
   }
+
+  @override
+  T deserialize(String value) {
+    try {
+      return _parse(type, value);
+    } catch (_) {
+      throw ErrorDescription('Invalid $type value \'$value\' for \'${argType.name}\' control');
+    }
+  }
+}
+
+dynamic _parse(Type type, String value) {
+  switch (type) {
+    case int:
+      return int.parse(value);
+    case double:
+      return double.parse(value);
+    default:
+      return num.parse(value);
+  }
 }
 
 class _NumberControl<T> extends StatefulWidget {
@@ -64,7 +84,7 @@ class _NumberControlState<T> extends State<_NumberControl<T>> {
             contentPadding: const EdgeInsets.fromLTRB(12, 16, 60, 16),
             validator: (value) {
               try {
-                _parse(value);
+                _parse(type, value);
               } catch (_) {
                 return 'Invalid ${type.toString()}';
               }
@@ -95,17 +115,6 @@ class _NumberControlState<T> extends State<_NumberControl<T>> {
         ],
       );
     });
-  }
-
-  dynamic _parse(String value) {
-    switch (widget.type) {
-      case int:
-        return int.parse(value);
-      case double:
-        return double.parse(value);
-      default:
-        return num.parse(value);
-    }
   }
 }
 

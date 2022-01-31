@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/models/arguments.dart';
 import 'package:flutter_storybook/models/component.dart';
 import 'package:flutter_storybook/ui/explorer.dart';
+import 'package:flutter_storybook/ui/panels/controls/controls/controls.dart';
 
 class Story extends ExplorerItem {
   /// The [Component] definition this story belongs to.
@@ -72,9 +73,26 @@ class Story extends ExplorerItem {
   restoreArgs(Map<String, String> queryArgs) {
     final argTypes = component.argTypes;
     for (final queryArg in queryArgs.entries) {
-      if (argTypes.containsKey(queryArg.key)) {
-        argTypes[queryArg.key]!.control;
+      final argName = queryArg.key;
+      final argValue = queryArg.value;
+      if (argTypes.containsKey(argName)) {
+        final value = argTypes[argName]!.control.deserialize(argValue);
+        updateArg(argName, value);
       }
     }
+  }
+
+  Map<String, String> serializeArgs() {
+    Map<String, String> serialized = {};
+    for (final argType in component.argTypes.values) {
+      if (argType.control is! NoControl) {
+        var value = args[argType.name];
+        value = value != null ? argType.control.serialize(value) : null;
+        if (value != null) {
+          serialized[argType.name] = value;
+        }
+      }
+    }
+    return serialized;
   }
 }

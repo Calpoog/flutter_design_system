@@ -15,7 +15,7 @@ class StoryRouteInformationParser extends RouteInformationParser<StoryRouteState
       for (final pair in pairs) {
         final arg = pair.split(':');
         if (arg.length == 2) {
-          args[arg[0]] = arg[1];
+          args[arg[0]] = Uri.decodeComponent(arg[1]);
         }
       }
     }
@@ -32,7 +32,9 @@ class StoryRouteInformationParser extends RouteInformationParser<StoryRouteState
       for (final arg in configuration.argValues!.entries) {
         args.add('${arg.key}:${Uri.encodeComponent(arg.value.toString())}');
       }
-      argStr = 'args=${args.join(';')}';
+      if (args.isNotEmpty) {
+        argStr = 'args=${args.join(';')}';
+      }
     }
     return RouteInformation(location: configuration.path == null ? '' : '${configuration.path}?$argStr');
   }

@@ -21,4 +21,11 @@ class BooleanControl extends Control<bool> {
       ),
     );
   }
+
+  @override
+  bool deserialize(String value) {
+    if (value == 'true') return true;
+    if (value == 'false') return false;
+    throw ErrorDescription('Invalid boolean value \'$value\' for \'${argType.name}\' control');
+  }
 }

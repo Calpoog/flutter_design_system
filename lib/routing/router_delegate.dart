@@ -31,7 +31,7 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
 
   @override
   StoryRouteState? get currentConfiguration {
-    return StoryRouteState(path: state.story?.path, argValues: state.story?.args);
+    return StoryRouteState(path: state.story?.path, argValues: state.story?.serializeArgs());
   }
 
   // @override
@@ -66,7 +66,11 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
   @override
   Future<void> setNewRoutePath(StoryRouteState configuration) {
     final story = stories[configuration.path];
-    state.setStory(story);
+    if (story != null) {
+      state.restoreStory(story, configuration.argValues ?? {});
+    } else {
+      state.args = null;
+    }
     return SynchronousFuture(null);
   }
 }
@@ -78,6 +82,8 @@ class AppState extends ChangeNotifier {
   // Restores a story from url
   restoreStory(Story story, Map<String, String> queryArgs) {
     this.story = story;
+    story.restoreArgs(queryArgs);
+    setArguments(Arguments(story));
   }
 
   setStory(Story? story) {
