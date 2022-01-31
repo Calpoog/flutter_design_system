@@ -30,43 +30,40 @@ typedef TemplateBuilder = Widget Function(BuildContext context, Arguments args);
 // }
 
 class Arguments extends ChangeNotifier {
-  final ArgValues _values;
   final Story _story;
   final ArgTypes _argTypes;
-  final AppState _appState;
   bool isFresh = true;
 
-  Arguments(Story story, AppState appState)
+  Arguments(Story story)
       : _story = story,
-        _argTypes = story.component.argTypes,
-        _values = story.args,
-        _appState = appState;
+        _argTypes = story.component.argTypes;
 
   T? value<T>(String name) {
+    final values = _story.args;
     assert(_argTypes.containsKey(name), 'There is no arg definition \'$name\'');
     ArgType arg = _argTypes[name]!;
 
-    assert(_values.containsKey(name) || arg.defaultValue != null || !arg.isRequired,
+    assert(values.containsKey(name) || arg.defaultValue != null || !arg.isRequired,
         'Story \'${_story.name}\' has no value provided for required arg \'$name\' and missing default value for its argType');
 
-    return _values[name] ?? arg.defaultValue;
+    return values[name] ?? arg.defaultValue;
   }
 
   void update(String name, dynamic value) {
     _story.updateArg(name, value);
     isFresh = false;
     notifyListeners();
-    _appState.argSet();
   }
 
   void reset() {
     _story.resetArgs();
     isFresh = true;
     notifyListeners();
-    _appState.argSet();
   }
 }
 
+/// An argument definition for a [Story] which determines the documentation
+/// to show as well as any controls for real-time modification in the canvas.
 class ArgType<T> {
   final String name;
   final Type type;

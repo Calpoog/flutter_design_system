@@ -1,10 +1,7 @@
-library storybook;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/models/story.dart';
 import 'package:flutter_storybook/routing/route_parser.dart';
 import 'package:flutter_storybook/routing/router_delegate.dart';
-import 'package:flutter_storybook/ui/component_view.dart';
 import 'package:flutter_storybook/ui/panels/canvas/background_popup.dart';
 import 'package:flutter_storybook/ui/panels/canvas/viewport_popup.dart';
 import 'package:flutter_storybook/ui/utils/theme.dart';

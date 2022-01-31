@@ -18,7 +18,7 @@ class Story extends ExplorerItem {
   final ArgValues initial;
 
   /// The current arg values which can change as users interact with controls.
-  late final ArgValues args;
+  late ArgValues args;
 
   /// Padding to put around the widget when displayed in the canvas and docs.
   final EdgeInsets? componentPadding;

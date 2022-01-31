@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/models/story.dart';
 import 'package:flutter_storybook/routing/story_path.dart';
-import 'package:flutter_storybook/storybook.dart';
+import 'package:flutter_storybook/models/arguments.dart';
 import 'package:flutter_storybook/ui/component_view.dart';
 import 'package:provider/provider.dart';
 
@@ -65,21 +65,35 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
 
   @override
   Future<void> setNewRoutePath(StoryRouteState configuration) {
-    state.setStory(stories[configuration.path]);
-    // state.story.arguments.apply(configuration.argValues);
+    final story = stories[configuration.path];
+    state.setStory(story);
     return SynchronousFuture(null);
   }
 }
 
 class AppState extends ChangeNotifier {
   Story? story;
+  Arguments? args;
 
   setStory(Story? story) {
     this.story = story;
+    setArguments(story != null ? Arguments(story) : null);
+  }
+
+  setArguments(Arguments? args) {
+    this.args?.removeListener(_argumentListener);
+    args?.addListener(_argumentListener);
+    this.args = args;
     notifyListeners();
   }
 
-  argSet() {
+  _argumentListener() {
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    args?.removeListener(_argumentListener);
+    super.dispose();
   }
 }
