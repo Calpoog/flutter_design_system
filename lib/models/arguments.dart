@@ -1,33 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/routing/router_delegate.dart';
 import 'package:flutter_storybook/ui/panels/controls/controls/controls.dart';
 import 'package:flutter_storybook/models/story.dart';
 
 typedef ArgTypes = Map<String, ArgType>;
 typedef ArgValues = Map<String, dynamic>;
 typedef TemplateBuilder = Widget Function(BuildContext context, Arguments args);
-
-// class ArgsNotifier extends ChangeNotifier {
-//   ArgsNotifier(this.story, this.state);
-
-//   final AppState state;
-//   Story story;
-//   bool isFresh = true;
-
-//   void update(String name, dynamic value) {
-//     story._updateArg(name, value);
-//     isFresh = false;
-//     notifyListeners();
-//     state.argSet();
-//   }
-
-//   void reset() {
-//     story._resetArgs();
-//     isFresh = true;
-//     notifyListeners();
-//     state.argSet();
-//   }
-// }
 
 class Arguments extends ChangeNotifier {
   final Story _story;
@@ -72,14 +49,14 @@ class ArgType<T> {
   T? defaultValue;
   final String? defaultMapped;
   final Map<String, T>? mapping;
-  late final ControlBuilder control;
+  late final Control control;
 
   ArgType({
     required this.name,
     required this.description,
     this.defaultValue,
     this.defaultMapped,
-    ControlBuilder? control,
+    Control? control,
     this.mapping,
     this.isRequired = false,
   }) : type = T {
@@ -87,6 +64,7 @@ class ArgType<T> {
         'Arg \'$name\' is not required but has no defaultValue and is non-nullable');
 
     this.control = control ?? Controls().choose<T>(this);
+    this.control.argType = this;
 
     if (defaultMapped != null) {
       assert(mapping != null && mapping!.containsKey(defaultMapped),

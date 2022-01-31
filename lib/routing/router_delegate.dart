@@ -75,6 +75,11 @@ class AppState extends ChangeNotifier {
   Story? story;
   Arguments? args;
 
+  // Restores a story from url
+  restoreStory(Story story, Map<String, String> queryArgs) {
+    this.story = story;
+  }
+
   setStory(Story? story) {
     this.story = story;
     setArguments(story != null ? Arguments(story) : null);

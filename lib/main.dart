@@ -13,13 +13,13 @@ void main() {
 final Component textComponent = Component(
   name: 'Text',
   builder: (BuildContext context, Arguments args) => TextField(),
-  argTypes: {
-    'text': ArgType<String>(
+  argTypes: [
+    ArgType<String>(
       name: 'text',
       description: 'The text to display',
       isRequired: true,
     ),
-  },
+  ],
   stories: [
     Story(
       name: 'Text',
@@ -52,18 +52,18 @@ final buttonComponent = Component(
       ),
     );
   },
-  argTypes: {
-    'text': ArgType<String>(
+  argTypes: [
+    ArgType<String>(
       name: 'text',
       description: 'The button text',
       defaultValue: 'Default',
       isRequired: true,
     ),
-    'number': ArgType<double?>(
+    ArgType<double?>(
       name: 'number',
       description: 'A number',
     ),
-    'align': ArgType<AlignmentGeometry?>(
+    ArgType<AlignmentGeometry?>(
       name: 'align',
       description: 'The alignment of the text inside the button',
       mapping: {
@@ -72,7 +72,7 @@ final buttonComponent = Component(
         'Center': Alignment.center,
       },
     ),
-    'shape': ArgType<MaterialStateProperty<OutlinedBorder>>(
+    ArgType<MaterialStateProperty<OutlinedBorder>>(
       name: 'shape',
       description: 'The button shape',
       // isRequired: true,
@@ -84,17 +84,17 @@ final buttonComponent = Component(
       },
       control: Controls().radio(),
     ),
-    'disabled': ArgType<bool?>(
+    ArgType<bool?>(
       name: 'disabled',
       description: 'A toggle',
     ),
-    'color': ArgType<Color>(
+    ArgType<Color>(
       name: 'color',
       description: 'The button color',
       defaultValue: Colors.red,
       // isRequired: true,
     ),
-  },
+  ],
   stories: [
     Story(
       name: 'Default',

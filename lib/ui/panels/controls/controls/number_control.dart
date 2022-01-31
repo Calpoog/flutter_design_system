@@ -10,9 +10,7 @@ import 'package:provider/provider.dart';
 
 class NumberControl<T> extends Control<T> {
   final Type type;
-  NumberControl({required ArgType argType, T? initial})
-      : type = T,
-        super(argType: argType, initial: initial);
+  NumberControl() : type = T;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +20,6 @@ class NumberControl<T> extends Control<T> {
       builder: (_) => _NumberControl<T>(
         type: type,
         argType: argType,
-        initial: initial,
       ),
     );
   }
@@ -31,13 +28,11 @@ class NumberControl<T> extends Control<T> {
 class _NumberControl<T> extends StatefulWidget {
   final Type type;
   final ArgType argType;
-  final T? initial;
 
   const _NumberControl({
     Key? key,
     required this.type,
     required this.argType,
-    this.initial,
   }) : super(key: key);
 
   @override
@@ -46,10 +41,11 @@ class _NumberControl<T> extends StatefulWidget {
 
 class _NumberControlState<T> extends State<_NumberControl<T>> {
   late final TextEditingController controller;
+  late final args = context.read<Arguments>();
 
   @override
   void initState() {
-    controller = TextEditingController(text: widget.initial?.toString());
+    controller = TextEditingController(text: args.value(widget.argType.name).toString());
     super.initState();
   }
 
@@ -57,14 +53,12 @@ class _NumberControlState<T> extends State<_NumberControl<T>> {
   Widget build(BuildContext context) {
     final argType = widget.argType;
     final type = widget.type;
-    final args = context.read<Arguments>();
 
     return StatefulBuilder(builder: (context, setState) {
       return Stack(
         children: [
           ResetAwareTextField(
             name: argType.name,
-            initial: widget.initial.toString(),
             keyboardType: TextInputType.number,
             controller: controller,
             contentPadding: const EdgeInsets.fromLTRB(12, 16, 60, 16),

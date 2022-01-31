@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/ui/explorer.dart';
-import 'arguments.dart';
-import 'story.dart';
+import 'package:flutter_storybook/models/arguments.dart';
+import 'package:flutter_storybook/models/story.dart';
 
 typedef Decorator = Widget Function(Widget child);
 
@@ -23,7 +23,7 @@ class ComponentActions {
 
 class Component extends ExplorerItem {
   final Decorator? decorator;
-  final ArgTypes argTypes;
+  final ArgTypes argTypes = {};
 
   // Compositional values for individual stories
   final TemplateBuilder? builder;
@@ -33,7 +33,7 @@ class Component extends ExplorerItem {
     required String name,
     this.builder,
     this.decorator,
-    required this.argTypes,
+    required List<ArgType> argTypes,
     this.componentPadding,
     required List<Story> stories,
     bool? isExpanded,
@@ -42,6 +42,7 @@ class Component extends ExplorerItem {
           children: stories,
           isExpanded: isExpanded,
         ) {
+    this.argTypes.addEntries(argTypes.map((a) => MapEntry(a.name, a)));
     for (final story in stories) {
       story.init(this);
     }

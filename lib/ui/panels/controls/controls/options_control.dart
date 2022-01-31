@@ -8,21 +8,20 @@ import 'package:provider/provider.dart';
 
 abstract class OptionsControl<T> extends Control<T> {
   OptionsControl({
-    required ArgType<T> argType,
-    T? initial,
     Map<String, T>? options,
     // ignore: unnecessary_this
-  })  : this.options = options ?? argType.mapping ?? {},
-        super(argType: argType, initial: initial) {
-    assert((options ?? argType.mapping) != null, 'No options provided and ArgType has no mapping');
-  }
+  }) : _options = options;
+  // : this.options = options ?? argType.mapping ?? {} {
+  //   assert((options ?? argType.mapping) != null, 'No options provided and ArgType has no mapping');
+  // }
 
-  final Map<String, T> options;
+  final Map<String, T>? _options;
+
+  Map<String, T> get options => _options ?? argType.mapping ?? {};
 }
 
 class RadioControl<T> extends OptionsControl<T> {
-  RadioControl({required ArgType<T> argType, T? initial, Map<String, T>? options})
-      : super(argType: argType, initial: initial, options: options);
+  RadioControl({Map<String, T>? options}) : super(options: options);
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +67,7 @@ class RadioControl<T> extends OptionsControl<T> {
 }
 
 class SelectControl<T> extends OptionsControl<T> {
-  SelectControl({required ArgType<T> argType, T? initial, Map<String, T>? options})
-      : super(argType: argType, initial: initial, options: options);
+  SelectControl({Map<String, T>? options}) : super(options: options);
 
   @override
   Widget build(BuildContext context) {

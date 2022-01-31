@@ -92,7 +92,7 @@ class ControlsPanel extends Panel {
                       ),
                       _Cell(
                         flex: 4,
-                        child: arg.control(arg, context.read<Arguments>().value(arg.name)).build(context),
+                        child: arg.control.build(context),
                       ),
                     ],
                   ),

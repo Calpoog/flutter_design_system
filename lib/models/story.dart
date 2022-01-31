@@ -68,4 +68,13 @@ class Story extends ExplorerItem {
     );
     debugPrint('Updating arg $name to ${value.toString()}');
   }
+
+  restoreArgs(Map<String, String> queryArgs) {
+    final argTypes = component.argTypes;
+    for (final queryArg in queryArgs.entries) {
+      if (argTypes.containsKey(queryArg.key)) {
+        argTypes[queryArg.key]!.control;
+      }
+    }
+  }
 }

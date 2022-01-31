@@ -6,8 +6,6 @@ import 'package:flutter_storybook/ui/utils/toggle.dart';
 import 'package:provider/provider.dart';
 
 class BooleanControl extends Control<bool> {
-  BooleanControl({required ArgType argType, bool? initial}) : super(argType: argType, initial: initial);
-
   @override
   Widget build(BuildContext context) {
     final Arguments args = context.read<Arguments>();

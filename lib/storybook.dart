@@ -54,7 +54,6 @@ class Storybook extends StatefulWidget {
   Storybook({
     Key? key,
     required this.explorer,
-    Map<String, Size>? deviceSizes,
     StorybookConfig? config,
   }) : super(key: key) {
     this.config = config ?? StorybookConfig();

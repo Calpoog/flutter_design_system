@@ -5,21 +5,17 @@ import 'package:flutter_storybook/ui/panels/controls/controls/controls.dart';
 import 'package:provider/provider.dart';
 
 class TextControl extends Control<String> {
-  TextControl({required ArgType argType, String? initial}) : super(argType: argType, initial: initial);
-
   @override
   Widget build(BuildContext context) {
     return StatefulBuilder(builder: (context, setState) {
       return ResetAwareTextField(
         name: argType.name,
-        initial: initial,
       );
     });
   }
 }
 
 class ResetAwareTextField extends StatefulWidget {
-  final String? initial;
   final String name;
   final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
@@ -30,7 +26,6 @@ class ResetAwareTextField extends StatefulWidget {
 
   const ResetAwareTextField({
     Key? key,
-    this.initial,
     required this.name,
     this.keyboardType = TextInputType.text,
     this.inputFormatters,
@@ -50,8 +45,8 @@ class _ResetAwareTextFieldState extends State<ResetAwareTextField> {
 
   @override
   void initState() {
-    controller = widget.controller ?? TextEditingController(text: widget.initial);
     args = context.read<Arguments>();
+    controller = widget.controller ?? TextEditingController(text: args.value(widget.name));
     args.addListener(resetListener);
     super.initState();
   }
