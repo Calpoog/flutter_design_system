@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/models/story.dart';
-import 'package:flutter_storybook/routing/story_path.dart';
+import 'package:flutter_storybook/routing/story_route_state.dart';
 import 'package:flutter_storybook/models/arguments.dart';
 import 'package:flutter_storybook/ui/component_view.dart';
 import 'package:provider/provider.dart';

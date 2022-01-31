@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_storybook/routing/story_path.dart';
+import 'package:flutter_storybook/routing/story_route_state.dart';
 
 class StoryRouteInformationParser extends RouteInformationParser<StoryRouteState> {
   // Url to navigation state
