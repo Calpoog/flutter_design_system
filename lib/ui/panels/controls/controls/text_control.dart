@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_storybook/models/arguments.dart';
 import 'package:flutter_storybook/ui/panels/controls/controls/controls.dart';
+import 'package:flutter_storybook/ui/panels/controls/controls/nullable_control.dart';
 import 'package:provider/provider.dart';
 
 class TextControl extends Control<String> {
   @override
   Widget build(BuildContext context) {
-    return StatefulBuilder(builder: (context, setState) {
-      return ResetAwareTextField(
+    return NullableControl(
+      argType: argType,
+      notNullInitialValue: '',
+      builder: (_) => ResetAwareTextField(
         name: argType.name,
-      );
-    });
+      ),
+    );
   }
 
   @override

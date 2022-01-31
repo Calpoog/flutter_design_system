@@ -16,7 +16,7 @@ class NumberControl<T> extends Control<T> {
   Widget build(BuildContext context) {
     return NullableControl(
       argType: argType,
-      initialForType: 0,
+      notNullInitialValue: 0,
       builder: (_) => _NumberControl<T>(
         type: type,
         argType: argType,
@@ -129,7 +129,7 @@ class _Incrementer extends StatelessWidget {
     final theme = context.read<AppTheme>();
     return Positioned(
       right: isPositive ? 4 : 30,
-      top: 7,
+      top: 8,
       child: GestureDetector(
         onTap: onTap,
         child: Hoverable(

@@ -42,7 +42,7 @@ class RadioControl<T> extends OptionsControl<T> {
     final name = argType.name;
     return NullableControl(
         argType: argType,
-        initialForType: argType.mapping!.values.first,
+        notNullInitialValue: argType.mapping!.values.first,
         builder: (context) {
           return Column(
             children: options.entries
@@ -90,7 +90,7 @@ class SelectControl<T> extends OptionsControl<T> {
     final value = args.value<T>(name);
     return NullableControl(
         argType: argType,
-        initialForType: argType.mapping!.values.first,
+        notNullInitialValue: argType.mapping!.values.first,
         builder: (context) {
           return Container(
             height: 40,

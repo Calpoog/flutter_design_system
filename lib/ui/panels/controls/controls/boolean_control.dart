@@ -12,7 +12,7 @@ class BooleanControl extends Control<bool> {
     final value = args.value(argType.name);
     return NullableControl(
       argType: argType,
-      initialForType: false,
+      notNullInitialValue: false,
       builder: (_) => Toggle(
         value: value,
         onChanged: (bool value) {
