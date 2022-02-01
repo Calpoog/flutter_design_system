@@ -108,7 +108,7 @@ class ExplorerHeader extends StatelessWidget {
   }
 }
 
-class ExplorerSearchField extends StatelessWidget {
+class ExplorerSearchField extends StatefulWidget {
   const ExplorerSearchField({
     Key? key,
     required this.onSearch,
@@ -117,6 +117,30 @@ class ExplorerSearchField extends StatelessWidget {
 
   final void Function(String query) onSearch;
   final TextEditingController controller;
+
+  @override
+  State<ExplorerSearchField> createState() => _ExplorerSearchFieldState();
+}
+
+class _ExplorerSearchFieldState extends State<ExplorerSearchField> {
+  late bool filled;
+
+  @override
+  void initState() {
+    filled = widget.controller.text.isNotEmpty;
+    widget.controller.addListener(_listener);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_listener);
+    super.dispose();
+  }
+
+  _listener() {
+    filled = widget.controller.text.isNotEmpty;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +158,7 @@ class ExplorerSearchField extends StatelessWidget {
         ),
         TextFormField(
           style: const TextStyle(fontSize: 13),
-          controller: controller,
+          controller: widget.controller,
           decoration: InputDecoration(
             hintText: 'Find components',
             contentPadding: const EdgeInsets.fromLTRB(30, 9, 20, 9),
@@ -148,10 +172,29 @@ class ExplorerSearchField extends StatelessWidget {
             ),
           ),
           onChanged: (String value) {
-            debugPrint('asdf');
-            onSearch(value);
+            setState(() {
+              widget.onSearch(value);
+            });
           },
         ),
+        if (filled)
+          Positioned(
+            top: 6,
+            right: 10,
+            child: Hoverable(
+              onPressed: () {
+                setState(() {
+                  widget.controller.clear();
+                  widget.onSearch('');
+                });
+              },
+              builder: (context, isHovered) => Icon(
+                Icons.cancel,
+                size: 16,
+                color: isHovered ? theme.selected : theme.unselected,
+              ),
+            ),
+          ),
       ],
     );
   }
