@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_storybook/models/story.dart';
 import 'package:flutter_storybook/routing/route_parser.dart';
 import 'package:flutter_storybook/routing/router_delegate.dart';
+import 'package:flutter_storybook/ui/explorer/explorer_items.dart';
 import 'package:flutter_storybook/ui/panels/canvas/background_popup.dart';
 import 'package:flutter_storybook/ui/panels/canvas/viewport_popup.dart';
 import 'package:flutter_storybook/ui/utils/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_storybook/ui/explorer.dart';
+import 'package:flutter_storybook/ui/explorer/explorer.dart';
 
 class StorybookConfig {
   late final Map<String, Size> deviceSizes;
@@ -26,8 +27,8 @@ class StorybookConfig {
         };
     this.deviceSizes = deviceSizes ??
         {
-          'Mobile ': const Size(320, 568),
-          'Large Mobile ': const Size(414, 896),
+          'Mobile': const Size(320, 568),
+          'Large Mobile': const Size(414, 896),
           'Tablet': const Size(834, 1112),
         };
   }
@@ -160,63 +161,59 @@ class _StorybookState extends State<Storybook> {
             unselectedLabelStyle: GoogleFonts.nunitoSans(fontWeight: FontWeight.bold),
           ),
         ),
-        builder: (context, child) => StorybookHome(child: child),
-      ),
-    );
-  }
-}
-
-class StorybookHome extends StatelessWidget {
-  const StorybookHome({
-    Key? key,
-    this.child,
-  }) : super(key: key);
-
-  final Widget? child;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.read<AppTheme>();
-    return Scaffold(
-      backgroundColor: theme.background,
-      body: GestureDetector(
-        onTap: () => context.read<OverlayNotifier>().close(),
-        child: SafeArea(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                width: 230,
-                child: Explorer(
-                  items: context.read<List<ExplorerItem>>(),
+        builder: (context, child) {
+          final theme = context.read<AppTheme>();
+          return Scaffold(
+            backgroundColor: theme.background,
+            body: GestureDetector(
+              onTap: () {
+                context.read<OverlayNotifier>().close();
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              child: SafeArea(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      width: 230,
+                      child: Explorer(
+                        items: context.read<List<ExplorerItem>>(),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.1),
+                              offset: Offset(0, 1),
+                              blurRadius: 5,
+                            )
+                          ],
+                        ),
+                        child: MultiProvider(
+                          providers: [
+                            ChangeNotifierProvider(
+                              create: (context) => ViewportNotifier(
+                                appState.globals,
+                                context.read<StorybookConfig>(),
+                              ),
+                            ),
+                            ChangeNotifierProvider(create: (context) => BackgroundNotifier()),
+                          ],
+                          child: child,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(4)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color.fromRGBO(0, 0, 0, 0.1),
-                        offset: Offset(0, 1),
-                        blurRadius: 5,
-                      )
-                    ],
-                  ),
-                  child: MultiProvider(
-                    providers: [
-                      ChangeNotifierProvider(create: (context) => ViewportNotifier()),
-                      ChangeNotifierProvider(create: (context) => BackgroundNotifier()),
-                    ],
-                    child: child,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_storybook/models/globals.dart';
 import 'package:flutter_storybook/storybook.dart';
 import 'package:flutter_storybook/ui/panels/tools/tool.dart';
 import 'package:flutter_storybook/ui/panels/tools/tool_button.dart';
@@ -101,30 +102,73 @@ class ViewportTool extends Tool {
   }
 }
 
-class ViewportNotifier extends ChangeNotifier {
+class ViewportNotifier extends UsesGlobals {
+  final Globals globals;
+  final StorybookConfig config;
   String? viewportName;
   double zoom = 1.0;
   Size? size;
 
+  ViewportNotifier(
+    this.globals,
+    this.config,
+  ) : super('viewport') {
+    globals.register(this);
+  }
+
   setZoom(double zoom) {
     this.zoom = zoom;
-    notifyListeners();
+    notify();
   }
 
   adjustZoom(double amount) {
     zoom += amount;
-    notifyListeners();
+    notify();
   }
 
   setSize(String name, Size? size) {
     this.size = size;
     viewportName = name;
-    notifyListeners();
+    notify();
   }
 
   resetSize() {
     size = null;
     viewportName = null;
+    notify();
+  }
+
+  notify() {
     notifyListeners();
+    globals.update(this);
+  }
+
+  @override
+  deserialize(Map<String, String> serialized) {
+    viewportName = serialized['name'];
+    zoom = double.tryParse(serialized['zoom'] ?? '1.0') ?? 1.0;
+    size = config.deviceSizes[viewportName];
+    if (size == null) {
+      viewportName = null;
+    }
+    notifyListeners();
+  }
+
+  @override
+  Map<String, String> serialize() {
+    final Map<String, String> map = {};
+    if (viewportName != null) {
+      map['name'] = viewportName!;
+    }
+    if (zoom != 1.0) {
+      map['zoom'] = zoom.toString();
+    }
+    return map;
+  }
+
+  @override
+  void dispose() {
+    globals.unregister(this);
+    super.dispose();
   }
 }

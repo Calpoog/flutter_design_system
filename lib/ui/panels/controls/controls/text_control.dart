@@ -60,7 +60,7 @@ class _ResetAwareTextFieldState extends State<ResetAwareTextField> {
   }
 
   resetListener() {
-    if (args.isFresh) {
+    if (args.isForced) {
       controller.text = args.value(widget.name).toString();
     }
   }

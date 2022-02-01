@@ -1,71 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/models/arguments.dart';
 import 'package:flutter_storybook/models/component.dart';
 import 'package:flutter_storybook/models/story.dart';
-import 'package:flutter_storybook/routing/router_delegate.dart';
 import 'package:flutter_storybook/ui/utils/hoverable.dart';
 import 'package:flutter_storybook/ui/utils/text.dart';
 import 'package:flutter_storybook/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
-
-class Explorer extends StatelessWidget {
-  final List<ExplorerItem> items;
-
-  const Explorer({Key? key, required this.items}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        iconTheme: const IconThemeData(size: 12),
-      ),
-      child: ListView.builder(
-          itemCount: items.length + 1,
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              return const ExplorerHeader();
-            }
-            return _buildItem(context, items[index - 1], 0);
-          }),
-    );
-  }
-
-  _buildItem(BuildContext context, ExplorerItem item, int depth) {
-    final appState = context.watch<AppState>();
-    Widget? child;
-
-    if (item.children != null) {
-      child = Column(
-        children: [
-          for (final child in item.children!) _buildItem(context, child, depth + (item.runtimeType == RootItem ? 0 : 1))
-        ],
-      );
-    }
-
-    switch (item.runtimeType) {
-      case RootItem:
-        return RootItemWidget(item: item as RootItem, depth: depth, child: child);
-      case FolderItem:
-        return FolderItemWidget(item: item as FolderItem, depth: depth, child: child);
-      case Component:
-        if (item.children!.length == 1 && item.children!.first.name == item.name) {
-          // Let the single story of same-name through
-          item = item.children!.first;
-        } else {
-          return ComponentItemWidget(item: item as Component, depth: depth, child: child);
-        }
-    }
-
-    return StoryItemWidget(
-      item: item as Story,
-      depth: depth,
-      isSelected: appState.story == item,
-      onPressed: () {
-        appState.setStory(item as Story);
-      },
-    );
-  }
-}
 
 abstract class ExplorerItem {
   final String name;
@@ -275,7 +214,11 @@ class _ItemState extends State<_Item> {
                   if (widget.icon != null)
                     Padding(
                       padding: EdgeInsets.only(left: widget.isExpandable ? 3.0 : 13.0),
-                      child: Icon(widget.icon!, color: widget.isSelected ? Colors.white : widget.iconColor),
+                      child: Icon(
+                        widget.icon!,
+                        color: widget.isSelected ? Colors.white : widget.iconColor,
+                        size: 12,
+                      ),
                     ),
                   Padding(
                     padding: const EdgeInsets.only(left: 5.0),
@@ -293,63 +236,6 @@ class _ItemState extends State<_Item> {
         ),
         if (widget.child != null && isExpanded) widget.child!,
       ],
-    );
-  }
-}
-
-class ExplorerHeader extends StatelessWidget {
-  const ExplorerHeader({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.read<AppTheme>();
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(children: [
-        Row(
-          children: const [
-            FlutterLogo(
-              size: 20,
-            ),
-            SizedBox(width: 7),
-            AppText(
-              'Flutterbook',
-              size: 18,
-              weight: FontWeight.w800,
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Stack(
-          children: [
-            Positioned(
-              top: 7,
-              left: 10,
-              child: Icon(
-                Icons.search_outlined,
-                size: 16,
-                color: theme.unselected,
-              ),
-            ),
-            TextFormField(
-              style: const TextStyle(fontSize: 13),
-              decoration: InputDecoration(
-                hintText: 'Find components',
-                contentPadding: const EdgeInsets.fromLTRB(30, 11, 20, 11),
-                isDense: true,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  borderSide: BorderSide(color: theme.unselected.withOpacity(0.4)),
-                ),
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-              ),
-              onChanged: (String value) {},
-            ),
-          ],
-        ),
-      ]),
     );
   }
 }

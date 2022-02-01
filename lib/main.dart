@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_storybook/models/arguments.dart';
 import 'package:flutter_storybook/models/component.dart';
+import 'package:flutter_storybook/ui/explorer/explorer_items.dart';
 import 'package:flutter_storybook/ui/panels/controls/controls/controls.dart';
 import 'package:flutter_storybook/models/story.dart';
 import 'package:flutter_storybook/storybook.dart';
-import 'package:flutter_storybook/ui/explorer.dart';
 
 void main() {
   runApp(const MyApp());

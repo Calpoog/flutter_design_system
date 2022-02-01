@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_storybook/models/arguments.dart';
 import 'package:flutter_storybook/models/component.dart';
-import 'package:flutter_storybook/ui/explorer.dart';
+import 'package:flutter_storybook/ui/explorer/explorer_items.dart';
 import 'package:flutter_storybook/ui/panels/controls/controls/controls.dart';
 
 class Story extends ExplorerItem {

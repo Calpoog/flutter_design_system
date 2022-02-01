@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_storybook/ui/explorer.dart';
+import 'package:flutter_storybook/ui/explorer/explorer_items.dart';
 import 'package:flutter_storybook/models/arguments.dart';
 import 'package:flutter_storybook/models/story.dart';
 

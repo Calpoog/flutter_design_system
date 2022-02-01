@@ -7,13 +7,13 @@ typedef ArgValues = Map<String, dynamic>;
 typedef TemplateBuilder = Widget Function(BuildContext context, Arguments args);
 
 class Arguments extends ChangeNotifier {
-  final Story _story;
-  final ArgTypes _argTypes;
-  bool isFresh = true;
+  late Story _story;
+  late ArgTypes _argTypes;
+  bool isForced = true;
 
-  Arguments(Story story)
-      : _story = story,
-        _argTypes = story.component.argTypes;
+  Arguments(Story story) {
+    updateStory(story);
+  }
 
   T? value<T>(String name) {
     final values = _story.args;
@@ -26,15 +26,20 @@ class Arguments extends ChangeNotifier {
     return values[name] ?? arg.defaultValue;
   }
 
+  void updateStory(Story story) {
+    _story = story;
+    _argTypes = story.component.argTypes;
+  }
+
   void update(String name, dynamic value) {
     _story.updateArg(name, value);
-    isFresh = false;
+    isForced = false;
     notifyListeners();
   }
 
   void reset() {
     _story.resetArgs();
-    isFresh = true;
+    isForced = true;
     notifyListeners();
   }
 }
