@@ -36,8 +36,6 @@ class Story extends ExplorerItem {
   init(Component component) {
     this.component = component;
     _processValues(args);
-
-    debugPrint('Story \'name\' init');
   }
 
   // Validates that values adhere to ArgTypes
@@ -62,12 +60,7 @@ class Story extends ExplorerItem {
   }
 
   updateArg(String name, dynamic value) {
-    args.update(
-      name,
-      (current) => value,
-      ifAbsent: () => value,
-    );
-    debugPrint('Updating arg $name to ${value.toString()}');
+    args[name] = value;
   }
 
   restoreArgs(Map<String, String> queryArgs) {

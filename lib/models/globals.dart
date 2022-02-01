@@ -51,7 +51,6 @@ class Globals extends ChangeNotifier {
     _users.forEach((user, namespace) {
       user.deserialize(_values[namespace] ?? {});
     });
-    debugPrint('Restoring globals');
   }
 
   Map<String, String> serialize() {

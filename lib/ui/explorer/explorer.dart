@@ -25,7 +25,6 @@ class _ExplorerState extends State<Explorer> {
   @override
   void initState() {
     _processItems(widget.items);
-    debugPrint(searchable.toString());
     super.initState();
   }
 
