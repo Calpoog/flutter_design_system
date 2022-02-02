@@ -60,7 +60,7 @@ class ViewportTool extends Tool {
               name: 'Change orientation',
               icon: Icons.sync_alt_outlined,
               onPressed: () {
-                viewportProvider.setSize(viewportProvider.viewportName!, Size(size.height, size.width));
+                viewportProvider.flip();
               }),
           AppText(
             size.height.toString(),
@@ -111,13 +111,20 @@ class ViewportTool extends Tool {
 
 class ViewportProvider extends UsesGlobals {
   String? viewportName;
+  bool landscape = false;
   double zoom = 1.0;
-  Size? size;
 
   ViewportProvider({
     required Globals globals,
     required StorybookConfig config,
   }) : super(namespace: 'viewport', globals: globals, config: config);
+
+  Size? get size {
+    if (viewportName == null) return null;
+
+    final size = config.deviceSizes[viewportName]!;
+    return landscape == true ? Size(size.height, size.width) : size;
+  }
 
   setZoom(double zoom) {
     this.zoom = zoom;
@@ -130,13 +137,16 @@ class ViewportProvider extends UsesGlobals {
   }
 
   setSize(String name, Size? size) {
-    this.size = size;
     viewportName = name;
     notify();
   }
 
+  flip() {
+    landscape = !landscape;
+    notify();
+  }
+
   resetSize() {
-    size = null;
     viewportName = null;
     notify();
   }
@@ -145,9 +155,10 @@ class ViewportProvider extends UsesGlobals {
   deserialize(Map<String, String> serialized) {
     viewportName = serialized['name'];
     zoom = double.tryParse(serialized['zoom'] ?? '1.0') ?? 1.0;
-    size = config.deviceSizes[viewportName];
-    if (size == null) {
+    if (config.deviceSizes[viewportName] == null) {
       viewportName = null;
+    } else {
+      landscape = serialized.containsKey('landscape');
     }
     notifyListeners();
   }
@@ -157,6 +168,9 @@ class ViewportProvider extends UsesGlobals {
     final Map<String, String> map = {};
     if (viewportName != null) {
       map['name'] = viewportName!;
+    }
+    if (landscape == true) {
+      map['landscape'] = 'true';
     }
     if (zoom != 1.0) {
       map['zoom'] = zoom.toString();

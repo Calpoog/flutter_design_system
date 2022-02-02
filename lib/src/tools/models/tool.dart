@@ -18,6 +18,10 @@ class Tool {
   final String name;
   final IconData icon;
   final bool divide;
+
+  /// A callback for when the tool button is clicked.
+  ///
+  /// If [onPressed] is specified then the tool cannot have a [popup].
   final void Function(BuildContext context)? onPressed;
   final LayerLink link;
   final Decorator? decorator;

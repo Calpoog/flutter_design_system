@@ -85,6 +85,7 @@ class ThemeProvider extends UsesGlobals {
   }
 
   reset() {
+    themeName = null;
     theme = null;
     notify();
   }
