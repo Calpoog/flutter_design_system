@@ -32,6 +32,7 @@ const baseArgs = {
 
 final buttonComponent = Component(
   name: 'Button',
+  markdownString: 'This is the component markdown.',
   componentPadding: const EdgeInsets.all(20),
   builder: (BuildContext context, Arguments args) {
     return SizedBox(
@@ -93,10 +94,12 @@ final buttonComponent = Component(
   stories: [
     Story(
       name: 'Default',
+      markdownString: 'The default button.',
       args: baseArgs,
     ),
     Story(
       name: 'Primary',
+      markdownString: 'A primary button for primary things.',
       args: Map.of(baseArgs)
         ..addAll(const {
           'text': 'Primary',
@@ -105,6 +108,7 @@ final buttonComponent = Component(
     ),
     Story(
       name: 'Secondary',
+      markdownString: 'A secondary button for secondary things.',
       args: Map.of(baseArgs)
         ..addAll(const {
           'text': 'Secondary',

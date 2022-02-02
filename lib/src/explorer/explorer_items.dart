@@ -111,7 +111,6 @@ class ComponentItemWidget extends StatelessWidget {
 class StoryItemWidget extends StatelessWidget {
   final Story item;
   final int depth;
-  final Widget? child;
   final VoidCallback onPressed;
   final bool isSelected;
 
@@ -119,7 +118,6 @@ class StoryItemWidget extends StatelessWidget {
     Key? key,
     required this.item,
     required this.depth,
-    this.child,
     required this.onPressed,
     this.isSelected = false,
   }) : super(key: key);

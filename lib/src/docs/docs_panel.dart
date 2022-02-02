@@ -2,9 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_design_system/src/models/story.dart';
 import 'package:flutter_markdown/flutter_markdown.dart' as md;
 import 'package:flutter_design_system/src/ui/panels/panel.dart';
 import 'package:flutter_design_system/src/ui/utils/text.dart';
+import 'package:provider/provider.dart';
 
 final _style = md.MarkdownStyleSheet(
   h1: const TextStyle(fontSize: 36, fontWeight: FontWeight.w800),
@@ -25,34 +27,76 @@ class DocsPanel extends Panel {
 
   @override
   Widget build(BuildContext context) {
+    final selectedStory = context.read<Story>();
+    final component = selectedStory.component;
+    final stories = component.children as List<Story>;
+
+    return LayoutBuilder(builder: (context, constraints) {
+      return SingleChildScrollView(
+        child: Center(
+          child: SizedBox(
+            width: min(constraints.maxWidth, 800),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (component.markdown != null) MarkdownFile(file: component.markdown!),
+                if (component.markdownString != null) MarkdownString(string: component.markdownString!),
+                // "Primary"
+                // TODO: Mini-panel and args/controls
+                const AppText('Stories', size: 20),
+                for (final story in stories) ...[
+                  AppText(story.name, size: 16),
+                  if (story.markdown != null) MarkdownFile(file: story.markdown!),
+                  if (story.markdownString != null) MarkdownString(string: story.markdownString!),
+                ],
+              ],
+            ),
+          ),
+        ),
+      );
+    });
+  }
+}
+
+class MarkdownFile extends StatelessWidget {
+  const MarkdownFile({
+    Key? key,
+    required this.file,
+  }) : super(key: key);
+
+  final String file;
+
+  @override
+  Widget build(BuildContext context) {
     return FutureBuilder(
-      future: rootBundle.loadString('test.md'),
+      future: rootBundle.loadString(file),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.hasData) {
-          return LayoutBuilder(
-            builder: (_, constraints) => SingleChildScrollView(
-              primary: false,
-              child: Center(
-                child: SizedBox(
-                  width: min(constraints.maxWidth, 800),
-                  child: Padding(
-                    padding: const EdgeInsets.all(30),
-                    child: md.MarkdownBody(
-                      data: snapshot.data!,
-                      styleSheet: _style,
-                      builders: {'code': CodeBuilder()},
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
+          return MarkdownString(string: snapshot.data!);
         }
 
         return const Center(
           child: CircularProgressIndicator(),
         );
       },
+    );
+  }
+}
+
+class MarkdownString extends StatelessWidget {
+  const MarkdownString({
+    Key? key,
+    required this.string,
+  }) : super(key: key);
+
+  final String string;
+
+  @override
+  Widget build(BuildContext context) {
+    return md.MarkdownBody(
+      data: string,
+      styleSheet: _style,
+      builders: {'code': CodeBuilder()},
     );
   }
 }
