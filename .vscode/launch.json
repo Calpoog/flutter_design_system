@@ -7,13 +7,13 @@
     {
       "name": "flutter_design_system",
       "request": "launch",
-      "program": "example/main.dart",
+      // "program": "example/main.dart",
       "type": "dart"
     },
     {
       "name": "flutter_design_system (profile mode)",
       "request": "launch",
-      "program": "example/main.dart",
+      // "program": "example/main.dart",
       "type": "dart",
       "flutterMode": "profile"
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_design_system/src/models/component.dart';
 import 'package:flutter_design_system/src/storybook.dart';
-import 'package:flutter_design_system/src/tools/tool_button.dart';
+import 'package:flutter_design_system/src/tools/ui/tool_button.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +12,7 @@ class Tool {
     required this.icon,
     this.onPressed,
     this.divide = false,
+    this.decorator,
   }) : link = LayerLink();
 
   final String name;
@@ -18,6 +20,7 @@ class Tool {
   final bool divide;
   final void Function(BuildContext context)? onPressed;
   final LayerLink link;
+  final Decorator? decorator;
 
   bool isActive(BuildContext context) => false;
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/tools/divider.dart';
-import 'package:flutter_design_system/src/tools/tool.dart';
+import 'package:flutter_design_system/src/tools/ui/divider.dart';
+import 'package:flutter_design_system/src/tools/models/tool.dart';
 import 'package:flutter_design_system/src/ui/utils/bordered.dart';
 
 abstract class Panel extends StatelessWidget {

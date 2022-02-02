@@ -1,14 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_design_system/src/storybook.dart';
 
 abstract class UsesGlobals extends ChangeNotifier {
   final String namespace;
+  final Globals globals;
+  final StorybookConfig config;
 
-  UsesGlobals(this.namespace);
+  UsesGlobals({
+    required this.namespace,
+    required this.globals,
+    required this.config,
+  }) {
+    globals.register(this);
+  }
 
   // Serializes the value pairs for the URL
   Map<String, String> serialize();
 
   deserialize(Map<String, String> serialized);
+
+  notify() {
+    notifyListeners();
+    globals.update(this);
+  }
+
+  @override
+  void dispose() {
+    globals.unregister(this);
+    super.dispose();
+  }
 }
 
 /// A class for storing string values of global state like viewport, zoom,

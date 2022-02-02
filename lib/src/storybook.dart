@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/models/story.dart';
+import 'package:flutter_design_system/flutter_design_system.dart';
 import 'package:flutter_design_system/src/routing/route_parser.dart';
 import 'package:flutter_design_system/src/routing/router_delegate.dart';
-import 'package:flutter_design_system/src/explorer/explorer_items.dart';
-import 'package:flutter_design_system/src/canvas/background_popup.dart';
-import 'package:flutter_design_system/src/canvas/viewport_popup.dart';
+import 'package:flutter_design_system/src/tools/theme_tool/theme_tool.dart';
+import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -12,18 +11,20 @@ import 'package:flutter_design_system/src/explorer/explorer.dart';
 
 class StorybookConfig {
   late final Map<String, Size> deviceSizes;
-  late final Map<String, Color> backgrounds;
+  late final Map<String, ThemeData> themes;
   final EdgeInsets componentPadding;
+  final Decorator? decorator;
 
   StorybookConfig({
     Map<String, Size>? deviceSizes,
-    Map<String, Color>? backgrounds,
+    Map<String, ThemeData>? themes,
     this.componentPadding = EdgeInsets.zero,
+    this.decorator,
   }) {
-    this.backgrounds = backgrounds ??
+    this.themes = themes ??
         {
-          'Dark': Colors.black,
-          'Light': Colors.white,
+          'Dark': ThemeData.dark(),
+          'Light': ThemeData.light(),
         };
     this.deviceSizes = deviceSizes ??
         {
@@ -197,12 +198,17 @@ class _StorybookState extends State<Storybook> {
                         child: MultiProvider(
                           providers: [
                             ChangeNotifierProvider(
-                              create: (context) => ViewportNotifier(
-                                appState.globals,
-                                context.read<StorybookConfig>(),
+                              create: (context) => ViewportProvider(
+                                globals: appState.globals,
+                                config: context.read<StorybookConfig>(),
                               ),
                             ),
-                            ChangeNotifierProvider(create: (context) => BackgroundNotifier()),
+                            ChangeNotifierProvider(
+                              create: (context) => ThemeProvider(
+                                globals: appState.globals,
+                                config: context.read<StorybookConfig>(),
+                              ),
+                            ),
                           ],
                           child: child,
                         ),

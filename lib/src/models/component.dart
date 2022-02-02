@@ -3,7 +3,7 @@ import 'package:flutter_design_system/src/explorer/explorer_items.dart';
 import 'package:flutter_design_system/src/models/arguments.dart';
 import 'package:flutter_design_system/src/models/story.dart';
 
-typedef Decorator = Widget Function(Widget child);
+typedef Decorator = Widget Function(BuildContext context, Widget child);
 
 class ComponentActions {
   final ArgTypes actions;

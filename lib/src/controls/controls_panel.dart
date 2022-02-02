@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/src/models/arguments.dart';
-import 'package:flutter_design_system/src/tools/tool_button.dart';
+import 'package:flutter_design_system/src/tools/ui/tool_button.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_design_system/src/ui/panels/panel.dart';
 import 'package:flutter_design_system/src/models/story.dart';

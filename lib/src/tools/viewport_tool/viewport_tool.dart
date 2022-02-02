@@ -1,27 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/src/models/globals.dart';
 import 'package:flutter_design_system/src/storybook.dart';
-import 'package:flutter_design_system/src/tools/tool.dart';
-import 'package:flutter_design_system/src/tools/tool_button.dart';
+import 'package:flutter_design_system/src/tools/models/tool.dart';
+import 'package:flutter_design_system/src/tools/ui/tool_button.dart';
+import 'package:flutter_design_system/src/tools/viewport_tool/viewport_decorator.dart';
 import 'package:flutter_design_system/src/ui/utils/text.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 class ViewportTool extends Tool {
-  ViewportTool({Key? key}) : super(key: key, name: 'Change preview size', icon: Icons.aspect_ratio_outlined);
+  ViewportTool({Key? key})
+      : super(
+          key: key,
+          name: 'Change preview size',
+          icon: Icons.aspect_ratio_outlined,
+          decorator: (context, child) => ViewportDecorator(child: child),
+        );
 
   @override
   bool isActive(BuildContext context) {
     // only need read because of the watch in button method below
-    return context.read<ViewportNotifier>().viewportName != null;
+    return context.read<ViewportProvider>().viewportName != null;
   }
 
   @override
   Widget button(BuildContext context) {
     final theme = context.read<AppTheme>();
-    final viewportNotifier = context.watch<ViewportNotifier>();
-    final isActive = viewportNotifier.viewportName != null;
-    final size = viewportNotifier.size;
+    final viewportProvider = context.watch<ViewportProvider>();
+    final isActive = viewportProvider.viewportName != null;
+    final size = viewportProvider.size;
 
     return Row(
       children: [
@@ -30,7 +37,7 @@ class ViewportTool extends Tool {
           child: ToolButton(
             name: name,
             isActive: isActive,
-            text: viewportNotifier.viewportName,
+            text: viewportProvider.viewportName,
             onPressed: () {
               if (onPressed != null) {
                 context.read<OverlayNotifier>().close();
@@ -53,7 +60,7 @@ class ViewportTool extends Tool {
               name: 'Change orientation',
               icon: Icons.sync_alt_outlined,
               onPressed: () {
-                viewportNotifier.setSize(viewportNotifier.viewportName!, Size(size.height, size.width));
+                viewportProvider.setSize(viewportProvider.viewportName!, Size(size.height, size.width));
               }),
           AppText(
             size.height.toString(),
@@ -67,7 +74,7 @@ class ViewportTool extends Tool {
 
   @override
   Widget popup(BuildContext context) {
-    final device = context.read<ViewportNotifier>();
+    final device = context.read<ViewportProvider>();
     final overlay = context.read<OverlayNotifier>();
     final hoverColor = context.read<AppTheme>().background;
     return Column(
@@ -102,19 +109,15 @@ class ViewportTool extends Tool {
   }
 }
 
-class ViewportNotifier extends UsesGlobals {
-  final Globals globals;
-  final StorybookConfig config;
+class ViewportProvider extends UsesGlobals {
   String? viewportName;
   double zoom = 1.0;
   Size? size;
 
-  ViewportNotifier(
-    this.globals,
-    this.config,
-  ) : super('viewport') {
-    globals.register(this);
-  }
+  ViewportProvider({
+    required Globals globals,
+    required StorybookConfig config,
+  }) : super(namespace: 'viewport', globals: globals, config: config);
 
   setZoom(double zoom) {
     this.zoom = zoom;
@@ -138,11 +141,6 @@ class ViewportNotifier extends UsesGlobals {
     notify();
   }
 
-  notify() {
-    notifyListeners();
-    globals.update(this);
-  }
-
   @override
   deserialize(Map<String, String> serialized) {
     viewportName = serialized['name'];
@@ -164,11 +162,5 @@ class ViewportNotifier extends UsesGlobals {
       map['zoom'] = zoom.toString();
     }
     return map;
-  }
-
-  @override
-  void dispose() {
-    globals.unregister(this);
-    super.dispose();
   }
 }

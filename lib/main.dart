@@ -6,21 +6,17 @@ void main() {
 }
 
 final Component textComponent = Component(
-  name: 'Text',
-  builder: (BuildContext context, Arguments args) => TextField(),
-  argTypes: [
-    ArgType<String>(
-      name: 'text',
-      description: 'The text to display',
-      isRequired: true,
+  name: 'Card',
+  builder: (BuildContext context, Arguments args) => const Card(
+    child: Padding(
+      padding: EdgeInsets.all(20.0),
+      child: Text('This is a card'),
     ),
-  ],
+  ),
+  argTypes: [],
   stories: [
     Story(
-      name: 'Text',
-      args: {
-        'text': 'Some text',
-      },
+      name: 'Card',
     ),
   ],
 );
@@ -48,7 +44,6 @@ final buttonComponent = Component(
       name: 'text',
       description: 'The button text',
       defaultValue: 'Default',
-      isRequired: true,
     ),
     ArgType<double?>(
       name: 'number',
@@ -79,9 +74,12 @@ final buttonComponent = Component(
       name: 'disabled',
       description: 'A toggle',
     ),
-    ArgType<Color>(name: 'color', description: 'The button color', defaultValue: Colors.purple
-        // isRequired: true,
-        ),
+    ArgType<Color>(
+      name: 'color',
+      description: 'The button color',
+      defaultValue: Colors.grey,
+      // isRequired: true,
+    ),
   ],
   stories: [
     Story(

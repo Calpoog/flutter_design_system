@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_design_system/flutter_design_system.dart';
+import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_design_system/src/storybook.dart';
-import 'package:flutter_design_system/src/canvas/background_popup.dart';
-import 'package:flutter_design_system/src/canvas/viewport_popup.dart';
-import 'package:flutter_design_system/src/tools/tool.dart';
+import 'package:flutter_design_system/src/tools/theme_tool/theme_tool.dart';
+import 'package:flutter_design_system/src/tools/models/tool.dart';
 import 'package:flutter_design_system/src/models/arguments.dart';
 import 'package:flutter_design_system/src/models/story.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:flutter_design_system/src/controls/controls_panel.dart';
 import 'package:flutter_design_system/src/ui/panels/panel.dart';
 import 'package:flutter_design_system/src/ui/utils/bordered.dart';
@@ -20,20 +19,20 @@ class CanvasPanel extends Panel {
             Tool(
               name: 'Zoom in',
               icon: Icons.zoom_in_outlined,
-              onPressed: (context) => context.read<ViewportNotifier>().adjustZoom(0.2),
+              onPressed: (context) => context.read<ViewportProvider>().adjustZoom(0.2),
             ),
             Tool(
               name: 'Zoom out',
               icon: Icons.zoom_out_outlined,
-              onPressed: (context) => context.read<ViewportNotifier>().adjustZoom(-0.2),
+              onPressed: (context) => context.read<ViewportProvider>().adjustZoom(-0.2),
             ),
             Tool(
               name: 'Reset zoom',
               icon: Icons.youtube_searched_for_outlined,
-              onPressed: (context) => context.read<ViewportNotifier>().setZoom(1.0),
+              onPressed: (context) => context.read<ViewportProvider>().setZoom(1.0),
               divide: true,
             ),
-            BackgroundTool(),
+            ThemeTool(),
             ViewportTool(),
           ],
         );
@@ -42,66 +41,31 @@ class CanvasPanel extends Panel {
   Widget build(BuildContext context) {
     final Arguments args = context.watch<Arguments>();
     final Story story = context.read<Story>();
+    final StorybookConfig config = context.read<StorybookConfig>();
+    Widget child = story.builder != null ? story.builder!(context, args) : story.component.builder!(context, args);
+
+    child = Container(
+      padding: story.componentPadding ?? story.component.componentPadding ?? config.componentPadding,
+      child: child,
+    );
+
+    if (story.component.decorator != null) {
+      child = story.component.decorator!(context, child);
+    }
+    if (config.decorator != null) {
+      child = config.decorator!(context, child);
+    }
+    for (final tool in tools) {
+      child = tool.decorator != null ? tool.decorator!(context, child) : child;
+    }
 
     return Column(
       children: [
         Expanded(
-          child: _ScalableCanvas(
-            child: story.builder != null ? story.builder!(context, args) : story.component.builder!(context, args),
-          ),
+          child: child,
         ),
         const AddOns(),
       ],
-    );
-  }
-}
-
-class _ScalableCanvas extends StatelessWidget {
-  final Widget child;
-
-  const _ScalableCanvas({Key? key, required this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.read<AppTheme>();
-    final device = context.watch<ViewportNotifier>();
-    final story = context.read<Story>();
-    const duration = Duration(milliseconds: 150);
-    final hasDevice = device.size != null;
-    return LayoutBuilder(
-      builder: (context, constraints) => SingleChildScrollView(
-        primary: false,
-        child: Container(
-          color: theme.backgroundDark,
-          constraints: BoxConstraints(minHeight: constraints.maxHeight),
-          alignment: Alignment.topCenter,
-          child: AnimatedContainer(
-            margin: EdgeInsets.symmetric(vertical: hasDevice ? 10 : 0),
-            padding: story.componentPadding ??
-                story.component.componentPadding ??
-                context.read<StorybookConfig>().componentPadding,
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              color: context.watch<BackgroundNotifier>().color ?? Colors.white,
-              border: hasDevice
-                  ? Border.all(
-                      color: theme.body,
-                    )
-                  : null,
-            ),
-            duration: duration,
-            width: device.size?.width ?? constraints.maxWidth,
-            height: device.size?.height ?? constraints.maxHeight,
-            alignment: Alignment.topLeft,
-            child: AnimatedScale(
-              alignment: Alignment.topLeft,
-              duration: duration,
-              scale: device.zoom,
-              child: Theme(data: ThemeData.fallback(), child: child),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

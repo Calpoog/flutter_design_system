@@ -20,8 +20,8 @@ class Arguments extends ChangeNotifier {
     assert(_argTypes.containsKey(name), 'There is no arg definition \'$name\'');
     ArgType arg = _argTypes[name]!;
 
-    assert(values.containsKey(name) || arg.defaultValue != null || !arg.isRequired,
-        'Story \'${_story.name}\' has no value provided for required arg \'$name\' and missing default value for its argType');
+    assert(values.containsKey(name) || !arg.isRequired,
+        'Story \'${_story.name}\' has no value provided for required arg \'$name\'');
 
     return values[name] ?? arg.defaultValue;
   }
