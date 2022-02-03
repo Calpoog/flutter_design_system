@@ -82,29 +82,26 @@ class _AddOnsState extends State<AddOns> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSlide(
+    return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
       curve: Curves.easeOut,
-      offset: addOnsOpen ? Offset.zero : const Offset(0, 251 / 300),
-      child: GestureDetector(
-        onTap: () {
-          if (!addOnsOpen) setState(() => addOnsOpen = true);
-        },
-        child: Bordered.top(
-          child: SizedBox(
-            height: 300,
-            child: PanelGroup(
-              tools: [
-                Tool(
-                  name: 'close',
-                  icon: addOnsOpen ? Icons.expand_more : Icons.expand_less,
-                  onPressed: (_) => setState(() => addOnsOpen = !addOnsOpen),
-                ),
-              ],
-              panels: [
-                ControlsPanel(),
-              ],
-            ),
+      height: addOnsOpen ? 300 : 42,
+      child: Bordered.top(
+        child: GestureDetector(
+          onTap: () {
+            if (!addOnsOpen) setState(() => addOnsOpen = true);
+          },
+          child: PanelGroup(
+            tools: [
+              Tool(
+                name: 'close',
+                icon: addOnsOpen ? Icons.expand_more : Icons.expand_less,
+                onPressed: (_) => setState(() => addOnsOpen = !addOnsOpen),
+              ),
+            ],
+            panels: [
+              ControlsPanel(),
+            ],
           ),
         ),
       ),
