@@ -57,6 +57,8 @@ class Globals extends ChangeNotifier {
     notifyListeners();
   }
 
+  updateValue(String name, String value) {}
+
   restore(Map<String, String> values) {
     _values.clear();
     for (final key in values.keys) {
@@ -78,7 +80,8 @@ class Globals extends ChangeNotifier {
 
     _values.forEach((namespace, values) {
       values.forEach((key, value) {
-        serialized['$namespace.$key'] = value;
+        final name = namespace == '' ? key : '$namespace.$key';
+        serialized[name] = value;
       });
     });
 
