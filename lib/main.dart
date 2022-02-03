@@ -119,7 +119,8 @@ class MyApp extends StatelessWidget {
         decorator: (context, child, globals) => MaterialApp(
           theme: context.read<StorybookConfig>().themes[globals['theme']],
           debugShowCheckedModeBanner: false,
-          home: Scaffold(body: child),
+          // Use builder here so there's no sub navigator interfering with routing
+          builder: (_, __) => Scaffold(body: child),
         ),
       ),
       explorer: [
