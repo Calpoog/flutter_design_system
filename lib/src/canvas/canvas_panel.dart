@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/flutter_design_system.dart';
+import 'package:flutter_design_system/src/models/globals.dart';
 import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_design_system/src/tools/theme_tool/theme_tool.dart';
@@ -37,9 +38,10 @@ class CanvasPanel extends Panel {
 
   @override
   Widget build(BuildContext context) {
-    final Arguments args = context.watch<Arguments>();
-    final Story story = context.read<Story>();
-    final StorybookConfig config = context.read<StorybookConfig>();
+    final args = context.watch<Arguments>();
+    final story = context.read<Story>();
+    final config = context.read<StorybookConfig>();
+    final globals = context.watch<Globals>();
     Widget child = story.builder != null ? story.builder!(context, args) : story.component.builder!(context, args);
 
     child = Container(
@@ -48,13 +50,13 @@ class CanvasPanel extends Panel {
     );
 
     if (story.component.decorator != null) {
-      child = story.component.decorator!(context, child);
+      child = story.component.decorator!(context, child, globals);
     }
     if (config.decorator != null) {
-      child = config.decorator!(context, child);
+      child = config.decorator!(context, child, globals);
     }
     for (final tool in tools) {
-      child = tool.decorator != null ? tool.decorator!(context, child) : child;
+      child = tool.decorator != null ? tool.decorator!(context, child, globals) : child;
     }
 
     return Column(

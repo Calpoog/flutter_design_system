@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_design_system/flutter_design_system.dart';
 import 'package:flutter_design_system/src/routing/route_parser.dart';
 import 'package:flutter_design_system/src/routing/router_delegate.dart';
-import 'package:flutter_design_system/src/tools/theme_tool/theme_tool.dart';
 import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -106,6 +105,7 @@ class _StorybookState extends State<Storybook> {
       providers: [
         ChangeNotifierProvider(create: (_) => OverlayNotifier()),
         ChangeNotifierProvider.value(value: appState),
+        ChangeNotifierProvider.value(value: appState.globals),
         Provider.value(value: widget.explorer),
         Provider.value(value: theme),
         Provider.value(value: widget.config),
@@ -199,12 +199,6 @@ class _StorybookState extends State<Storybook> {
                           providers: [
                             ChangeNotifierProvider(
                               create: (context) => ViewportProvider(
-                                globals: appState.globals,
-                                config: context.read<StorybookConfig>(),
-                              ),
-                            ),
-                            ChangeNotifierProvider(
-                              create: (context) => ThemeProvider(
                                 globals: appState.globals,
                                 config: context.read<StorybookConfig>(),
                               ),

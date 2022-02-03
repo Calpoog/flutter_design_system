@@ -12,21 +12,25 @@ class ThemeTool extends Tool {
           key: key,
           name: 'Change theme',
           icon: Icons.image_outlined,
-          decorator: (context, child) => Theme(
-            data: context.watch<ThemeProvider>().theme ?? ThemeData.fallback(),
-            child: child,
-          ),
+          decorator: (context, child, globals) {
+            final config = context.read<StorybookConfig>();
+            return Theme(
+              data: config.themes[globals['theme']] ?? ThemeData.fallback(),
+              child: child,
+            );
+          },
         );
 
   @override
   bool isActive(BuildContext context) {
-    return context.watch<ThemeProvider>().theme != null;
+    return context.watch<Globals>()['theme'] != null;
   }
 
   @override
   Widget popup(BuildContext context) {
     final overlay = context.read<OverlayNotifier>();
     final theme = context.read<AppTheme>();
+    final globals = context.read<Globals>();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,7 +40,7 @@ class ThemeTool extends Tool {
           title: const AppText.body('Reset background'),
           hoverColor: theme.background,
           onTap: () {
-            context.read<ThemeProvider>().reset();
+            globals.remove('theme');
             overlay.close();
           },
         ),
@@ -58,7 +62,7 @@ class ThemeTool extends Tool {
                   ),
                 ),
                 onTap: () {
-                  context.read<ThemeProvider>().update(entry.key);
+                  globals['theme'] = entry.key;
                   overlay.close();
                 },
               ),
@@ -66,45 +70,5 @@ class ThemeTool extends Tool {
             .toList(),
       ],
     );
-  }
-}
-
-class ThemeProvider extends UsesGlobals {
-  String? themeName;
-  ThemeData? theme;
-
-  ThemeProvider({
-    required Globals globals,
-    required StorybookConfig config,
-  }) : super(namespace: 'theme', globals: globals, config: config);
-
-  update(String name) {
-    themeName = name;
-    theme = config.themes[name];
-    notify();
-  }
-
-  reset() {
-    themeName = null;
-    theme = null;
-    notify();
-  }
-
-  @override
-  deserialize(Map<String, String> serialized) {
-    themeName = serialized['name'];
-    theme = config.themes[themeName];
-    if (theme == null) themeName = null;
-    notifyListeners();
-  }
-
-  @override
-  Map<String, String> serialize() {
-    if (themeName == null) {
-      return {};
-    }
-    return {
-      'name': themeName!,
-    };
   }
 }

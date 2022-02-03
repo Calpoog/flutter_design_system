@@ -101,7 +101,7 @@ class Tool<T> {
               leading: option.trailing,
               trailing: option.trailing,
               onTap: () {
-                context.read<Globals>().updateValue(name, option.value);
+                context.read<Globals>()[name] = option.value;
                 overlay.close();
               },
             ),

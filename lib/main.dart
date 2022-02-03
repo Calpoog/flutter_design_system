@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/flutter_design_system.dart';
+import 'package:flutter_design_system/src/models/globals.dart';
 import 'package:flutter_design_system/src/tools/theme_tool/theme_tool.dart';
 import 'package:provider/provider.dart';
 
@@ -115,8 +116,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Storybook(
       config: StorybookConfig(
-        decorator: (context, child) => MaterialApp(
-          theme: context.read<ThemeProvider>().theme,
+        decorator: (context, child, globals) => MaterialApp(
+          theme: context.read<StorybookConfig>().themes[globals['theme']],
           debugShowCheckedModeBanner: false,
           home: Scaffold(body: child),
         ),

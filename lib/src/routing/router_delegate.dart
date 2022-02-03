@@ -35,7 +35,7 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
     return StoryRouteState(
       path: state.story?.path,
       argValues: state.story?.serializeArgs(),
-      globals: state.globals.serialize(),
+      globals: state.globals.all(),
     );
   }
 

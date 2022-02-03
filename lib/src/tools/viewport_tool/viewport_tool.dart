@@ -14,7 +14,7 @@ class ViewportTool extends Tool {
           key: key,
           name: 'Change preview size',
           icon: Icons.aspect_ratio_outlined,
-          decorator: (context, child) => ViewportDecorator(child: child),
+          decorator: (_, child, __) => ViewportDecorator(child: child),
         );
 
   @override
@@ -109,15 +109,17 @@ class ViewportTool extends Tool {
   }
 }
 
-class ViewportProvider extends UsesGlobals {
+class ViewportProvider extends ChangeNotifier {
+  final Globals globals;
+  final StorybookConfig config;
   String? viewportName;
   bool landscape = false;
   double zoom = 1.0;
 
   ViewportProvider({
-    required Globals globals,
-    required StorybookConfig config,
-  }) : super(namespace: 'viewport', globals: globals, config: config);
+    required this.globals,
+    required this.config,
+  });
 
   Size? get size {
     if (viewportName == null) return null;
@@ -128,53 +130,33 @@ class ViewportProvider extends UsesGlobals {
 
   setZoom(double zoom) {
     this.zoom = zoom;
-    notify();
+    notifyListeners();
   }
 
   adjustZoom(double amount) {
     zoom += amount;
-    notify();
+    notifyListeners();
   }
 
   setSize(String name, Size? size) {
     viewportName = name;
-    notify();
+    globals['viewport.name'] = name;
+    notifyListeners();
   }
 
   flip() {
     landscape = !landscape;
-    notify();
-  }
-
-  resetSize() {
-    viewportName = null;
-    notify();
-  }
-
-  @override
-  deserialize(Map<String, String> serialized) {
-    viewportName = serialized['name'];
-    zoom = double.tryParse(serialized['zoom'] ?? '1.0') ?? 1.0;
-    if (config.deviceSizes[viewportName] == null) {
-      viewportName = null;
+    if (landscape) {
+      globals['viewport.landscape'] = 'true';
     } else {
-      landscape = serialized.containsKey('landscape');
+      globals.remove('viewport.landscape');
     }
     notifyListeners();
   }
 
-  @override
-  Map<String, String> serialize() {
-    final Map<String, String> map = {};
-    if (viewportName != null) {
-      map['name'] = viewportName!;
-    }
-    if (landscape == true) {
-      map['landscape'] = 'true';
-    }
-    if (zoom != 1.0) {
-      map['zoom'] = zoom.toString();
-    }
-    return map;
+  resetSize() {
+    viewportName = null;
+    globals.remove('viewport.name');
+    notifyListeners();
   }
 }
