@@ -8,10 +8,24 @@ class StoryRouteInformationParser extends RouteInformationParser<StoryRouteState
   Future<StoryRouteState> parseRouteInformation(RouteInformation routeInformation) {
     final uri = Uri.parse(routeInformation.location ?? '');
 
+    var parts = uri.path.split('/');
+    bool isViewingDocs = false;
+    String? path;
+    if (parts.length > 2) {
+      isViewingDocs = parts[1] == 'Docs';
+      path = '/' + parts.sublist(2).join('/');
+    }
     final args = _parseQuerySubParams(uri.queryParameters['args']);
     final globals = _parseQuerySubParams(uri.queryParameters['globals']);
 
-    return SynchronousFuture(StoryRouteState(path: uri.path, argValues: args, globals: globals));
+    return SynchronousFuture(
+      StoryRouteState(
+        path: path,
+        argValues: args,
+        globals: globals,
+        isViewingDocs: isViewingDocs,
+      ),
+    );
   }
 
   // Navigation state to url
@@ -26,7 +40,10 @@ class StoryRouteInformationParser extends RouteInformationParser<StoryRouteState
 
     if (params.isNotEmpty) params = '?' + params;
 
-    return RouteInformation(location: configuration.path == null ? '' : '${configuration.path}$params');
+    return RouteInformation(
+        location: configuration.path == null
+            ? ''
+            : '${configuration.isViewingDocs ? '/Docs' : '/Story'}${configuration.path}$params');
   }
 }
 

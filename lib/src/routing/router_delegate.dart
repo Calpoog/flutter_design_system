@@ -4,18 +4,15 @@ import 'package:flutter_design_system/src/models/globals.dart';
 import 'package:flutter_design_system/src/models/story.dart';
 import 'package:flutter_design_system/src/routing/story_route_state.dart';
 import 'package:flutter_design_system/src/models/arguments.dart';
-import 'package:flutter_design_system/src/ui/component_view.dart';
-import 'package:provider/provider.dart';
 
 class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<StoryRouteState> {
-  StoryRouterDelegate({required this.stories, GlobalKey<NavigatorState>? navigatorKey, required this.state})
-      : navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>() {
+  StoryRouterDelegate({required this.stories, required this.state}) {
     state.addListener(_stateListener);
   }
 
   @override
-  final GlobalKey<NavigatorState> navigatorKey;
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   final AppState state;
   final Map<String, Story> stories;
@@ -36,6 +33,7 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
       path: state.story?.path,
       argValues: state.story?.serializeArgs(),
       globals: state.globals.all(),
+      isViewingDocs: state.isViewingDocs,
     );
   }
 
@@ -43,21 +41,7 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
   Widget build(BuildContext context) {
     return Navigator(
       key: navigatorKey,
-      pages: [
-        if (state.story == null) const MaterialPage(child: SizedBox()),
-        if (state.story != null)
-          MaterialPage(
-            name: state.story!.name,
-            key: ValueKey(state.story),
-            child: MultiProvider(
-              providers: [
-                Provider.value(value: state.story),
-                ChangeNotifierProvider.value(value: state.args),
-              ],
-              child: const ComponentView(),
-            ),
-          ),
-      ],
+      pages: const [MaterialPage(child: SizedBox())],
       onPopPage: (route, result) {
         return false;
       },
@@ -68,6 +52,7 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
   Future<void> setNewRoutePath(StoryRouteState configuration) {
     final story = stories[configuration.path];
     if (story != null) {
+      state.isViewingDocs = configuration.isViewingDocs;
       state.globals.restore(configuration.globals);
       state.restoreStory(story, configuration.argValues ?? {});
     } else {
@@ -80,10 +65,16 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
 class AppState extends ChangeNotifier {
   Story? story;
   Arguments? args;
+  bool isViewingDocs = false;
   final globals = Globals();
 
   AppState() {
     globals.addListener(_listener);
+  }
+
+  view(isDocs) {
+    isViewingDocs = isDocs;
+    notifyListeners();
   }
 
   // Restores a story from url, driven by browser/user URL updates, not UI

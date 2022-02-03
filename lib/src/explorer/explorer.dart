@@ -43,41 +43,37 @@ class _ExplorerState extends State<Explorer> {
 
   @override
   Widget build(BuildContext context) {
-    return Overlay(initialEntries: [
-      OverlayEntry(
-        builder: (context) => Column(
-          children: [
-            const ExplorerHeader(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: ExplorerSearchField(
-                controller: searchController,
-                onSearch: (query) {
-                  setState(() {
-                    this.query = query;
-                  });
-                },
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            Expanded(
-              child: query == ''
-                  ? ExplorerBody(items: widget.items)
-                  : ExplorerSearchResults(
-                      query: query,
-                      items: searchable,
-                      onSelected: () {
-                        setState(() {
-                          query = '';
-                          searchController.clear();
-                        });
-                      },
-                    ),
-            ),
-          ],
+    return Column(
+      children: [
+        const ExplorerHeader(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: ExplorerSearchField(
+            controller: searchController,
+            onSearch: (query) {
+              setState(() {
+                this.query = query;
+              });
+            },
+          ),
         ),
-      ),
-    ]);
+        const SizedBox(height: 20.0),
+        Expanded(
+          child: query == ''
+              ? ExplorerBody(items: widget.items)
+              : ExplorerSearchResults(
+                  query: query,
+                  items: searchable,
+                  onSelected: () {
+                    setState(() {
+                      query = '';
+                      searchController.clear();
+                    });
+                  },
+                ),
+        ),
+      ],
+    );
   }
 }
 

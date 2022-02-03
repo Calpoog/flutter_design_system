@@ -3,6 +3,7 @@ import 'package:flutter_design_system/flutter_design_system.dart';
 import 'package:flutter_design_system/src/routing/route_parser.dart';
 import 'package:flutter_design_system/src/routing/router_delegate.dart';
 import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
+import 'package:flutter_design_system/src/ui/component_view.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -85,12 +86,10 @@ class Storybook extends StatefulWidget {
 }
 
 class _StorybookState extends State<Storybook> {
-  final navKey = GlobalKey<NavigatorState>();
   final appState = AppState();
   late final routeInformationParser = StoryRouteInformationParser();
   late final routerDelegate = StoryRouterDelegate(
     stories: widget.stories,
-    navigatorKey: navKey,
     state: appState,
   );
 
@@ -164,54 +163,65 @@ class _StorybookState extends State<Storybook> {
         ),
         builder: (context, child) {
           final theme = context.read<AppTheme>();
-          return Scaffold(
-            backgroundColor: theme.background,
-            body: GestureDetector(
-              onTap: () {
-                context.read<OverlayNotifier>().close();
-                FocusManager.instance.primaryFocus?.unfocus();
-              },
-              child: SafeArea(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(
-                      width: 230,
-                      child: Explorer(
-                        items: context.read<List<ExplorerItem>>(),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(4)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color.fromRGBO(0, 0, 0, 0.1),
-                              offset: Offset(0, 1),
-                              blurRadius: 5,
-                            )
-                          ],
-                        ),
-                        child: MultiProvider(
-                          providers: [
-                            ChangeNotifierProvider(
-                              create: (context) => ViewportProvider(
-                                globals: appState.globals,
-                                config: context.read<StorybookConfig>(),
+          return Overlay(
+            initialEntries: [
+              OverlayEntry(builder: (context) => child ?? const SizedBox()),
+              OverlayEntry(
+                builder: (context) => Scaffold(
+                  backgroundColor: theme.background,
+                  body: GestureDetector(
+                    onTap: () {
+                      context.read<OverlayNotifier>().close();
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
+                    child: SafeArea(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SizedBox(
+                            width: 230,
+                            child: Explorer(
+                              items: context.read<List<ExplorerItem>>(),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(Radius.circular(4)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromRGBO(0, 0, 0, 0.1),
+                                    offset: Offset(0, 1),
+                                    blurRadius: 5,
+                                  )
+                                ],
+                              ),
+                              child: Consumer<AppState>(
+                                builder: (context, appState, _) => MultiProvider(
+                                  providers: [
+                                    ChangeNotifierProvider(
+                                      create: (context) => ViewportProvider(
+                                        globals: appState.globals,
+                                        config: context.read<StorybookConfig>(),
+                                      ),
+                                    ),
+                                    Provider.value(value: appState.story),
+                                    ChangeNotifierProvider.value(value: appState.args),
+                                  ],
+                                  child: appState.story != null ? const ComponentView() : const SizedBox(),
+                                ),
                               ),
                             ),
-                          ],
-                          child: child,
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           );
         },
       ),
