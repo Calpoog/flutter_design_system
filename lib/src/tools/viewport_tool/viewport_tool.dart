@@ -14,8 +14,11 @@ class ViewportTool extends Tool {
           key: key,
           name: 'Change preview size',
           icon: Icons.aspect_ratio_outlined,
-          decorator: (_, child, __) => ViewportDecorator(child: child),
         );
+
+  static Widget decorator(BuildContext context, Widget child, Globals globals) {
+    return ViewportDecorator(child: child);
+  }
 
   @override
   bool isActive(BuildContext context) {
@@ -114,28 +117,20 @@ class ViewportProvider extends ChangeNotifier {
   final StorybookConfig config;
   String? viewportName;
   bool landscape = false;
-  double zoom = 1.0;
 
   ViewportProvider({
     required this.globals,
     required this.config,
-  });
+  }) {
+    viewportName = globals['viewport.name'];
+    if (globals['viewport.landscape'] != null) landscape = true;
+  }
 
   Size? get size {
     if (viewportName == null) return null;
 
     final size = config.deviceSizes[viewportName]!;
     return landscape == true ? Size(size.height, size.width) : size;
-  }
-
-  setZoom(double zoom) {
-    this.zoom = zoom;
-    notifyListeners();
-  }
-
-  adjustZoom(double amount) {
-    zoom += amount;
-    notifyListeners();
   }
 
   setSize(String name, Size? size) {
@@ -157,6 +152,7 @@ class ViewportProvider extends ChangeNotifier {
   resetSize() {
     viewportName = null;
     globals.remove('viewport.name');
+    globals.remove('viewport.landscape');
     notifyListeners();
   }
 }

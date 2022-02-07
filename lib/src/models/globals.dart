@@ -19,6 +19,7 @@ class Globals extends ChangeNotifier {
 
   void remove(String name) {
     _values.remove(name);
+    notifyListeners();
   }
 
   String? operator [](String name) {

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/flutter_design_system.dart';
-import 'package:flutter_design_system/src/models/globals.dart';
-import 'package:flutter_design_system/src/tools/theme_tool/theme_tool.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,6 +7,11 @@ void main() {
 
 final Component textComponent = Component(
   name: 'Card',
+  decorator: (context, child, globals) => Container(
+    // width: double.infinity,
+    // height: double.infinity,
+    child: child,
+  ),
   builder: (BuildContext context, Arguments args) => const Card(
     child: Padding(
       padding: EdgeInsets.all(20.0),
@@ -28,6 +30,10 @@ final buttonComponent = Component(
   name: 'Button',
   markdownString: 'This is the component markdown.',
   componentPadding: const EdgeInsets.all(20),
+  decorator: (context, child, globals) => Container(
+    alignment: Alignment.topLeft,
+    child: child,
+  ),
   builder: (BuildContext context, Arguments args) {
     return SizedBox(
       width: 200,
@@ -116,13 +122,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Storybook(
       config: StorybookConfig(
-        decorator: (context, child, globals) => MaterialApp(
-          theme: context.read<StorybookConfig>().themes[globals['theme']],
-          debugShowCheckedModeBanner: false,
-          // Use builder here so there's no sub navigator interfering with routing
-          builder: (_, __) => Scaffold(body: child),
-        ),
-      ),
+          // decorator: (context, child, globals) => MaterialApp(
+          //   theme: context.read<StorybookConfig>().themes[globals['theme']],
+          //   debugShowCheckedModeBanner: false,
+          //   // Use builder here so there's no sub navigator interfering with routing
+          //   builder: (_, __) => Scaffold(body: child),
+          // ),
+          ),
       explorer: [
         RootItem(name: 'Library', children: [
           FolderItem(

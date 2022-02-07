@@ -3,6 +3,7 @@ import 'package:flutter_design_system/src/docs/docs_panel.dart';
 import 'package:flutter_design_system/src/routing/router_delegate.dart';
 import 'package:flutter_design_system/src/tools/ui/divider.dart';
 import 'package:flutter_design_system/src/tools/models/tool.dart';
+import 'package:flutter_design_system/src/ui/toolbar.dart';
 import 'package:flutter_design_system/src/ui/utils/bordered.dart';
 import 'package:provider/src/provider.dart';
 
@@ -73,10 +74,7 @@ class _PanelGroupState extends State<PanelGroup> with SingleTickerProviderStateM
                   ],
                 ),
                 if (currentPanel.tools.isNotEmpty) const ToolDivider(),
-                for (final tool in currentPanel.tools) ...[
-                  tool.button(context),
-                  if (tool.divide) const ToolDivider(),
-                ],
+                Toolbar(tools: currentPanel.tools),
                 const Expanded(child: SizedBox()),
                 for (final tool in widget.tools) tool.button(context),
               ],

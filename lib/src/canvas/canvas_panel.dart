@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/flutter_design_system.dart';
-import 'package:flutter_design_system/src/models/globals.dart';
+import 'package:flutter_design_system/src/canvas/canvas.dart';
+import 'package:flutter_design_system/src/tools/viewport_tool/viewport_decorator.dart';
 import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_design_system/src/tools/theme_tool/theme_tool.dart';
 import 'package:flutter_design_system/src/tools/models/tool.dart';
 import 'package:flutter_design_system/src/controls/controls_panel.dart';
+import 'package:flutter_design_system/src/tools/zoom_tool/zoom_decorator.dart';
+import 'package:flutter_design_system/src/tools/zoom_tool/zoom_tool.dart';
 import 'package:flutter_design_system/src/ui/panels/panel.dart';
 import 'package:flutter_design_system/src/ui/utils/bordered.dart';
+import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import 'package:provider/provider.dart';
 
 class CanvasPanel extends Panel {
   CanvasPanel({Key? key})
@@ -15,22 +18,7 @@ class CanvasPanel extends Panel {
           name: 'Canvas',
           key: key,
           tools: [
-            Tool(
-              name: 'Zoom in',
-              icon: Icons.zoom_in_outlined,
-              onPressed: (context) => context.read<ViewportProvider>().adjustZoom(0.2),
-            ),
-            Tool(
-              name: 'Zoom out',
-              icon: Icons.zoom_out_outlined,
-              onPressed: (context) => context.read<ViewportProvider>().adjustZoom(-0.2),
-            ),
-            Tool(
-              name: 'Reset zoom',
-              icon: Icons.youtube_searched_for_outlined,
-              onPressed: (context) => context.read<ViewportProvider>().setZoom(1.0),
-              divide: true,
-            ),
+            ...zoomTools(),
             ThemeTool(),
             ViewportTool(),
           ],
@@ -38,31 +26,20 @@ class CanvasPanel extends Panel {
 
   @override
   Widget build(BuildContext context) {
-    final args = context.watch<Arguments>();
-    final story = context.read<Story>();
-    final config = context.read<StorybookConfig>();
-    final globals = context.watch<Globals>();
-    Widget child = story.builder != null ? story.builder!(context, args) : story.component.builder!(context, args);
-
-    child = Container(
-      padding: story.componentPadding ?? story.component.componentPadding ?? config.componentPadding,
-      child: child,
-    );
-
-    if (story.component.decorator != null) {
-      child = story.component.decorator!(context, child, globals);
-    }
-    if (config.decorator != null) {
-      child = config.decorator!(context, child, globals);
-    }
-    for (final tool in tools) {
-      child = tool.decorator != null ? tool.decorator!(context, child, globals) : child;
-    }
-
     return Column(
       children: [
         Expanded(
-          child: child,
+          child: Container(
+            color: context.read<AppTheme>().backgroundDark,
+            child: ViewportDecorator(
+              child: Canvas(
+                decorators: [
+                  (context, child, globals) => ZoomDecorator(child: child),
+                  ThemeTool.decorator,
+                ],
+              ),
+            ),
+          ),
         ),
         const AddOns(),
       ],

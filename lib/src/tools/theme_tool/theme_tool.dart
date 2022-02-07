@@ -12,14 +12,15 @@ class ThemeTool extends Tool {
           key: key,
           name: 'Change theme',
           icon: Icons.image_outlined,
-          decorator: (context, child, globals) {
-            final config = context.read<StorybookConfig>();
-            return Theme(
-              data: config.themes[globals['theme']] ?? ThemeData.fallback(),
-              child: child,
-            );
-          },
         );
+
+  static Widget decorator(BuildContext context, Widget child, Globals globals) {
+    final config = context.read<StorybookConfig>();
+    return Theme(
+      data: config.themes[globals['theme']] ?? ThemeData.fallback(),
+      child: child,
+    );
+  }
 
   @override
   bool isActive(BuildContext context) {

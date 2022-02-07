@@ -54,7 +54,6 @@ class Tool<T> {
     required this.icon,
     this.onPressed,
     this.divide = false,
-    this.decorator,
     this.options,
     this.serialize,
   })  : assert(onPressed == null || options == null, 'A tool cannot have an onPressed callback and options'),
@@ -80,7 +79,6 @@ class Tool<T> {
   /// If [onPressed] is specified then the tool cannot have [options].
   final void Function(BuildContext context)? onPressed;
   final LayerLink link;
-  final Decorator? decorator;
 
   bool isActive(BuildContext context) => false;
 

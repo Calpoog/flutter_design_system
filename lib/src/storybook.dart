@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_design_system/flutter_design_system.dart';
 import 'package:flutter_design_system/src/routing/route_parser.dart';
 import 'package:flutter_design_system/src/routing/router_delegate.dart';
+import 'package:flutter_design_system/src/tools/theme_tool/theme_tool.dart';
+import 'package:flutter_design_system/src/tools/viewport_tool/viewport_decorator.dart';
 import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
+import 'package:flutter_design_system/src/tools/zoom_tool/zoom_decorator.dart';
+import 'package:flutter_design_system/src/tools/zoom_tool/zoom_tool.dart';
 import 'package:flutter_design_system/src/ui/component_view.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,13 +17,13 @@ class StorybookConfig {
   late final Map<String, Size> deviceSizes;
   late final Map<String, ThemeData> themes;
   final EdgeInsets componentPadding;
-  final Decorator? decorator;
+  late final List<Decorator> decorators;
 
   StorybookConfig({
     Map<String, Size>? deviceSizes,
     Map<String, ThemeData>? themes,
     this.componentPadding = EdgeInsets.zero,
-    this.decorator,
+    List<Decorator>? decorators,
   }) {
     this.themes = themes ??
         {
@@ -32,6 +36,7 @@ class StorybookConfig {
           'Large Mobile': const Size(414, 896),
           'Tablet': const Size(834, 1112),
         };
+    this.decorators = decorators ?? [];
   }
 }
 
@@ -201,14 +206,17 @@ class _StorybookState extends State<Storybook> {
                               child: Consumer<AppState>(
                                 builder: (context, appState, _) => MultiProvider(
                                   providers: [
+                                    Provider.value(value: appState.story),
+                                    ChangeNotifierProvider.value(value: appState.args),
+                                    ChangeNotifierProvider(
+                                      create: (context) => ZoomProvider(),
+                                    ),
                                     ChangeNotifierProvider(
                                       create: (context) => ViewportProvider(
                                         globals: appState.globals,
                                         config: context.read<StorybookConfig>(),
                                       ),
                                     ),
-                                    Provider.value(value: appState.story),
-                                    ChangeNotifierProvider.value(value: appState.args),
                                   ],
                                   child: appState.story != null ? const ComponentView() : const SizedBox(),
                                 ),

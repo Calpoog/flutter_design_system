@@ -35,15 +35,12 @@ class _ComponentViewState extends State<ComponentView> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     context.watch<Story>();
-    return KeyedSubtree(
-      key: ValueKey(appState.story),
-      child: PanelGroup(
-        controller: controller,
-        panels: [
-          CanvasPanel(),
-          DocsPanel(),
-        ],
-      ),
+    return PanelGroup(
+      controller: controller,
+      panels: [
+        CanvasPanel(),
+        DocsPanel(),
+      ],
     );
   }
 

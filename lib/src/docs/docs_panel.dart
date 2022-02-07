@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_design_system/src/docs/doc_canvas.dart';
 import 'package:flutter_design_system/src/models/story.dart';
 import 'package:flutter_markdown/flutter_markdown.dart' as md;
 import 'package:flutter_design_system/src/ui/panels/panel.dart';
@@ -37,6 +38,7 @@ class DocsPanel extends Panel {
           child: SizedBox(
             width: min(constraints.maxWidth, 800),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (component.markdown != null) MarkdownFile(file: component.markdown!),
@@ -46,6 +48,7 @@ class DocsPanel extends Panel {
                 const AppText('Stories', size: 20),
                 for (final story in stories) ...[
                   AppText(story.name, size: 16),
+                  DocCanvas(story: story),
                   if (story.markdown != null) MarkdownFile(file: story.markdown!),
                   if (story.markdownString != null) MarkdownString(string: story.markdownString!),
                 ],
