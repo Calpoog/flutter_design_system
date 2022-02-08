@@ -24,6 +24,7 @@ class DocCanvas extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ZoomProvider()),
       ],
       child: Container(
+        margin: const EdgeInsets.only(bottom: 20.0),
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           border: Border.all(color: theme.border),

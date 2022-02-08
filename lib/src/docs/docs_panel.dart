@@ -17,7 +17,8 @@ class DocsPanel extends Panel {
   Widget build(BuildContext context) {
     final selectedStory = context.read<Story>();
     final component = selectedStory.component;
-    final stories = component.children as List<Story>;
+    final stories = List.from(component.children as List<Story>);
+    final primary = stories.removeAt(0);
 
     return LayoutBuilder(builder: (context, constraints) {
       return SingleChildScrollView(
@@ -28,16 +29,18 @@ class DocsPanel extends Panel {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                H1(component.name),
+                DocCanvas(story: primary),
                 if (component.markdown != null) MarkdownFile(file: component.markdown!),
                 if (component.markdownString != null) MarkdownString(string: component.markdownString!),
-                // "Primary"
-                // TODO: Mini-panel and args/controls
-                const AppText('Stories', size: 20),
+                const SizedBox(height: 30),
+                if (stories.isNotEmpty) const H3('Stories', useRule: true),
                 for (final story in stories) ...[
-                  AppText(story.name, size: 16),
+                  H4(story.name, useRule: false),
                   DocCanvas(story: story),
                   if (story.markdown != null) MarkdownFile(file: story.markdown!),
                   if (story.markdownString != null) MarkdownString(string: story.markdownString!),
+                  const SizedBox(height: 30),
                 ],
               ],
             ),
@@ -87,13 +90,20 @@ class MarkdownString extends StatelessWidget {
     final theme = Theme.of(context);
     final textStyle = theme.textTheme.bodyText1!.copyWith(fontFamily: 'NunitoSans', color: appTheme.body);
     final headingStyle = textStyle.copyWith(fontWeight: FontWeight.w900);
+    const headingPadding = EdgeInsets.fromLTRB(0, 24, 0, 16);
     final _style = md.MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
       h1: headingStyle.copyWith(fontSize: 36),
+      h1Padding: headingPadding,
       h2: headingStyle.copyWith(fontSize: 30),
+      h2Padding: headingPadding,
       h3: headingStyle.copyWith(fontSize: 24),
+      h3Padding: headingPadding,
       h4: headingStyle.copyWith(fontSize: 18),
+      h4Padding: headingPadding,
       h5: headingStyle.copyWith(fontSize: 14),
+      h5Padding: headingPadding,
       h6: headingStyle.copyWith(fontSize: 12),
+      h6Padding: headingPadding,
       tableHead: textStyle.copyWith(fontWeight: FontWeight.w800),
       blockquote: headingStyle.copyWith(color: Colors.red),
       blockquotePadding: const EdgeInsets.only(left: 20.0),

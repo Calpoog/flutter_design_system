@@ -109,6 +109,7 @@ class _StorybookState extends State<Storybook> {
         Provider.value(value: widget.config),
       ],
       builder: (context, _) => MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         routeInformationParser: routeInformationParser,
         routerDelegate: routerDelegate,
         title: 'Storybook',
