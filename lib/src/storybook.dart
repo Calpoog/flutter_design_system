@@ -2,14 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_design_system/flutter_design_system.dart';
 import 'package:flutter_design_system/src/routing/route_parser.dart';
 import 'package:flutter_design_system/src/routing/router_delegate.dart';
-import 'package:flutter_design_system/src/tools/theme_tool/theme_tool.dart';
-import 'package:flutter_design_system/src/tools/viewport_tool/viewport_decorator.dart';
 import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
-import 'package:flutter_design_system/src/tools/zoom_tool/zoom_decorator.dart';
 import 'package:flutter_design_system/src/tools/zoom_tool/zoom_tool.dart';
 import 'package:flutter_design_system/src/ui/component_view.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_design_system/src/explorer/explorer.dart';
 
@@ -100,9 +96,7 @@ class _StorybookState extends State<Storybook> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = GoogleFonts.nunitoSansTextTheme(
-      Theme.of(context).textTheme.copyWith(subtitle1: const TextStyle(fontSize: 14)),
-    );
+    final textTheme = Theme.of(context).textTheme.copyWith(subtitle1: const TextStyle(fontSize: 14));
     final theme = AppTheme();
 
     return MultiProvider(
@@ -120,6 +114,7 @@ class _StorybookState extends State<Storybook> {
         title: 'Storybook',
         theme: ThemeData(
           textTheme: textTheme,
+          fontFamily: 'NunitoSans',
           iconTheme: IconThemeData(color: theme.unselected, size: 25),
           pageTransitionsTheme: const PageTransitionsTheme(builders: {
             TargetPlatform.android: ZoomPageTransitionsBuilder(),
@@ -134,7 +129,7 @@ class _StorybookState extends State<Storybook> {
               side: BorderSide(color: theme.inputBorder),
               primary: theme.body,
               backgroundColor: theme.inputBorder.withOpacity(0.03),
-              textStyle: GoogleFonts.nunitoSans(fontWeight: FontWeight.bold),
+              textStyle: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
           primaryColor: theme.selected,
@@ -161,9 +156,9 @@ class _StorybookState extends State<Storybook> {
               ),
             ),
             labelColor: theme.selected,
-            labelStyle: GoogleFonts.nunitoSans(fontWeight: FontWeight.bold),
+            labelStyle: const TextStyle(fontFamily: 'NunitoSans', fontWeight: FontWeight.bold),
             unselectedLabelColor: theme.unselected,
-            unselectedLabelStyle: GoogleFonts.nunitoSans(fontWeight: FontWeight.bold),
+            unselectedLabelStyle: const TextStyle(fontFamily: 'NunitoSans', fontWeight: FontWeight.bold),
           ),
         ),
         builder: (context, child) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'theme.dart';
@@ -27,7 +26,8 @@ class AppText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: GoogleFonts.nunitoSans(
+      style: TextStyle(
+        fontFamily: 'NunitoSans',
         color: color ?? context.read<AppTheme>().body,
         fontWeight: weight,
         fontSize: size,
@@ -53,7 +53,13 @@ class AppCode extends StatelessWidget {
       ),
       child: RichText(
         overflow: TextOverflow.ellipsis,
-        text: TextSpan(text: text, style: GoogleFonts.robotoMono(fontSize: 12)),
+        text: TextSpan(
+          text: text,
+          style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                fontFamily: 'RobotoMono',
+                fontSize: 12,
+              ),
+        ),
         softWrap: false,
       ),
     );

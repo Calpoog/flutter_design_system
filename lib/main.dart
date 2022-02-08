@@ -7,6 +7,7 @@ void main() {
 
 final Component textComponent = Component(
   name: 'Card',
+  markdown: 'test.md',
   decorator: (context, child, globals) => Container(
     // width: double.infinity,
     // height: double.infinity,
