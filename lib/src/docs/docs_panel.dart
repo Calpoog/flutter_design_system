@@ -4,24 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_design_system/src/docs/doc_canvas.dart';
 import 'package:flutter_design_system/src/models/story.dart';
+import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:flutter_markdown/flutter_markdown.dart' as md;
 import 'package:flutter_design_system/src/ui/panels/panel.dart';
 import 'package:flutter_design_system/src/ui/utils/text.dart';
 import 'package:provider/provider.dart';
-
-final _style = md.MarkdownStyleSheet(
-  h1: const TextStyle(fontSize: 36, fontWeight: FontWeight.w800),
-  h2: const TextStyle(fontSize: 30, fontWeight: FontWeight.w900),
-  h3: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
-  h4: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
-  h5: const TextStyle(fontSize: 14, fontWeight: FontWeight.w900),
-  h6: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900),
-  horizontalRuleDecoration: const BoxDecoration(
-    border: Border(
-      bottom: BorderSide(width: 1, color: Color.fromRGBO(229, 229, 229, 1)),
-    ),
-  ),
-);
 
 class DocsPanel extends Panel {
   DocsPanel({Key? key}) : super(name: 'Docs', key: key);
@@ -96,6 +83,34 @@ class MarkdownString extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appTheme = context.read<AppTheme>();
+    final theme = Theme.of(context);
+    final textStyle = theme.textTheme.bodyText1!.copyWith(fontFamily: 'NunitoSans', color: appTheme.body);
+    final headingStyle = textStyle.copyWith(fontWeight: FontWeight.w900);
+    final _style = md.MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+      h1: headingStyle.copyWith(fontSize: 36),
+      h2: headingStyle.copyWith(fontSize: 30),
+      h3: headingStyle.copyWith(fontSize: 24),
+      h4: headingStyle.copyWith(fontSize: 18),
+      h5: headingStyle.copyWith(fontSize: 14),
+      h6: headingStyle.copyWith(fontSize: 12),
+      tableHead: textStyle.copyWith(fontWeight: FontWeight.w800),
+      blockquote: headingStyle.copyWith(color: Colors.red),
+      blockquotePadding: const EdgeInsets.only(left: 20.0),
+      blockquoteDecoration: BoxDecoration(
+        border: Border(
+          left: BorderSide(width: 5.0, color: Colors.blueGrey.withOpacity(0.2)),
+        ),
+      ),
+      p: textStyle,
+      tableBody: textStyle,
+      horizontalRuleDecoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(width: 1, color: Color.fromRGBO(229, 229, 229, 1)),
+        ),
+      ),
+    );
+
     return md.MarkdownBody(
       data: string,
       styleSheet: _style,
@@ -108,5 +123,19 @@ class CodeBuilder extends md.MarkdownElementBuilder {
   @override
   Widget? visitElementAfter(dynamic element, TextStyle? preferredStyle) {
     return AppCode(element.textContent);
+  }
+}
+
+class BlockQuoteBuilder extends md.MarkdownElementBuilder {
+  @override
+  Widget? visitElementAfter(dynamic element, TextStyle? preferredStyle) {
+    return Container(
+      child: AppText(element.textContent),
+      decoration: const BoxDecoration(
+        border: Border(
+          left: BorderSide(width: 5.0, color: Colors.black),
+        ),
+      ),
+    );
   }
 }
