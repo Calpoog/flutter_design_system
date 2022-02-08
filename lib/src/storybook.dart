@@ -5,6 +5,7 @@ import 'package:flutter_design_system/src/routing/router_delegate.dart';
 import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
 import 'package:flutter_design_system/src/tools/zoom_tool/zoom_tool.dart';
 import 'package:flutter_design_system/src/ui/component_view.dart';
+import 'package:flutter_design_system/src/ui/utils/section.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_design_system/src/explorer/explorer.dart';
@@ -188,33 +189,24 @@ class _StorybookState extends State<Storybook> {
                           Expanded(
                             child: Container(
                               margin: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.all(Radius.circular(4)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color.fromRGBO(0, 0, 0, 0.1),
-                                    offset: Offset(0, 1),
-                                    blurRadius: 5,
-                                  )
-                                ],
-                              ),
-                              child: Consumer<AppState>(
-                                builder: (context, appState, _) => MultiProvider(
-                                  providers: [
-                                    Provider.value(value: appState.story),
-                                    ChangeNotifierProvider.value(value: appState.args),
-                                    ChangeNotifierProvider(
-                                      create: (context) => ZoomProvider(),
-                                    ),
-                                    ChangeNotifierProvider(
-                                      create: (context) => ViewportProvider(
-                                        globals: appState.globals,
-                                        config: context.read<StorybookConfig>(),
+                              child: Section(
+                                child: Consumer<AppState>(
+                                  builder: (context, appState, _) => MultiProvider(
+                                    providers: [
+                                      Provider.value(value: appState.story),
+                                      ChangeNotifierProvider.value(value: appState.args),
+                                      ChangeNotifierProvider(
+                                        create: (context) => ZoomProvider(),
                                       ),
-                                    ),
-                                  ],
-                                  child: appState.story != null ? const ComponentView() : const SizedBox(),
+                                      ChangeNotifierProvider(
+                                        create: (context) => ViewportProvider(
+                                          globals: appState.globals,
+                                          config: context.read<StorybookConfig>(),
+                                        ),
+                                      ),
+                                    ],
+                                    child: appState.story != null ? const ComponentView() : const SizedBox(),
+                                  ),
                                 ),
                               ),
                             ),

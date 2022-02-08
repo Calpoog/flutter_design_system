@@ -5,7 +5,7 @@ import 'package:flutter_design_system/src/tools/zoom_tool/zoom_decorator.dart';
 import 'package:flutter_design_system/src/tools/zoom_tool/zoom_tool.dart';
 import 'package:flutter_design_system/src/ui/toolbar.dart';
 import 'package:flutter_design_system/src/ui/utils/bordered.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import 'package:flutter_design_system/src/ui/utils/section.dart';
 import 'package:provider/provider.dart';
 
 class DocCanvas extends StatelessWidget {
@@ -15,7 +15,6 @@ class DocCanvas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.read<AppTheme>();
     final tools = zoomTools();
 
     return MultiProvider(
@@ -23,15 +22,8 @@ class DocCanvas extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => Arguments(story)),
         ChangeNotifierProvider(create: (_) => ZoomProvider()),
       ],
-      child: Container(
+      child: Section(
         margin: const EdgeInsets.only(bottom: 20.0),
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          border: Border.all(color: theme.border),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(5),
-          ),
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
