@@ -131,7 +131,7 @@ class _StorybookState extends State<Storybook> {
               side: BorderSide(color: theme.inputBorder),
               primary: theme.body,
               backgroundColor: theme.inputBorder.withOpacity(0.03),
-              textStyle: const TextStyle(fontWeight: FontWeight.bold),
+              textStyle: const TextStyle(fontFamily: 'NunitoSans', fontWeight: FontWeight.bold),
             ),
           ),
           primaryColor: theme.selected,

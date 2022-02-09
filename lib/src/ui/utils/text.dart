@@ -36,10 +36,10 @@ class AppText extends StatelessWidget {
   }
 }
 
-class AppCode extends StatelessWidget {
+class CodeText extends StatelessWidget {
   final String text;
 
-  const AppCode(this.text, {Key? key}) : super(key: key);
+  const CodeText(this.text, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

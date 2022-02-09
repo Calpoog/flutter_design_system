@@ -30,6 +30,8 @@ class CanvasPanel extends Panel {
       children: [
         Expanded(
           child: Container(
+            width: double.infinity,
+            alignment: Alignment.topCenter,
             color: context.read<AppTheme>().backgroundDark,
             child: ViewportDecorator(
               child: Canvas(

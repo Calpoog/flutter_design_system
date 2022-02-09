@@ -17,11 +17,8 @@ class DocCanvas extends StatelessWidget {
   Widget build(BuildContext context) {
     final tools = zoomTools();
 
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => Arguments(story)),
-        ChangeNotifierProvider(create: (_) => ZoomProvider()),
-      ],
+    return ChangeNotifierProvider(
+      create: (_) => ZoomProvider(),
       child: Section(
         margin: const EdgeInsets.only(bottom: 20.0),
         child: Column(

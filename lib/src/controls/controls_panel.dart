@@ -84,13 +84,13 @@ class ControlsPanel extends Panel {
                             children: [
                               AppText.body(arg.description),
                               const SizedBox(height: 5),
-                              AppCode(arg.type.toString()),
+                              CodeText(arg.type.toString()),
                             ],
                           ),
                         ),
                         _Cell(
                           flex: 2,
-                          child: AppCode(arg.defaultValue.toString()),
+                          child: CodeText(arg.defaultValue.toString()),
                         ),
                         _Cell(
                           flex: 4,
