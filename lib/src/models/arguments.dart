@@ -12,10 +12,9 @@ class Arguments extends ChangeNotifier {
   late Story _story;
   late ArgTypes _argTypes;
   late final AppState? _appState;
-  final BuildContext? _context;
   bool isForced = true;
 
-  Arguments({required Story story, BuildContext? context}) : _context = context {
+  Arguments({required Story story, BuildContext? context}) {
     _appState = context?.read<AppState>();
     updateStory(story);
     _appState?.addListener(_stateListener);
@@ -48,18 +47,17 @@ class Arguments extends ChangeNotifier {
     _story.updateArg(name, value);
     isForced = false;
     notifyListeners();
-    if (_appState != null) _updateRouteArgParams(); //_appState!.argsUpdated();
+    if (_appState != null) _updateRouteArgParams();
   }
 
   void reset() {
     _story.resetArgs();
     isForced = true;
     notifyListeners();
-    if (_appState != null) _updateRouteArgParams(); //_appState!.argsUpdated();
+    if (_appState != null) _updateRouteArgParams();
   }
 
   void _updateRouteArgParams() {
-    // Router.neglect(_context!, () {});
     _appState!.argsUpdated();
   }
 
