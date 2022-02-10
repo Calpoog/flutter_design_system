@@ -18,48 +18,46 @@ class ControlsPanel extends Panel {
       child: SingleChildScrollView(
         primary: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           child: Column(
             children: [
-              Bordered.bottom(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Row(
-                    children: [
-                      const _Cell(
-                        flex: 2,
-                        child: AppText.title('Name'),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  children: [
+                    const _Cell(
+                      flex: 2,
+                      child: AppText.title('Name'),
+                    ),
+                    const _Cell(
+                      flex: 4,
+                      child: AppText.title('Description'),
+                    ),
+                    const _Cell(
+                      flex: 2,
+                      child: AppText.title('Default'),
+                    ),
+                    _Cell(
+                      flex: 4,
+                      child: Row(
+                        children: [
+                          const AppText.title('Control'),
+                          const Expanded(child: SizedBox()),
+                          ToolButton(
+                            icon: Icons.replay,
+                            onPressed: () {
+                              context.read<Arguments>().reset();
+                            },
+                            name: 'Reset controls',
+                          ),
+                        ],
                       ),
-                      const _Cell(
-                        flex: 4,
-                        child: AppText.title('Description'),
-                      ),
-                      const _Cell(
-                        flex: 2,
-                        child: AppText.title('Default'),
-                      ),
-                      _Cell(
-                        flex: 4,
-                        child: Row(
-                          children: [
-                            const AppText.title('Control'),
-                            const Expanded(child: SizedBox()),
-                            ToolButton(
-                              icon: Icons.replay,
-                              onPressed: () {
-                                context.read<Arguments>().reset();
-                              },
-                              name: 'Reset controls',
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
               for (final arg in story.component.argTypes.values)
-                Bordered.bottom(
+                Bordered.top(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: Row(
@@ -90,7 +88,10 @@ class ControlsPanel extends Panel {
                         ),
                         _Cell(
                           flex: 2,
-                          child: CodeText(arg.defaultValue.toString()),
+                          child: Tooltip(
+                            message: arg.defaultValue.toString(),
+                            child: CodeText(arg.defaultValue.toString()),
+                          ),
                         ),
                         _Cell(
                           flex: 4,

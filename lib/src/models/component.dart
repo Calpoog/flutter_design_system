@@ -25,8 +25,9 @@ class ComponentActions {
 class Component extends ExplorerItem {
   final Decorator? decorator;
   final ArgTypes argTypes = {};
-  final String? markdown;
+  final String? markdownFile;
   final String? markdownString;
+  final Widget? docWidget;
 
   // Compositional values for individual stories
   final TemplateBuilder? builder;
@@ -40,8 +41,9 @@ class Component extends ExplorerItem {
     this.componentPadding,
     required List<Story> stories,
     bool? isExpanded,
-    this.markdown,
+    this.markdownFile,
     this.markdownString,
+    this.docWidget,
   }) : super(
           name: name,
           children: stories,

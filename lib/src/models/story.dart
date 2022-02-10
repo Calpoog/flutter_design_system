@@ -24,16 +24,18 @@ class Story extends ExplorerItem {
   /// Padding to put around the widget when displayed in the canvas and docs.
   final EdgeInsets? componentPadding;
 
-  final String? markdown;
+  final String? markdownFile;
   final String? markdownString;
+  final Widget? docWidget;
 
   Story({
     required String name,
     ArgValues? args,
     this.builder,
     this.componentPadding,
-    this.markdown,
+    this.markdownFile,
     this.markdownString,
+    this.docWidget,
   })  : args = Map.of(args ?? {}),
         initial = Map.of(args ?? {}),
         super(name: name);
