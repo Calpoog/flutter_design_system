@@ -17,10 +17,13 @@ class DocsPanel extends Panel {
 
   @override
   Widget build(BuildContext context) {
-    final selectedStory = context.read<Story>();
+    final selectedStory = context.watch<Story>();
 
     if (selectedStory is Documentation) {
-      return SingleChildScrollView(child: DocsWidget(selectedStory));
+      return SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
+        child: DocsWidget(selectedStory),
+      );
     } else {
       return DocsPage(
         story: selectedStory,

@@ -248,7 +248,7 @@ class _ItemState extends State<_Item> {
                       ),
                     ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 5.0),
+                    padding: const EdgeInsets.only(left: 5.0, top: 2.0),
                     child: widget.text ??
                         AppText(
                           widget.name!,

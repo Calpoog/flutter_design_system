@@ -98,6 +98,7 @@ class _PanelGroupState extends State<PanelGroup> with SingleTickerProviderStateM
   @override
   void dispose() {
     controller.removeListener(_tabListener);
+    controller.dispose();
     super.dispose();
   }
 }

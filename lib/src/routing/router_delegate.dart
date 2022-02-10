@@ -32,7 +32,7 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
   StoryRouteState? get currentConfiguration {
     return StoryRouteState(
       path: state.story?.path,
-      argValues: state.isViewingDocs ? {} : state.story?.serializeArgs(),
+      argValues: state.isViewingDocs || state.story is Documentation ? {} : state.story?.serializeArgs(),
       globals: state.globals.all(),
       isViewingDocs: state.isViewingDocs,
     );

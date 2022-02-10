@@ -29,7 +29,7 @@ class _ComponentViewState extends State<ComponentView> with TickerProviderStateM
     final isDoc = widget.story is Documentation;
 
     return KeyedSubtree(
-      key: ValueKey(widget.story),
+      key: ValueKey('${appState.isViewingDocs ? 'Docs' : 'Story'}/${widget.story.path}'),
       child: PanelGroup(
         initialTab: isDoc || !appState.isViewingDocs ? 0 : 1,
         onTabChange: (int index) => appState.view(index == 1),

@@ -232,6 +232,7 @@ class ExplorerBody extends StatelessWidget {
         return DocumentationItemWidget(
             item: item as Documentation,
             depth: depth,
+            isSelected: appState.story == item,
             onPressed: () {
               appState.setStory(item as Story);
             });
