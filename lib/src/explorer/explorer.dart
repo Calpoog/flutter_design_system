@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/src/models/component.dart';
+import 'package:flutter_design_system/src/models/documentaton.dart';
 import 'package:flutter_design_system/src/models/story.dart';
 import 'package:flutter_design_system/src/routing/router_delegate.dart';
 import 'package:flutter_design_system/src/explorer/explorer_items.dart';
@@ -227,6 +228,13 @@ class ExplorerBody extends StatelessWidget {
         return RootItemWidget(item: item as RootItem, depth: depth, child: child);
       case FolderItem:
         return FolderItemWidget(item: item as FolderItem, depth: depth, child: child);
+      case Documentation:
+        return DocumentationItemWidget(
+            item: item as Documentation,
+            depth: depth,
+            onPressed: () {
+              appState.setStory(item as Story);
+            });
       case Component:
         if (item.children!.length == 1 && item.children!.first.name == item.name) {
           // Let the single story of same-name through

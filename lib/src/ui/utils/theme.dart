@@ -13,6 +13,7 @@ class AppTheme {
   final Color component;
   final Color folder;
   final Color inputBorder;
+  final Color docs;
 
   AppTheme({
     this.background = const Color.fromRGBO(246, 249, 252, 1),
@@ -27,5 +28,6 @@ class AppTheme {
     this.story = const Color.fromRGBO(55, 213, 211, 1),
     this.component = const Color.fromRGBO(30, 167, 253, 1),
     this.folder = const Color.fromRGBO(42, 4, 129, 1),
+    this.docs = const Color.fromRGBO(255, 131, 0, 1),
   });
 }

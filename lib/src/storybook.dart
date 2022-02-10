@@ -194,7 +194,6 @@ class _StorybookState extends State<Storybook> {
                                   builder: (context, appState, _) => MultiProvider(
                                     providers: [
                                       Provider.value(value: appState.story),
-                                      ChangeNotifierProvider.value(value: appState.args),
                                       ChangeNotifierProvider(
                                         create: (context) => ZoomProvider(),
                                       ),
@@ -205,7 +204,11 @@ class _StorybookState extends State<Storybook> {
                                         ),
                                       ),
                                     ],
-                                    child: appState.story != null ? const ComponentView() : const SizedBox(),
+                                    child: appState.story != null
+                                        ? Consumer<AppState>(
+                                            builder: (_, __, ___) => ComponentView(story: appState.story!),
+                                          )
+                                        : const SizedBox(),
                                   ),
                                 ),
                               ),

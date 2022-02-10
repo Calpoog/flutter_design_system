@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/src/models/component.dart';
+import 'package:flutter_design_system/src/models/documentaton.dart';
 import 'package:flutter_design_system/src/models/story.dart';
 import 'package:flutter_design_system/src/ui/utils/hoverable.dart';
 import 'package:flutter_design_system/src/ui/utils/text.dart';
@@ -129,6 +130,34 @@ class StoryItemWidget extends StatelessWidget {
       depth: depth,
       icon: Icons.bookmark_outline,
       iconColor: context.read<AppTheme>().story,
+      isExpandable: false,
+      isSelected: isSelected,
+      onPressed: onPressed,
+    );
+  }
+}
+
+class DocumentationItemWidget extends StatelessWidget {
+  final Documentation item;
+  final int depth;
+  final VoidCallback onPressed;
+  final bool isSelected;
+
+  const DocumentationItemWidget({
+    Key? key,
+    required this.item,
+    required this.depth,
+    required this.onPressed,
+    this.isSelected = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return _Item(
+      name: item.name,
+      depth: depth,
+      icon: Icons.description_outlined,
+      iconColor: context.read<AppTheme>().docs,
       isExpandable: false,
       isSelected: isSelected,
       onPressed: onPressed,

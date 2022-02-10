@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/src/explorer/explorer_items.dart';
 import 'package:flutter_design_system/src/models/arguments.dart';
+import 'package:flutter_design_system/src/models/documentable.dart';
 import 'package:flutter_design_system/src/models/globals.dart';
 import 'package:flutter_design_system/src/models/story.dart';
 
@@ -22,11 +23,14 @@ class ComponentActions {
   }
 }
 
-class Component extends ExplorerItem {
+class Component extends ExplorerItem implements Documentable {
   final Decorator? decorator;
   final ArgTypes argTypes = {};
+  @override
   final String? markdownFile;
+  @override
   final String? markdownString;
+  @override
   final Widget? docWidget;
 
   // Compositional values for individual stories

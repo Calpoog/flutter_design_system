@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_design_system/src/controls/controls.dart';
 import 'package:flutter_design_system/src/models/story.dart';
+import 'package:flutter_design_system/src/routing/router_delegate.dart';
 
 typedef ArgTypes = Map<String, ArgType>;
 typedef ArgValues = Map<String, dynamic>;
@@ -9,10 +10,19 @@ typedef TemplateBuilder = Widget Function(BuildContext context, Arguments args);
 class Arguments extends ChangeNotifier {
   late Story _story;
   late ArgTypes _argTypes;
+  final AppState? _appState;
   bool isForced = true;
 
-  Arguments(Story story) {
+  Arguments(Story story, [AppState? appState]) : _appState = appState {
     updateStory(story);
+    _appState?.addListener(_stateListener);
+  }
+
+  _stateListener() {
+    if (_appState!.isRestoring) {
+      isForced = true;
+      notifyListeners();
+    }
   }
 
   T? value<T>(String name) {
@@ -35,12 +45,20 @@ class Arguments extends ChangeNotifier {
     _story.updateArg(name, value);
     isForced = false;
     notifyListeners();
+    if (_appState != null) _appState!.argsUpdated();
   }
 
   void reset() {
     _story.resetArgs();
     isForced = true;
     notifyListeners();
+    if (_appState != null) _appState!.argsUpdated();
+  }
+
+  @override
+  void dispose() {
+    _appState?.removeListener(_stateListener);
+    super.dispose();
   }
 }
 

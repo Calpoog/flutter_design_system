@@ -1,17 +1,13 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_design_system/src/controls/controls_panel.dart';
-import 'package:flutter_design_system/src/docs/doc_canvas.dart';
+import 'package:flutter_design_system/src/docs/docs.dart';
+import 'package:flutter_design_system/src/docs/docs_page.dart';
+import 'package:flutter_design_system/src/models/documentaton.dart';
 import 'package:flutter_design_system/src/models/story.dart';
-import 'package:flutter_design_system/src/models/arguments.dart';
-import 'package:flutter_design_system/src/ui/utils/section.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:flutter_highlighter/flutter_highlighter.dart';
 import 'package:flutter_highlighter/themes/atom-one-light.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:markdown/markdown.dart' as md;
 import 'package:flutter_design_system/src/ui/panels/panel.dart';
 import 'package:flutter_design_system/src/ui/utils/text.dart';
 import 'package:provider/provider.dart';
@@ -22,58 +18,14 @@ class DocsPanel extends Panel {
   @override
   Widget build(BuildContext context) {
     final selectedStory = context.read<Story>();
-    final component = selectedStory.component;
-    final List<Story> stories = List.from(component.children as List<Story>);
-    final primary = stories.removeAt(0);
 
-    return LayoutBuilder(builder: (context, constraints) {
-      return SingleChildScrollView(
-        child: Center(
-          child: KeyedSubtree(
-            key: ValueKey(primary.component),
-            child: SizedBox(
-              width: min(constraints.maxWidth, 800),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  H1(component.name),
-                  ChangeNotifierProvider(
-                    create: (context) => Arguments(primary),
-                    child: Column(
-                      children: [
-                        DocCanvas(story: primary),
-                        if (primary.component.argTypes.isNotEmpty)
-                          Section(
-                            child: ControlsPanel(),
-                            margin: const EdgeInsets.only(bottom: 20.0),
-                          ),
-                      ],
-                    ),
-                  ),
-                  if (component.docWidget != null) component.docWidget!,
-                  if (component.markdownFile != null) MarkdownFile(file: component.markdownFile!),
-                  if (component.markdownString != null) MarkdownString(string: component.markdownString!),
-                  const SizedBox(height: 30),
-                  if (stories.isNotEmpty) const H3('Stories', useRule: true),
-                  for (final story in stories) ...[
-                    H4(story.name, useRule: false),
-                    ChangeNotifierProvider(
-                      create: (context) => Arguments(story),
-                      child: DocCanvas(story: story),
-                    ),
-                    if (story.docWidget != null) story.docWidget!,
-                    if (story.markdownFile != null) MarkdownFile(file: story.markdownFile!),
-                    if (story.markdownString != null) MarkdownString(string: story.markdownString!),
-                    const SizedBox(height: 30),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        ),
+    if (selectedStory is Documentation) {
+      return SingleChildScrollView(child: DocsWidget(selectedStory));
+    } else {
+      return DocsPage(
+        story: selectedStory,
       );
-    });
+    }
   }
 }
 

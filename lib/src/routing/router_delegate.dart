@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_design_system/src/models/documentaton.dart';
 import 'package:flutter_design_system/src/models/globals.dart';
 import 'package:flutter_design_system/src/models/story.dart';
 import 'package:flutter_design_system/src/routing/story_route_state.dart';
@@ -31,7 +32,7 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
   StoryRouteState? get currentConfiguration {
     return StoryRouteState(
       path: state.story?.path,
-      argValues: state.story?.serializeArgs(),
+      argValues: state.isViewingDocs ? {} : state.story?.serializeArgs(),
       globals: state.globals.all(),
       isViewingDocs: state.isViewingDocs,
     );
@@ -55,8 +56,6 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
       state.isViewingDocs = configuration.isViewingDocs;
       state.globals.restore(configuration.globals);
       state.restoreStory(story, configuration.argValues ?? {});
-    } else {
-      state.args = null;
     }
     return SynchronousFuture(null);
   }
@@ -64,7 +63,7 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
 
 class AppState extends ChangeNotifier {
   Story? story;
-  Arguments? args;
+  bool isRestoring = false;
   bool isViewingDocs = false;
   final globals = Globals();
 
@@ -79,36 +78,23 @@ class AppState extends ChangeNotifier {
 
   // Restores a story from url, driven by browser/user URL updates, not UI
   restoreStory(Story story, Map<String, String> queryArgs) {
-    final isStoryChange = this.story == story;
+    isRestoring = true;
     this.story = story;
-    story.restoreArgs(queryArgs);
-    // Only make args notify its listeners if the story is the same, otherwise
-    // It notifies before the router rebuilds the right side and the current
-    // Story will rerender with wrong args.
-    _updateArgs(isStoryChange);
+    if (story is! Documentation) story.restoreArgs(queryArgs);
     notifyListeners();
+    isRestoring = false;
   }
 
   // Called by the explorer to change stories
   setStory(Story story) {
+    if (story is Documentation) isViewingDocs = true;
     this.story = story;
-    _updateArgs();
     notifyListeners();
   }
 
-  // Updates/listens to the current Arguments object for the selected story
-  _updateArgs([bool notify = false]) {
-    if (args == null) {
-      args = Arguments(story!);
-      args!.addListener(_listener);
-    } else {
-      args!.updateStory(story!);
-    }
-    args!.isForced = true;
-
-    if (notify) {
-      args!.notifyListeners();
-    }
+  // Arguments that are attached to app state/url can tell state to update
+  argsUpdated() {
+    notifyListeners();
   }
 
   _listener() {
@@ -117,7 +103,6 @@ class AppState extends ChangeNotifier {
 
   @override
   void dispose() {
-    args?.removeListener(_listener);
     globals.removeListener(_listener);
     super.dispose();
   }

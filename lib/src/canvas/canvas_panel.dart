@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_design_system/flutter_design_system.dart';
 import 'package:flutter_design_system/src/canvas/canvas.dart';
+import 'package:flutter_design_system/src/models/arguments.dart';
+import 'package:flutter_design_system/src/routing/router_delegate.dart';
 import 'package:flutter_design_system/src/tools/viewport_tool/viewport_decorator.dart';
 import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
 import 'package:flutter_design_system/src/tools/theme_tool/theme_tool.dart';
@@ -26,25 +29,28 @@ class CanvasPanel extends Panel {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Container(
-            width: double.infinity,
-            alignment: Alignment.topCenter,
-            color: context.read<AppTheme>().backgroundDark,
-            child: ViewportDecorator(
-              child: Canvas(
-                decorators: [
-                  (context, child, globals) => ZoomDecorator(child: child),
-                  ThemeTool.decorator,
-                ],
+    return ChangeNotifierProvider(
+      create: (context) => Arguments(context.read<Story>(), context.read<AppState>()),
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              alignment: Alignment.topCenter,
+              color: context.read<AppTheme>().backgroundDark,
+              child: ViewportDecorator(
+                child: Canvas(
+                  decorators: [
+                    (context, child, globals) => ZoomDecorator(child: child),
+                    ThemeTool.decorator,
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        const AddOns(),
-      ],
+          const AddOns(),
+        ],
+      ),
     );
   }
 }

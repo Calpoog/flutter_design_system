@@ -24,13 +24,15 @@ class PanelGroup extends StatefulWidget {
     Key? key,
     required this.panels,
     List<Tool>? tools,
-    this.controller,
+    this.onTabChange,
+    this.initialTab = 0,
   })  : tools = tools ?? [],
         super(key: key);
 
   final List<Panel> panels;
   final List<Tool> tools;
-  final TabController? controller;
+  final void Function(int index)? onTabChange;
+  final int initialTab;
 
   @override
   State<PanelGroup> createState() => _PanelGroupState();
@@ -44,12 +46,13 @@ class _PanelGroupState extends State<PanelGroup> with SingleTickerProviderStateM
 
   @override
   void initState() {
-    controller = widget.controller ?? TabController(length: widget.panels.length, vsync: this);
+    controller = TabController(initialIndex: widget.initialTab, length: widget.panels.length, vsync: this);
     controller.addListener(_tabListener);
     super.initState();
   }
 
   _tabListener() {
+    if (widget.onTabChange != null) widget.onTabChange!(controller.index);
     setState(() {});
   }
 

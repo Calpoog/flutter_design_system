@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/flutter_design_system.dart';
+import 'package:flutter_design_system/src/models/documentaton.dart';
 
 void main() {
   runApp(const MyApp());
@@ -132,6 +133,10 @@ class MyApp extends StatelessWidget {
           ),
       explorer: [
         RootItem(name: 'Library', children: [
+          Documentation(
+            name: 'Introduction',
+            markdownFile: 'test.md',
+          ),
           FolderItem(
             name: 'Widgets',
             children: [

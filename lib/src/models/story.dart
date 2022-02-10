@@ -3,8 +3,9 @@ import 'package:flutter_design_system/src/models/arguments.dart';
 import 'package:flutter_design_system/src/models/component.dart';
 import 'package:flutter_design_system/src/explorer/explorer_items.dart';
 import 'package:flutter_design_system/src/controls/controls.dart';
+import 'package:flutter_design_system/src/models/documentable.dart';
 
-class Story extends ExplorerItem {
+class Story extends ExplorerItem implements Documentable {
   /// The [Component] definition this story belongs to.
   late final Component component;
 
@@ -24,8 +25,11 @@ class Story extends ExplorerItem {
   /// Padding to put around the widget when displayed in the canvas and docs.
   final EdgeInsets? componentPadding;
 
+  @override
   final String? markdownFile;
+  @override
   final String? markdownString;
+  @override
   final Widget? docWidget;
 
   Story({
