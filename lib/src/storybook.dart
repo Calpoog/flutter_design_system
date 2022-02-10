@@ -88,7 +88,7 @@ class Storybook extends StatefulWidget {
 }
 
 class _StorybookState extends State<Storybook> {
-  final appState = AppState();
+  late final appState = AppState();
   late final routeInformationParser = StoryRouteInformationParser();
   late final routerDelegate = StoryRouterDelegate(
     stories: widget.stories,
@@ -163,67 +163,81 @@ class _StorybookState extends State<Storybook> {
             unselectedLabelStyle: const TextStyle(fontFamily: 'NunitoSans', fontWeight: FontWeight.bold),
           ),
         ),
-        builder: (context, child) {
-          final theme = context.read<AppTheme>();
-          return Overlay(
-            initialEntries: [
-              OverlayEntry(builder: (context) => child ?? const SizedBox()),
-              OverlayEntry(
-                builder: (context) => Scaffold(
-                  backgroundColor: theme.background,
-                  body: GestureDetector(
-                    onTap: () {
-                      context.read<OverlayNotifier>().close();
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    },
-                    child: SafeArea(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          SizedBox(
-                            width: 230,
-                            child: Explorer(
-                              items: context.read<List<ExplorerItem>>(),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                              child: Section(
-                                child: Consumer<AppState>(
-                                  builder: (context, appState, _) => MultiProvider(
-                                    providers: [
-                                      Provider.value(value: appState.story),
-                                      ChangeNotifierProvider(
-                                        create: (context) => ZoomProvider(),
-                                      ),
-                                      ChangeNotifierProvider(
-                                        create: (context) => ViewportProvider(
-                                          globals: appState.globals,
-                                          config: context.read<StorybookConfig>(),
-                                        ),
-                                      ),
-                                    ],
-                                    child: appState.story != null
-                                        ? Consumer<AppState>(
-                                            builder: (_, __, ___) => ComponentView(story: appState.story!),
-                                          )
-                                        : const SizedBox(),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+        builder: (context, child) => StorybookHome(child: child),
+      ),
+    );
+  }
+}
+
+class StorybookHome extends StatefulWidget {
+  const StorybookHome({Key? key, this.child}) : super(key: key);
+
+  final Widget? child;
+
+  @override
+  _StorybookHomeState createState() => _StorybookHomeState();
+}
+
+class _StorybookHomeState extends State<StorybookHome> {
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.read<AppTheme>();
+    return Overlay(
+      initialEntries: [
+        OverlayEntry(builder: (context) => widget.child ?? const SizedBox()),
+        OverlayEntry(
+          builder: (context) => Scaffold(
+            backgroundColor: theme.background,
+            body: GestureDetector(
+              onTap: () {
+                context.read<OverlayNotifier>().close();
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              child: SafeArea(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      width: 230,
+                      child: Explorer(
+                        items: context.read<List<ExplorerItem>>(),
                       ),
                     ),
-                  ),
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                        child: Section(
+                          child: Consumer<AppState>(
+                            builder: (context, appState, _) => MultiProvider(
+                              providers: [
+                                Provider.value(value: appState.story),
+                                ChangeNotifierProvider(
+                                  create: (context) => ZoomProvider(),
+                                ),
+                                ChangeNotifierProvider(
+                                  create: (context) => ViewportProvider(
+                                    globals: appState.globals,
+                                    config: context.read<StorybookConfig>(),
+                                  ),
+                                ),
+                              ],
+                              child: appState.story != null
+                                  ? Consumer<AppState>(
+                                      builder: (_, __, ___) => ComponentView(story: appState.story!),
+                                    )
+                                  : const SizedBox(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          );
-        },
-      ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

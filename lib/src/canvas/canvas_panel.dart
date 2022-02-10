@@ -30,7 +30,7 @@ class CanvasPanel extends Panel {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => Arguments(context.read<Story>(), context.read<AppState>()),
+      create: (context) => Arguments(story: context.read<Story>(), context: context),
       child: Column(
         children: [
           Expanded(

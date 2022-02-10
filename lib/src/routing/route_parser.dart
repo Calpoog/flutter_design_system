@@ -31,20 +31,24 @@ class StoryRouteInformationParser extends RouteInformationParser<StoryRouteState
   // Navigation state to url
   @override
   RouteInformation restoreRouteInformation(StoryRouteState configuration) {
-    final args = _buildQuerySubParams('args', configuration.argValues);
-    final globals = _buildQuerySubParams('globals', configuration.globals);
-    String params = [
-      if (args != null) args,
-      if (globals != null) globals,
-    ].join('&');
-
-    if (params.isNotEmpty) params = '?' + params;
-
-    return RouteInformation(
-        location: configuration.path == null
-            ? ''
-            : '${configuration.isViewingDocs ? '/Docs' : '/Story'}${configuration.path}$params');
+    return configToRouteInfo(configuration);
   }
+}
+
+RouteInformation configToRouteInfo(StoryRouteState configuration) {
+  final args = _buildQuerySubParams('args', configuration.argValues);
+  final globals = _buildQuerySubParams('globals', configuration.globals);
+  String params = [
+    if (args != null) args,
+    if (globals != null) globals,
+  ].join('&');
+
+  if (params.isNotEmpty) params = '?' + params;
+
+  return RouteInformation(
+      location: configuration.path == null
+          ? ''
+          : '${configuration.isViewingDocs ? '/Docs' : '/Story'}${configuration.path}$params');
 }
 
 String? _buildQuerySubParams(String name, Map<String, String>? values) {

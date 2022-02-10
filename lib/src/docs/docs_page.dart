@@ -77,7 +77,7 @@ class _StoryWidget extends StatelessWidget {
         children: [
           H4(story.name, useRule: false),
           ChangeNotifierProvider(
-            create: (context) => Arguments(story),
+            create: (context) => Arguments(story: story),
             child: DocCanvas(story: story),
           ),
           DocsWidget(story),
@@ -106,7 +106,7 @@ class _PrimaryWidget extends StatelessWidget {
           // The widget shown at the top is the "primary" aka first Story
           // and displays with the args list and controls
           ChangeNotifierProvider(
-            create: (context) => Arguments(primary),
+            create: (context) => Arguments(story: primary),
             child: Column(
               children: [
                 DocCanvas(story: primary),

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_design_system/src/controls/controls.dart';
 import 'package:flutter_design_system/src/models/story.dart';
 import 'package:flutter_design_system/src/routing/router_delegate.dart';
+import 'package:provider/provider.dart';
 
 typedef ArgTypes = Map<String, ArgType>;
 typedef ArgValues = Map<String, dynamic>;
@@ -10,10 +11,12 @@ typedef TemplateBuilder = Widget Function(BuildContext context, Arguments args);
 class Arguments extends ChangeNotifier {
   late Story _story;
   late ArgTypes _argTypes;
-  final AppState? _appState;
+  late final AppState? _appState;
+  final BuildContext? _context;
   bool isForced = true;
 
-  Arguments(Story story, [AppState? appState]) : _appState = appState {
+  Arguments({required Story story, BuildContext? context}) : _context = context {
+    _appState = context?.read<AppState>();
     updateStory(story);
     _appState?.addListener(_stateListener);
   }
@@ -45,14 +48,19 @@ class Arguments extends ChangeNotifier {
     _story.updateArg(name, value);
     isForced = false;
     notifyListeners();
-    if (_appState != null) _appState!.argsUpdated();
+    if (_appState != null) _updateRouteArgParams(); //_appState!.argsUpdated();
   }
 
   void reset() {
     _story.resetArgs();
     isForced = true;
     notifyListeners();
-    if (_appState != null) _appState!.argsUpdated();
+    if (_appState != null) _updateRouteArgParams(); //_appState!.argsUpdated();
+  }
+
+  void _updateRouteArgParams() {
+    // Router.neglect(_context!, () {});
+    _appState!.argsUpdated();
   }
 
   @override

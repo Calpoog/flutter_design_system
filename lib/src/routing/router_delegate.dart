@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_design_system/src/models/documentaton.dart';
 import 'package:flutter_design_system/src/models/globals.dart';
 import 'package:flutter_design_system/src/models/story.dart';
+import 'package:flutter_design_system/src/routing/route_parser.dart';
 import 'package:flutter_design_system/src/routing/story_route_state.dart';
 import 'package:flutter_design_system/src/models/arguments.dart';
 
@@ -30,12 +32,7 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
 
   @override
   StoryRouteState? get currentConfiguration {
-    return StoryRouteState(
-      path: state.story?.path,
-      argValues: state.isViewingDocs || state.story is Documentation ? {} : state.story?.serializeArgs(),
-      globals: state.globals.all(),
-      isViewingDocs: state.isViewingDocs,
-    );
+    return state.toRouteConfig();
   }
 
   @override
@@ -61,8 +58,29 @@ class StoryRouterDelegate extends RouterDelegate<StoryRouteState>
   }
 }
 
+// class CustomPlatformRouteInformationProvider extends PlatformRouteInformationProvider {
+//   CustomPlatformRouteInformationProvider({required RouteInformation initialRouteInformation,}) : super(initialRouteInformation: initialRouteInformation);
+
+//   @override
+//   void routerReportsNewRouteInformation(RouteInformation routeInformation, {required RouteInformationReportingType type}) {
+//     final bool replace =
+//       type == RouteInformationReportingType.neglect ||
+//       (type == RouteInformationReportingType.none &&
+//        _valueInEngine.location == routeInformation.location);
+//     SystemNavigator.selectMultiEntryHistory();
+//     SystemNavigator.routeInformationUpdated(
+//       location: routeInformation.location!,
+//       state: routeInformation.state,
+//       replace: replace,
+//     );
+//     _value = routeInformation;
+//     _valueInEngine = routeInformation;
+//   }
+// }
+
 class AppState extends ChangeNotifier {
   Story? story;
+  bool isArgsUpdating = false;
   bool isRestoring = false;
   bool isViewingDocs = false;
   final globals = Globals();
@@ -94,11 +112,24 @@ class AppState extends ChangeNotifier {
 
   // Arguments that are attached to app state/url can tell state to update
   argsUpdated() {
-    notifyListeners();
+    // Explicitly replace history because router is inaccessible to use router.neglect()
+    SystemNavigator.routeInformationUpdated(
+      location: configToRouteInfo(toRouteConfig()).location ?? '',
+      replace: true,
+    );
   }
 
   _listener() {
     notifyListeners();
+  }
+
+  toRouteConfig() {
+    return StoryRouteState(
+      path: story?.path,
+      argValues: isViewingDocs || story is Documentation ? {} : story?.serializeArgs(),
+      globals: globals.all(),
+      isViewingDocs: isViewingDocs,
+    );
   }
 
   @override
