@@ -77,14 +77,14 @@ flutter:
   fonts:
     - family: NunitoSans
       fonts:
-        - asset: assets/fonts/NunitoSans-Regular.ttf
-        - asset: assets/fonts/NunitoSans-SemiBold.ttf
-        - asset: assets/fonts/NunitoSans-Bold.ttf
-        - asset: assets/fonts/NunitoSans-Black.ttf
-        - asset: assets/fonts/NunitoSans-ExtraBold.ttf
+        - asset: lib/fonts/NunitoSans-Regular.ttf
+        - asset: lib/fonts/NunitoSans-SemiBold.ttf
+        - asset: lib/fonts/NunitoSans-Bold.ttf
+        - asset: lib/fonts/NunitoSans-Black.ttf
+        - asset: lib/fonts/NunitoSans-ExtraBold.ttf
     - family: RobotoMono
       fonts:
-        - asset: assets/fonts/RobotoMono-Regular.ttf
+        - asset: lib/fonts/RobotoMono-Regular.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

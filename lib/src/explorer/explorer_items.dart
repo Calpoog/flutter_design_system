@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/src/models/component.dart';
-import 'package:flutter_design_system/src/models/documentaton.dart';
+import 'package:flutter_design_system/src/models/documentation.dart';
 import 'package:flutter_design_system/src/models/story.dart';
 import 'package:flutter_design_system/src/ui/utils/hoverable.dart';
 import 'package:flutter_design_system/src/ui/utils/text.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/src/models/globals.dart';
-import 'package:flutter_design_system/src/storybook.dart';
+import 'package:flutter_design_system/src/design_system.dart';
 import 'package:flutter_design_system/src/tools/models/tool.dart';
 import 'package:flutter_design_system/src/tools/ui/tool_button.dart';
 import 'package:flutter_design_system/src/tools/viewport_tool/viewport_decorator.dart';
@@ -83,7 +83,7 @@ class ViewportTool extends StatelessWidget {
           },
         ),
         ...context
-            .read<StorybookConfig>()
+            .read<DesignSystemConfig>()
             .deviceSizes
             .entries
             .map(
@@ -115,7 +115,7 @@ class ViewportTool extends StatelessWidget {
 
 class ViewportProvider extends ChangeNotifier {
   final Globals globals;
-  final StorybookConfig config;
+  final DesignSystemConfig config;
   String? viewportName;
   bool landscape = false;
 

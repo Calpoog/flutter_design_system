@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_design_system/flutter_design_system.dart';
 import 'package:flutter_design_system/src/routing/route_parser.dart';
 import 'package:flutter_design_system/src/routing/router_delegate.dart';
-import 'package:flutter_design_system/src/tools/models/tool.dart';
-import 'package:flutter_design_system/src/tools/theme_tool/theme_tool.dart';
 import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
 import 'package:flutter_design_system/src/tools/zoom_tool/zoom_tool.dart';
 import 'package:flutter_design_system/src/ui/component_view.dart';
@@ -12,13 +10,13 @@ import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_design_system/src/explorer/explorer.dart';
 
-class StorybookConfig {
+class DesignSystemConfig {
   late final Map<String, Size> deviceSizes;
   late final Map<String, ThemeData> themes;
   final EdgeInsets componentPadding;
   late final List<Decorator> decorators;
 
-  StorybookConfig({
+  DesignSystemConfig({
     Map<String, Size>? deviceSizes,
     Map<String, ThemeData>? themes,
     this.componentPadding = EdgeInsets.zero,
@@ -55,20 +53,20 @@ class OverlayNotifier extends ChangeNotifier {
   }
 }
 
-class Storybook extends StatefulWidget {
-  Storybook({
+class DesignSystem extends StatefulWidget {
+  DesignSystem({
     Key? key,
     required this.explorer,
-    StorybookConfig? config,
+    DesignSystemConfig? config,
   }) : super(key: key) {
-    this.config = config ?? StorybookConfig();
+    this.config = config ?? DesignSystemConfig();
 
     _processItems(explorer, '');
   }
 
   final List<ExplorerItem> explorer;
   final Map<String, Story> stories = {};
-  late final StorybookConfig config;
+  late final DesignSystemConfig config;
 
   // Builds the string path for each item and stores a flat list of stories for routing
   _processItems(List<ExplorerItem> items, String path) {
@@ -85,10 +83,10 @@ class Storybook extends StatefulWidget {
   }
 
   @override
-  State<Storybook> createState() => _StorybookState();
+  State<DesignSystem> createState() => _DesignSystemState();
 }
 
-class _StorybookState extends State<Storybook> {
+class _DesignSystemState extends State<DesignSystem> {
   late final appState = AppState();
   late final routeInformationParser = StoryRouteInformationParser();
   late final routerDelegate = StoryRouterDelegate(
@@ -114,7 +112,7 @@ class _StorybookState extends State<Storybook> {
         debugShowCheckedModeBanner: false,
         routeInformationParser: routeInformationParser,
         routerDelegate: routerDelegate,
-        title: 'Storybook',
+        title: 'DesignSystem',
         theme: ThemeData(
           textTheme: textTheme,
           fontFamily: 'NunitoSans',
@@ -164,22 +162,22 @@ class _StorybookState extends State<Storybook> {
             unselectedLabelStyle: const TextStyle(fontFamily: 'NunitoSans', fontWeight: FontWeight.bold),
           ),
         ),
-        builder: (context, child) => StorybookHome(child: child),
+        builder: (context, child) => DesignSystemHome(child: child),
       ),
     );
   }
 }
 
-class StorybookHome extends StatefulWidget {
-  const StorybookHome({Key? key, this.child}) : super(key: key);
+class DesignSystemHome extends StatefulWidget {
+  const DesignSystemHome({Key? key, this.child}) : super(key: key);
 
   final Widget? child;
 
   @override
-  _StorybookHomeState createState() => _StorybookHomeState();
+  _DesignSystemHomeState createState() => _DesignSystemHomeState();
 }
 
-class _StorybookHomeState extends State<StorybookHome> {
+class _DesignSystemHomeState extends State<DesignSystemHome> {
   @override
   Widget build(BuildContext context) {
     final theme = context.read<AppTheme>();
@@ -218,7 +216,7 @@ class _StorybookHomeState extends State<StorybookHome> {
                                 ChangeNotifierProvider(
                                   create: (context) => ViewportProvider(
                                     globals: appState.globals,
-                                    config: context.read<StorybookConfig>(),
+                                    config: context.read<DesignSystemConfig>(),
                                   ),
                                 ),
                               ],

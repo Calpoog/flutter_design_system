@@ -5,6 +5,12 @@ import 'package:flutter_design_system/src/explorer/explorer_items.dart';
 import 'package:flutter_design_system/src/controls/controls.dart';
 import 'package:flutter_design_system/src/models/documentable.dart';
 
+/// A representation of a story in the design system.
+///
+/// A [Story] is usable as an item in the explorer.
+///
+/// A [Story] defines what is rendered in the canvas, metadata about its
+/// arguments, controls, and documentation.
 class Story extends ExplorerItem implements Documentable {
   /// The [Component] definition this story belongs to.
   late final Component component;
@@ -25,13 +31,20 @@ class Story extends ExplorerItem implements Documentable {
   /// Padding to put around the widget when displayed in the canvas and docs.
   final EdgeInsets? componentPadding;
 
+  /// A string path to a markdown file which must be accessible in the pubspec
+  /// assets.
   @override
   final String? markdownFile;
+
+  /// A string of markdown documentation.
   @override
   final String? markdownString;
+
+  /// A [Widget] to render as documentation for ultimate flexibility.
   @override
   final Widget? docWidget;
 
+  /// Creates a Story.
   Story({
     required String name,
     ArgValues? args,
@@ -44,6 +57,8 @@ class Story extends ExplorerItem implements Documentable {
         initial = Map.of(args ?? {}),
         super(name: name);
 
+  /// Initializes the [Story] with a reference to its parent [Component] and
+  /// validates [ArgType]s requirements.
   init(Component component) {
     this.component = component;
     _processValues(args);
@@ -66,14 +81,18 @@ class Story extends ExplorerItem implements Documentable {
     });
   }
 
+  /// Resets all current arg values back to their initial values.
   resetArgs() {
     args = Map.of(initial);
   }
 
+  /// Updates the value of an arg.
   updateArg(String name, dynamic value) {
     args[name] = value;
   }
 
+  /// Restores arg values from the URL by deserializing them based on the
+  /// [ArgType]s control.
   restoreArgs(Map<String, String> queryArgs) {
     final argTypes = component.argTypes;
     for (final queryArg in queryArgs.entries) {
@@ -86,6 +105,7 @@ class Story extends ExplorerItem implements Documentable {
     }
   }
 
+  /// Serializes the current arg values for use in the URL.
   Map<String, String> serializeArgs() {
     Map<String, String> serialized = {};
     for (final argType in component.argTypes.values) {

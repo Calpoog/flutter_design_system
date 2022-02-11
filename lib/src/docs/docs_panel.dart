@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_design_system/src/docs/docs.dart';
 import 'package:flutter_design_system/src/docs/docs_page.dart';
-import 'package:flutter_design_system/src/models/documentaton.dart';
+import 'package:flutter_design_system/src/models/documentation.dart';
 import 'package:flutter_design_system/src/models/story.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:flutter_highlighter/flutter_highlighter.dart';
@@ -13,7 +13,7 @@ import 'package:flutter_design_system/src/ui/utils/text.dart';
 import 'package:provider/provider.dart';
 
 class DocsPanel extends Panel {
-  DocsPanel({Key? key}) : super(name: 'Docs', key: key);
+  const DocsPanel({Key? key}) : super(name: 'Docs', key: key);
 
   @override
   Widget build(BuildContext context) {

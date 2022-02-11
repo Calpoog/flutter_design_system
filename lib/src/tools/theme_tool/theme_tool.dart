@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/src/models/globals.dart';
-import 'package:flutter_design_system/src/storybook.dart';
+import 'package:flutter_design_system/src/design_system.dart';
 import 'package:flutter_design_system/src/tools/models/tool.dart';
 import 'package:flutter_design_system/src/ui/utils/text.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
@@ -10,7 +10,7 @@ class ThemeTool extends StatelessWidget {
   const ThemeTool({Key? key}) : super(key: key);
 
   static Widget decorator(BuildContext context, Widget child, Globals globals) {
-    final config = context.read<StorybookConfig>();
+    final config = context.read<DesignSystemConfig>();
     return Theme(
       data: config.themes[globals['theme']] ?? ThemeData.fallback(),
       child: child,
@@ -35,7 +35,7 @@ class ThemeTool extends StatelessWidget {
           },
         ),
         ...context
-            .read<StorybookConfig>()
+            .read<DesignSystemConfig>()
             .themes
             .entries
             .map(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/src/canvas/canvas_panel.dart';
-import 'package:flutter_design_system/src/models/documentaton.dart';
+import 'package:flutter_design_system/src/models/documentation.dart';
 import 'package:flutter_design_system/src/models/story.dart';
 import 'package:flutter_design_system/src/routing/router_delegate.dart';
 import 'package:flutter_design_system/src/ui/panels/panel.dart';
@@ -34,7 +34,7 @@ class _ComponentViewState extends State<ComponentView> with TickerProviderStateM
         initialTab: isDoc || !appState.isViewingDocs ? 0 : 1,
         onTabChange: (int index) => appState.view(index == 1),
         panels: [
-          if (!isDoc) CanvasPanel(),
+          if (!isDoc) const CanvasPanel(),
           DocsPanel(),
         ],
       ),

@@ -1,12 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_design_system/src/controls/controls.dart';
+import 'package:flutter_design_system/src/models/globals.dart';
 import 'package:flutter_design_system/src/models/story.dart';
 import 'package:flutter_design_system/src/routing/router_delegate.dart';
 import 'package:provider/provider.dart';
 
 typedef ArgTypes = Map<String, ArgType>;
 typedef ArgValues = Map<String, dynamic>;
-typedef TemplateBuilder = Widget Function(BuildContext context, Arguments args);
+typedef TemplateBuilder = Widget Function(BuildContext context, Arguments args, Globals globals);
 
 class Arguments extends ChangeNotifier {
   late Story _story;
@@ -80,6 +81,12 @@ class ArgType<T> {
   final Map<String, T>? mapping;
   late final Control control;
 
+  /// Creates an ArgType.
+  ///
+  /// If the arg is not required, it must have a [defaultValue] or be nullable.
+  ///
+  /// If the arg has a [mapping], a provided [defaultMapping] must exist as a key
+  /// in the map.
   ArgType({
     required this.name,
     required this.description,
@@ -92,7 +99,7 @@ class ArgType<T> {
     assert(isRequired || defaultValue != null || defaultMapped != null || null is T,
         'Arg \'$name\' is not required but has no defaultValue and is non-nullable');
 
-    this.control = control ?? Controls().choose<T>(this);
+    this.control = control ?? Controls.choose<T>(this);
     this.control.argType = this;
 
     if (defaultMapped != null) {

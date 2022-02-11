@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/flutter_design_system.dart';
-import 'package:flutter_design_system/src/explorer/explorer_items.dart';
-import 'package:flutter_design_system/src/models/arguments.dart';
 import 'package:flutter_design_system/src/models/documentable.dart';
 import 'package:flutter_design_system/src/models/globals.dart';
-import 'package:flutter_design_system/src/models/story.dart';
 
+/// A builder for a wrapping widget around a [Story] with access to globals.
+///
+/// [child] will be the [Story] to wrap as well as any other decorators that were
+/// applied first.
 typedef Decorator = Widget Function(BuildContext context, Widget child, Globals globals);
 
+// TODO
 class ComponentActions {
   final ArgTypes actions;
 
@@ -24,6 +26,14 @@ class ComponentActions {
   }
 }
 
+/// A representation of a component in the design system.
+///
+/// A [Component] is usable as an item in the explorer.
+///
+/// A component can have it's own top-level documentation and provides fallbacks
+/// for configuration that isn't specified at a story level. If configuration
+/// is also not provided at the component level, it will be inherited from the
+/// configuration the [DesignSystem] level.
 class Component extends ExplorerItem implements Documentable {
   final Decorator? decorator;
   final ArgTypes argTypes = {};

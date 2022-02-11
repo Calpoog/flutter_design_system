@@ -3,7 +3,7 @@ import 'package:flutter_design_system/src/models/component.dart';
 import 'package:flutter_design_system/src/models/globals.dart';
 import 'package:flutter_design_system/src/models/story.dart';
 import 'package:flutter_design_system/src/models/arguments.dart';
-import 'package:flutter_design_system/src/storybook.dart';
+import 'package:flutter_design_system/src/design_system.dart';
 import 'package:provider/provider.dart';
 
 class Canvas extends StatelessWidget {
@@ -18,9 +18,11 @@ class Canvas extends StatelessWidget {
   Widget build(BuildContext context) {
     final args = context.watch<Arguments>();
     final story = context.watch<Story>();
-    final config = context.read<StorybookConfig>();
+    final config = context.read<DesignSystemConfig>();
     final globals = context.watch<Globals>();
-    Widget child = story.builder != null ? story.builder!(context, args) : story.component.builder!(context, args);
+    Widget child = story.builder != null
+        ? story.builder!(context, args, globals)
+        : story.component.builder!(context, args, globals);
 
     child = Container(
       padding: story.componentPadding ?? story.component.componentPadding ?? config.componentPadding,
