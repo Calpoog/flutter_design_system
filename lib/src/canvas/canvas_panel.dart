@@ -1,31 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/flutter_design_system.dart';
 import 'package:flutter_design_system/src/canvas/canvas.dart';
-import 'package:flutter_design_system/src/models/arguments.dart';
-import 'package:flutter_design_system/src/routing/router_delegate.dart';
 import 'package:flutter_design_system/src/tools/viewport_tool/viewport_decorator.dart';
-import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
 import 'package:flutter_design_system/src/tools/theme_tool/theme_tool.dart';
 import 'package:flutter_design_system/src/tools/models/tool.dart';
 import 'package:flutter_design_system/src/controls/controls_panel.dart';
 import 'package:flutter_design_system/src/tools/zoom_tool/zoom_decorator.dart';
-import 'package:flutter_design_system/src/tools/zoom_tool/zoom_tool.dart';
 import 'package:flutter_design_system/src/ui/panels/panel.dart';
 import 'package:flutter_design_system/src/ui/utils/bordered.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 class CanvasPanel extends Panel {
-  CanvasPanel({Key? key})
+  const CanvasPanel({Key? key})
       : super(
           name: 'Canvas',
           key: key,
-          tools: [
-            ...zoomTools(),
-            ThemeTool(),
-            ViewportTool(),
-          ],
         );
+
+  @override
+  List<Tool> toolsBuilder(BuildContext context) {
+    return context.read<StorybookConfig>().canvasTools;
+  }
 
   @override
   Widget build(BuildContext context) {

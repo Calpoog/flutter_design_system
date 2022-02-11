@@ -8,15 +8,14 @@ import 'package:flutter_design_system/src/ui/utils/bordered.dart';
 import 'package:provider/src/provider.dart';
 
 abstract class Panel extends StatelessWidget {
-  Panel({
+  const Panel({
     required this.name,
-    List<Tool>? tools,
     Key? key,
-  })  : tools = tools ?? [],
-        super(key: key);
+  }) : super(key: key);
 
   final String name;
-  final List<Tool> tools;
+
+  List<Tool> toolsBuilder(BuildContext context) => [];
 }
 
 class PanelGroup extends StatefulWidget {
@@ -58,6 +57,7 @@ class _PanelGroupState extends State<PanelGroup> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    final tools = currentPanel.toolsBuilder(context);
     return Column(
       children: [
         Bordered.bottom(
@@ -76,8 +76,8 @@ class _PanelGroupState extends State<PanelGroup> with SingleTickerProviderStateM
                       ),
                   ],
                 ),
-                if (currentPanel.tools.isNotEmpty) const ToolDivider(),
-                Toolbar(tools: currentPanel.tools),
+                if (tools.isNotEmpty) const ToolDivider(),
+                Toolbar(tools: tools),
                 const Expanded(child: SizedBox()),
                 for (final tool in widget.tools) tool.button(context),
               ],
