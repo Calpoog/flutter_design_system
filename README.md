@@ -1,4 +1,4 @@
-# flutter_storybook
+# Flutter Design System
 
 A new Flutter project.
 
