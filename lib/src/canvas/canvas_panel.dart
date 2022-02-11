@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_design_system/flutter_design_system.dart';
 import 'package:flutter_design_system/src/canvas/canvas.dart';
+import 'package:flutter_design_system/src/tools/ui/divider.dart';
 import 'package:flutter_design_system/src/tools/viewport_tool/viewport_decorator.dart';
 import 'package:flutter_design_system/src/tools/theme_tool/theme_tool.dart';
 import 'package:flutter_design_system/src/tools/models/tool.dart';
 import 'package:flutter_design_system/src/controls/controls_panel.dart';
+import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
 import 'package:flutter_design_system/src/tools/zoom_tool/zoom_decorator.dart';
+import 'package:flutter_design_system/src/tools/zoom_tool/zoom_tool.dart';
 import 'package:flutter_design_system/src/ui/panels/panel.dart';
 import 'package:flutter_design_system/src/ui/utils/bordered.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
@@ -19,8 +22,8 @@ class CanvasPanel extends Panel {
         );
 
   @override
-  List<Tool> toolsBuilder(BuildContext context) {
-    return context.read<StorybookConfig>().canvasTools;
+  List<Widget> toolsBuilder(BuildContext context) {
+    return [...zoomTools(), const ToolDivider(), const ThemeTool(), const ViewportTool()];
   }
 
   @override
@@ -74,13 +77,13 @@ class _AddOnsState extends State<AddOns> {
             if (!addOnsOpen) setState(() => addOnsOpen = true);
           },
           child: PanelGroup(
-            tools: [
-              Tool(
-                name: 'close',
-                icon: addOnsOpen ? Icons.expand_more : Icons.expand_less,
-                onPressed: (_) => setState(() => addOnsOpen = !addOnsOpen),
-              ),
-            ],
+            // tools: [
+            //   Tool(
+            //     name: 'close',
+            //     icon: addOnsOpen ? Icons.expand_more : Icons.expand_less,
+            //     onPressed: () => setState(() => addOnsOpen = !addOnsOpen),
+            //   ),
+            // ],
             panels: const [
               ControlsPanel(),
             ],

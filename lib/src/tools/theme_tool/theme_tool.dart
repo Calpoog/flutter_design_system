@@ -6,13 +6,8 @@ import 'package:flutter_design_system/src/ui/utils/text.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
-class ThemeTool extends Tool {
-  ThemeTool({Key? key})
-      : super(
-          key: key,
-          name: 'Change theme',
-          icon: Icons.image_outlined,
-        );
+class ThemeTool extends StatelessWidget {
+  const ThemeTool({Key? key}) : super(key: key);
 
   static Widget decorator(BuildContext context, Widget child, Globals globals) {
     final config = context.read<StorybookConfig>();
@@ -22,12 +17,6 @@ class ThemeTool extends Tool {
     );
   }
 
-  @override
-  bool isActive(BuildContext context) {
-    return context.watch<Globals>()['theme'] != null;
-  }
-
-  @override
   Widget popup(BuildContext context) {
     final overlay = context.read<OverlayNotifier>();
     final theme = context.read<AppTheme>();
@@ -70,6 +59,16 @@ class ThemeTool extends Tool {
             )
             .toList(),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Tool(
+      name: 'Change theme',
+      icon: Icons.image_outlined,
+      popupBuilder: popup,
+      isActive: context.watch<Globals>()['theme'] != null,
     );
   }
 }

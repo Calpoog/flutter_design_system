@@ -47,21 +47,35 @@ class ToolItemWidget<T> extends StatelessWidget {
   }
 }
 
-class Tool<T> {
-  Tool({
+class Tool extends StatefulWidget {
+  const Tool({
     Key? key,
+    this.buttonBuilder,
+    this.popupBuilder,
     required this.name,
-    required this.icon,
-    this.onPressed,
-    this.divide = false,
+    this.isActive = false,
     this.options,
-    this.serialize,
-  })  : assert(onPressed == null || options == null, 'A tool cannot have an onPressed callback and options'),
-        link = LayerLink();
+    this.onPressed,
+    required this.icon,
+  }) : super(key: key);
 
+  /// A builder to create a custom button if the default [ToolButton] does not suffice.
+  final Widget Function(BuildContext context, LayerLink link)? buttonBuilder;
+
+  /// A builder for a custom popup.
+  ///
+  /// The popup will not use [options]. If [onPressed] is provided it will take
+  /// precedence and be called on button click.
+  final WidgetBuilder? popupBuilder;
+
+  /// The name of the tool to display as a tooltip.
   final String name;
+
+  /// An icon to display for the tool's button.
   final IconData icon;
-  final bool divide;
+
+  /// Whether the tool button should display an active indicator.
+  final bool isActive;
 
   /// A list of [ToolItem] which will show in a popup when the tool button is
   /// clicked. The selected item will have its value persisted to globals.
@@ -69,21 +83,47 @@ class Tool<T> {
   /// If [options] is specified then the tool cannot have an [onPressed] callback.
   final List<ToolItem>? options;
 
-  /// A function to serialize the values of type [T] to [String] when a tool
-  /// option is selected and saved to globals.
-  late final String Function(T value)? serialize;
-  late final T Function(String value)? deserialize;
-
   /// A callback for when the tool button is clicked.
   ///
   /// If [onPressed] is specified then the tool cannot have [options].
-  final void Function(BuildContext context)? onPressed;
-  final LayerLink link;
+  final VoidCallback? onPressed;
 
-  bool isActive(BuildContext context) => false;
+  @override
+  _ToolState createState() => _ToolState();
+}
 
-  Widget popup(BuildContext context) {
-    if (options == null) return const SizedBox();
+class _ToolState extends State<Tool> {
+  late final link = LayerLink();
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.buttonBuilder == null ? _buttonBuilder(context, link) : widget.buttonBuilder!(context, link);
+  }
+
+  Widget _buttonBuilder(BuildContext context, _) {
+    return CompositedTransformTarget(
+      link: link,
+      child: ToolButton(
+        name: widget.name,
+        isActive: widget.isActive,
+        onPressed: () {
+          if (widget.onPressed != null) {
+            context.read<OverlayNotifier>().close();
+            widget.onPressed!();
+          } else {
+            showToolPopup(
+                context: context,
+                link: link,
+                child: widget.popupBuilder == null ? _popupBuilder(context) : widget.popupBuilder!(context));
+          }
+        },
+        icon: widget.icon,
+      ),
+    );
+  }
+
+  Widget _popupBuilder(BuildContext context) {
+    if (widget.options == null) return const SizedBox();
 
     final overlay = context.read<OverlayNotifier>();
     final theme = context.read<AppTheme>();
@@ -91,7 +131,7 @@ class Tool<T> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-      children: options!
+      children: widget.options!
           .map(
             (option) => ListTile(
               title: AppText.body(option.title),
@@ -99,7 +139,7 @@ class Tool<T> {
               leading: option.trailing,
               trailing: option.trailing,
               onTap: () {
-                context.read<Globals>()[name] = option.value;
+                context.read<Globals>()[widget.name] = option.value;
                 overlay.close();
               },
             ),
@@ -107,33 +147,13 @@ class Tool<T> {
           .toList(),
     );
   }
-
-  Widget button(BuildContext context) {
-    return CompositedTransformTarget(
-      link: link,
-      child: ToolButton(
-        name: name,
-        isActive: isActive(context),
-        onPressed: () {
-          if (onPressed != null) {
-            context.read<OverlayNotifier>().close();
-            onPressed!(context);
-          } else {
-            showToolPopup(context: context, tool: this);
-          }
-        },
-        icon: icon,
-      ),
-    );
-  }
 }
 
 const double _kPopupWidth = 200.0;
 const double _kPopupMaxHeight = 300.0;
 
-void showToolPopup({required BuildContext context, required Tool tool}) {
+void showToolPopup({required BuildContext context, required LayerLink link, required Widget child}) {
   final overlay = context.read<OverlayNotifier>();
-  final link = tool.link;
   final entry = OverlayEntry(
     builder: (BuildContext overlayContext) {
       final theme = context.read<AppTheme>();
@@ -164,7 +184,7 @@ void showToolPopup({required BuildContext context, required Tool tool}) {
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               child: Material(
                 color: theme.foreground,
-                child: tool.popup(context),
+                child: child,
               ),
             ),
           ),

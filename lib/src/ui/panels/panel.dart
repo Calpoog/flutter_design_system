@@ -15,7 +15,7 @@ abstract class Panel extends StatelessWidget {
 
   final String name;
 
-  List<Tool> toolsBuilder(BuildContext context) => [];
+  List<Widget> toolsBuilder(BuildContext context) => [];
 }
 
 class PanelGroup extends StatefulWidget {
@@ -79,7 +79,7 @@ class _PanelGroupState extends State<PanelGroup> with SingleTickerProviderStateM
                 if (tools.isNotEmpty) const ToolDivider(),
                 Toolbar(tools: tools),
                 const Expanded(child: SizedBox()),
-                for (final tool in widget.tools) tool.button(context),
+                ...widget.tools,
               ],
             ),
           ),

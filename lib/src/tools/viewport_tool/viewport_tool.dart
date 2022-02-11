@@ -8,26 +8,22 @@ import 'package:flutter_design_system/src/ui/utils/text.dart';
 import 'package:flutter_design_system/src/ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
-class ViewportTool extends Tool {
-  ViewportTool({Key? key})
-      : super(
-          key: key,
-          name: 'Change preview size',
-          icon: Icons.aspect_ratio_outlined,
-        );
+class ViewportTool extends StatelessWidget {
+  const ViewportTool({Key? key}) : super(key: key);
+
+  final name = 'Change preview size';
 
   static Widget decorator(BuildContext context, Widget child, Globals globals) {
     return ViewportDecorator(child: child);
   }
 
-  @override
-  bool isActive(BuildContext context) {
-    // only need read because of the watch in button method below
-    return context.read<ViewportProvider>().viewportName != null;
-  }
+  // @override
+  // bool isActive(BuildContext context) {
+  //   // only need read because of the watch in button method below
+  //   return context.read<ViewportProvider>().viewportName != null;
+  // }
 
-  @override
-  Widget button(BuildContext context) {
+  Widget button(BuildContext context, LayerLink link) {
     final theme = context.read<AppTheme>();
     final viewportProvider = context.watch<ViewportProvider>();
     final isActive = viewportProvider.viewportName != null;
@@ -42,14 +38,9 @@ class ViewportTool extends Tool {
             isActive: isActive,
             text: viewportProvider.viewportName,
             onPressed: () {
-              if (onPressed != null) {
-                context.read<OverlayNotifier>().close();
-                onPressed!(context);
-              } else {
-                showToolPopup(context: context, tool: this);
-              }
+              showToolPopup(context: context, link: link, child: popup(context));
             },
-            icon: icon,
+            icon: Icons.aspect_ratio_outlined,
           ),
         ),
         if (isActive) ...[
@@ -75,7 +66,6 @@ class ViewportTool extends Tool {
     );
   }
 
-  @override
   Widget popup(BuildContext context) {
     final device = context.read<ViewportProvider>();
     final overlay = context.read<OverlayNotifier>();
@@ -108,6 +98,17 @@ class ViewportTool extends Tool {
             )
             .toList(),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Tool(
+      name: name,
+      icon: Icons.aspect_ratio_outlined,
+      buttonBuilder: button,
+      popupBuilder: popup,
+      isActive: context.read<ViewportProvider>().viewportName != null,
     );
   }
 }

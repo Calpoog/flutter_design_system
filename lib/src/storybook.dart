@@ -17,14 +17,12 @@ class StorybookConfig {
   late final Map<String, ThemeData> themes;
   final EdgeInsets componentPadding;
   late final List<Decorator> decorators;
-  late final List<Tool> canvasTools;
 
   StorybookConfig({
     Map<String, Size>? deviceSizes,
     Map<String, ThemeData>? themes,
     this.componentPadding = EdgeInsets.zero,
     List<Decorator>? decorators,
-    List<Tool>? canvasTools,
   }) {
     this.themes = themes ??
         {
@@ -38,12 +36,6 @@ class StorybookConfig {
           'Tablet': const Size(834, 1112),
         };
     this.decorators = decorators ?? [];
-    this.canvasTools = (canvasTools ?? [])
-      ..addAll([
-        ...zoomTools(),
-        ThemeTool(),
-        ViewportTool(),
-      ]);
   }
 }
 
