@@ -8,7 +8,7 @@ import 'package:flutter_design_system/src/ui/utils/text.dart';
 import 'package:flutter_design_system/src/ui/utils/bordered.dart';
 
 class ControlsPanel extends Panel {
-  ControlsPanel({Key? key}) : super(name: 'Controls', key: key);
+  const ControlsPanel({Key? key}) : super(name: 'Controls', key: key);
 
   @override
   Widget build(BuildContext context) {

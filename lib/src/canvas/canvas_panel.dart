@@ -25,8 +25,9 @@ class CanvasPanel extends Panel {
 
   @override
   Widget build(BuildContext context) {
+    final story = context.read<Story>();
     return ChangeNotifierProvider(
-      create: (context) => Arguments(story: context.read<Story>(), context: context),
+      create: (context) => Arguments(story: story, context: context),
       child: Column(
         children: [
           Expanded(
@@ -44,7 +45,7 @@ class CanvasPanel extends Panel {
               ),
             ),
           ),
-          const AddOns(),
+          if (story.component.controlCount > 0) const AddOns(),
         ],
       ),
     );
@@ -80,7 +81,7 @@ class _AddOnsState extends State<AddOns> {
                 onPressed: (_) => setState(() => addOnsOpen = !addOnsOpen),
               ),
             ],
-            panels: [
+            panels: const [
               ControlsPanel(),
             ],
           ),

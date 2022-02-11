@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_design_system/flutter_design_system.dart';
 import 'package:flutter_design_system/src/explorer/explorer_items.dart';
 import 'package:flutter_design_system/src/models/arguments.dart';
 import 'package:flutter_design_system/src/models/documentable.dart';
@@ -57,5 +58,13 @@ class Component extends ExplorerItem implements Documentable {
     for (final story in stories) {
       story.init(this);
     }
+  }
+
+  int get controlCount {
+    int count = 0;
+    for (var argType in argTypes.values) {
+      if (argType.control is! NoControl) count++;
+    }
+    return count;
   }
 }
