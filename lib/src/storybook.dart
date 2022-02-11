@@ -52,7 +52,6 @@ class OverlayNotifier extends ChangeNotifier {
   void close() {
     entry?.remove();
     entry = null;
-    notifyListeners();
   }
 }
 

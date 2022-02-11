@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/models/component.dart';
 import 'package:flutter_design_system/src/models/globals.dart';
 import 'package:flutter_design_system/src/storybook.dart';
 import 'package:flutter_design_system/src/tools/ui/tool_button.dart';
@@ -22,29 +21,6 @@ class ToolItem<T> {
     required this.value,
     Key? key,
   });
-}
-
-class ToolItemWidget<T> extends StatelessWidget {
-  final ToolItem<T> item;
-  final void Function(T value) onPressed;
-
-  const ToolItemWidget({
-    required this.item,
-    required this.onPressed,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.read<AppTheme>();
-    return ListTile(
-      title: AppText.body(item.title),
-      hoverColor: theme.background,
-      leading: item.leading,
-      trailing: item.trailing,
-      onTap: () => onPressed(item.value),
-    );
-  }
 }
 
 class Tool extends StatefulWidget {
@@ -94,6 +70,13 @@ class Tool extends StatefulWidget {
 
 class _ToolState extends State<Tool> {
   late final link = LayerLink();
+  late final OverlayNotifier overlay;
+
+  @override
+  void initState() {
+    overlay = context.read<OverlayNotifier>();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +108,6 @@ class _ToolState extends State<Tool> {
   Widget _popupBuilder(BuildContext context) {
     if (widget.options == null) return const SizedBox();
 
-    final overlay = context.read<OverlayNotifier>();
     final theme = context.read<AppTheme>();
 
     return Column(
@@ -147,6 +129,12 @@ class _ToolState extends State<Tool> {
           .toList(),
     );
   }
+
+  @override
+  void dispose() {
+    overlay.close();
+    super.dispose();
+  }
 }
 
 const double _kPopupWidth = 200.0;
@@ -161,6 +149,7 @@ void showToolPopup({required BuildContext context, required LayerLink link, requ
         top: 0.0,
         left: 0.0,
         child: CompositedTransformFollower(
+          showWhenUnlinked: false,
           followerAnchor: Alignment.topCenter,
           targetAnchor: Alignment.bottomCenter,
           offset: const Offset(0, 12),
