@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/models/component.dart';
-import 'package:flutter_design_system/src/models/documentation.dart';
-import 'package:flutter_design_system/src/models/story.dart';
-import 'package:flutter_design_system/src/routing/router_delegate.dart';
-import 'package:flutter_design_system/src/explorer/explorer_items.dart';
-import 'package:flutter_design_system/src/ui/utils/hoverable.dart';
-import 'package:flutter_design_system/src/ui/utils/text.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import '../models/component.dart';
+import '../models/documentation.dart';
+import '../models/story.dart';
+import '../routing/router_delegate.dart';
+import 'explorer_items.dart';
+import '../ui/utils/hoverable.dart';
+import '../ui/utils/text.dart';
+import '../ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 class Explorer extends StatefulWidget {

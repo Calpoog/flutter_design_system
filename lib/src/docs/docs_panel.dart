@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_design_system/src/docs/docs.dart';
-import 'package:flutter_design_system/src/docs/docs_page.dart';
-import 'package:flutter_design_system/src/models/documentation.dart';
-import 'package:flutter_design_system/src/models/story.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import 'docs.dart';
+import 'docs_page.dart';
+import '../models/documentation.dart';
+import '../models/story.dart';
+import '../ui/utils/theme.dart';
 import 'package:flutter_highlighter/flutter_highlighter.dart';
 import 'package:flutter_highlighter/themes/atom-one-light.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutter_design_system/src/ui/panels/panel.dart';
-import 'package:flutter_design_system/src/ui/utils/text.dart';
+import '../ui/panels/panel.dart';
+import '../ui/utils/text.dart';
 import 'package:provider/provider.dart';
 
 class DocsPanel extends Panel {

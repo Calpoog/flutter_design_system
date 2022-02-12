@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/canvas/canvas_panel.dart';
-import 'package:flutter_design_system/src/models/documentation.dart';
-import 'package:flutter_design_system/src/models/story.dart';
-import 'package:flutter_design_system/src/routing/router_delegate.dart';
-import 'package:flutter_design_system/src/ui/panels/panel.dart';
-import 'package:flutter_design_system/src/docs/docs_panel.dart';
+import '../canvas/canvas_panel.dart';
+import '../models/documentation.dart';
+import '../models/story.dart';
+import '../routing/router_delegate.dart';
+import 'panels/panel.dart';
+import '../docs/docs_panel.dart';
 import 'package:provider/provider.dart';
 
 class ComponentView extends StatefulWidget {
@@ -35,7 +35,7 @@ class _ComponentViewState extends State<ComponentView> with TickerProviderStateM
         onTabChange: (int index) => appState.view(index == 1),
         panels: [
           if (!isDoc) const CanvasPanel(),
-          DocsPanel(),
+          const DocsPanel(),
         ],
       ),
     );

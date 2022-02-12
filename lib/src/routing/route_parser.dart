@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+// ignore: prefer_relative_imports
 import 'package:flutter_design_system/src/routing/story_route_state.dart';
 
 class StoryRouteInformationParser extends RouteInformationParser<StoryRouteState> {

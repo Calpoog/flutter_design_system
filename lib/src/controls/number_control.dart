@@ -86,6 +86,7 @@ class _NumberControlState<T> extends State<_NumberControl<T>> {
             validator: (value) {
               try {
                 _parse(type, value);
+                return null;
               } catch (_) {
                 return 'Invalid ${type.toString()}';
               }

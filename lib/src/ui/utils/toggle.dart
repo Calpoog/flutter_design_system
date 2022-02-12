@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/ui/utils/text.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import 'text.dart';
+import 'theme.dart';
 import 'package:provider/provider.dart';
 
 class Toggle extends StatelessWidget {

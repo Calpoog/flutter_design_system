@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_design_system/src/models/arguments.dart';
-import 'package:flutter_design_system/src/controls/controls.dart';
-import 'package:flutter_design_system/src/controls/nullable_control.dart';
+import '../models/arguments.dart';
+import 'controls.dart';
+import 'nullable_control.dart';
 import 'package:provider/provider.dart';
 
 class TextControl extends Control<String> {

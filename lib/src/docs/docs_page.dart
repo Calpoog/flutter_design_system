@@ -1,13 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/controls/controls_panel.dart';
-import 'package:flutter_design_system/src/docs/doc_canvas.dart';
-import 'package:flutter_design_system/src/docs/docs.dart';
-import 'package:flutter_design_system/src/models/story.dart';
-import 'package:flutter_design_system/src/models/arguments.dart';
-import 'package:flutter_design_system/src/ui/utils/section.dart';
-import 'package:flutter_design_system/src/ui/utils/text.dart';
+import '../controls/controls_panel.dart';
+import 'doc_canvas.dart';
+import 'docs.dart';
+import '../models/story.dart';
+import '../models/arguments.dart';
+import '../ui/utils/section.dart';
+import '../ui/utils/text.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -111,9 +111,9 @@ class _PrimaryWidget extends StatelessWidget {
               children: [
                 DocCanvas(story: primary),
                 if (primary.component.argTypes.isNotEmpty)
-                  Section(
+                  const Section(
                     child: ControlsPanel(),
-                    margin: const EdgeInsets.only(bottom: 20.0),
+                    margin: EdgeInsets.only(bottom: 20.0),
                   ),
               ],
             ),

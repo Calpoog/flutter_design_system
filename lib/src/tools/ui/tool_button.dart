@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/ui/utils/hoverable.dart';
-import 'package:flutter_design_system/src/ui/utils/text.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import '../../ui/utils/hoverable.dart';
+import '../../ui/utils/text.dart';
+import '../../ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 class ToolButton extends StatelessWidget {

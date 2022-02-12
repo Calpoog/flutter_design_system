@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/models/globals.dart';
-import 'package:flutter_design_system/src/design_system.dart';
-import 'package:flutter_design_system/src/tools/models/tool.dart';
-import 'package:flutter_design_system/src/tools/ui/tool_button.dart';
-import 'package:flutter_design_system/src/tools/viewport_tool/viewport_decorator.dart';
-import 'package:flutter_design_system/src/ui/utils/text.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import '../../models/globals.dart';
+import '../../design_system.dart';
+import '../models/tool.dart';
+import '../ui/tool_button.dart';
+import 'viewport_decorator.dart';
+import '../../ui/utils/text.dart';
+import '../../ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 class ViewportTool extends StatelessWidget {

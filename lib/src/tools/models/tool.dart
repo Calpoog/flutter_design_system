@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/models/globals.dart';
-import 'package:flutter_design_system/src/design_system.dart';
-import 'package:flutter_design_system/src/tools/ui/tool_button.dart';
-import 'package:flutter_design_system/src/ui/utils/text.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import '../../models/globals.dart';
+import '../../design_system.dart';
+import '../ui/tool_button.dart';
+import '../../ui/utils/text.dart';
+import '../../ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 /// A list item for simple tools which displays as an option in the tool popup

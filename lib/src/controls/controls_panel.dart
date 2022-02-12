@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/models/arguments.dart';
-import 'package:flutter_design_system/src/tools/ui/tool_button.dart';
+import '../models/arguments.dart';
+import '../tools/ui/tool_button.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_design_system/src/ui/panels/panel.dart';
-import 'package:flutter_design_system/src/models/story.dart';
-import 'package:flutter_design_system/src/ui/utils/text.dart';
-import 'package:flutter_design_system/src/ui/utils/bordered.dart';
+import '../ui/panels/panel.dart';
+import '../models/story.dart';
+import '../ui/utils/text.dart';
+import '../ui/utils/bordered.dart';
 
 class ControlsPanel extends Panel {
   const ControlsPanel({Key? key}) : super(name: 'Controls', key: key);

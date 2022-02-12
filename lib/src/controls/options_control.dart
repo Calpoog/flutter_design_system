@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/models/arguments.dart';
-import 'package:flutter_design_system/src/controls/controls.dart';
-import 'package:flutter_design_system/src/controls/nullable_control.dart';
-import 'package:flutter_design_system/src/ui/utils/text.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import '../models/arguments.dart';
+import 'controls.dart';
+import 'nullable_control.dart';
+import '../ui/utils/text.dart';
+import '../ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 abstract class OptionsControl<T> extends Control<T> {

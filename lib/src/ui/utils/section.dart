@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import 'theme.dart';
 import 'package:provider/provider.dart';
 
 class Section extends StatelessWidget {

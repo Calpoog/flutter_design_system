@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/docs/docs_panel.dart';
-import 'package:flutter_design_system/src/models/documentable.dart';
+import 'docs_panel.dart';
+import '../models/documentable.dart';
 
 class DocsWidget extends StatelessWidget {
   const DocsWidget(this.item, {Key? key}) : super(key: key);

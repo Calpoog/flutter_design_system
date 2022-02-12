@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/docs/docs_panel.dart';
-import 'package:flutter_design_system/src/routing/router_delegate.dart';
-import 'package:flutter_design_system/src/tools/ui/divider.dart';
-import 'package:flutter_design_system/src/tools/models/tool.dart';
-import 'package:flutter_design_system/src/ui/toolbar.dart';
-import 'package:flutter_design_system/src/ui/utils/bordered.dart';
-import 'package:provider/src/provider.dart';
+import '../../routing/router_delegate.dart';
+import '../../tools/ui/divider.dart';
+import '../../tools/models/tool.dart';
+import '../toolbar.dart';
+import '../utils/bordered.dart';
+import 'package:provider/provider.dart';
 
 abstract class Panel extends StatelessWidget {
   const Panel({

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/tools/models/tool.dart';
+import '../models/tool.dart';
 import 'package:provider/provider.dart';
 
 List<Widget> zoomTools() => const [

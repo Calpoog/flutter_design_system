@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import 'viewport_tool.dart';
+import '../../ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 class ViewportDecorator extends StatelessWidget {
