@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/flutter_design_system.dart';
-import 'package:flutter_design_system/src/routing/route_parser.dart';
-import 'package:flutter_design_system/src/routing/router_delegate.dart';
-import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
-import 'package:flutter_design_system/src/tools/zoom_tool/zoom_tool.dart';
-import 'package:flutter_design_system/src/ui/component_view.dart';
-import 'package:flutter_design_system/src/ui/utils/section.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import '../flutter_design_system.dart';
+import 'routing/route_parser.dart';
+import 'routing/router_delegate.dart';
+import 'tools/viewport_tool/viewport_tool.dart';
+import 'tools/zoom_tool/zoom_tool.dart';
+import 'ui/component_view.dart';
+import 'ui/utils/section.dart';
+import 'ui/utils/theme.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_design_system/src/explorer/explorer.dart';
+import 'explorer/explorer.dart';
 
 class DesignSystemConfig {
   late final Map<String, Size> deviceSizes;

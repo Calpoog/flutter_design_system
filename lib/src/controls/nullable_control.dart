@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/models/arguments.dart';
 import 'package:provider/provider.dart';
+import '../models/arguments.dart';
+import '../models/arg_type.dart';
 
 /// A Widget to flip between a null value and the correct [Control] for
 /// `argType.type`.

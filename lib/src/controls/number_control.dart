@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_design_system/src/models/arguments.dart';
-import 'package:flutter_design_system/src/controls/controls.dart';
-import 'package:flutter_design_system/src/controls/nullable_control.dart';
-import 'package:flutter_design_system/src/controls/text_control.dart';
-import 'package:flutter_design_system/src/ui/utils/hoverable.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import '../models/arg_type.dart';
+import '../models/arguments.dart';
+import 'controls.dart';
+import 'nullable_control.dart';
+import 'text_control.dart';
+import '../ui/utils/hoverable.dart';
+import '../ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 class NumberControl<T> extends Control<T> {

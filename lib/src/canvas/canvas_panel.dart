@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/flutter_design_system.dart';
-import 'package:flutter_design_system/src/canvas/canvas.dart';
-import 'package:flutter_design_system/src/tools/ui/divider.dart';
-import 'package:flutter_design_system/src/tools/viewport_tool/viewport_decorator.dart';
-import 'package:flutter_design_system/src/tools/theme_tool/theme_tool.dart';
-import 'package:flutter_design_system/src/tools/models/tool.dart';
-import 'package:flutter_design_system/src/controls/controls_panel.dart';
-import 'package:flutter_design_system/src/tools/viewport_tool/viewport_tool.dart';
-import 'package:flutter_design_system/src/tools/zoom_tool/zoom_decorator.dart';
-import 'package:flutter_design_system/src/tools/zoom_tool/zoom_tool.dart';
-import 'package:flutter_design_system/src/ui/panels/panel.dart';
-import 'package:flutter_design_system/src/ui/utils/bordered.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import '../models/arguments.dart';
+import '../models/story.dart';
+import 'canvas.dart';
+import '../tools/ui/divider.dart';
+import '../tools/viewport_tool/viewport_decorator.dart';
+import '../tools/theme_tool/theme_tool.dart';
+import '../controls/controls_panel.dart';
+import '../tools/viewport_tool/viewport_tool.dart';
+import '../tools/zoom_tool/zoom_decorator.dart';
+import '../tools/zoom_tool/zoom_tool.dart';
+import '../ui/panels/panel.dart';
+import '../ui/utils/bordered.dart';
+import '../ui/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 class CanvasPanel extends Panel {

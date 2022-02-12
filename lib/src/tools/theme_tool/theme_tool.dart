@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/models/globals.dart';
-import 'package:flutter_design_system/src/design_system.dart';
-import 'package:flutter_design_system/src/tools/models/tool.dart';
-import 'package:flutter_design_system/src/ui/utils/text.dart';
-import 'package:flutter_design_system/src/ui/utils/theme.dart';
+import '../../models/globals.dart';
+import '../../design_system.dart';
+import '../models/tool.dart';
+import '../../ui/utils/text.dart';
+import '../../ui/utils/theme.dart';
+import '../../consumer.dart' as consumer;
 import 'package:provider/provider.dart';
 
 class ThemeTool extends StatelessWidget {
   const ThemeTool({Key? key}) : super(key: key);
 
-  static Widget decorator(BuildContext context, Widget child, Globals globals) {
+  static Widget decorator(BuildContext context, Widget child, consumer.Globals globals) {
     final config = context.read<DesignSystemConfig>();
     return Theme(
-      data: config.themes[globals['theme']] ?? ThemeData.fallback(),
+      data: config.themes[globals.value('theme')] ?? ThemeData.fallback(),
       child: child,
     );
   }

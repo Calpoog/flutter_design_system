@@ -1,9 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_design_system/src/models/arguments.dart';
-import 'package:flutter_design_system/src/models/component.dart';
-import 'package:flutter_design_system/src/explorer/explorer_items.dart';
-import 'package:flutter_design_system/src/controls/controls.dart';
-import 'package:flutter_design_system/src/models/documentable.dart';
+import 'arg_type.dart';
+import 'arguments.dart';
+import 'component.dart';
+import '../explorer/explorer_items.dart';
+import '../controls/controls.dart';
+import 'documentable.dart';
 
 /// A representation of a story in the design system.
 ///

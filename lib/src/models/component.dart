@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/flutter_design_system.dart';
-import 'package:flutter_design_system/src/models/documentable.dart';
-import 'package:flutter_design_system/src/models/globals.dart';
+import '../consumer.dart' as consumer;
+import '../controls/controls.dart';
+import '../explorer/explorer_items.dart';
+import 'story.dart';
+import 'arg_type.dart';
+import 'documentable.dart';
 
 /// A builder for a wrapping widget around a [Story] with access to globals.
 ///
 /// [child] will be the [Story] to wrap as well as any other decorators that were
 /// applied first.
-typedef Decorator = Widget Function(BuildContext context, Widget child, Globals globals);
+typedef Decorator = Widget Function(BuildContext context, Widget child, consumer.Globals globals);
 
 // TODO
 class ComponentActions {

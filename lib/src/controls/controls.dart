@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_design_system/src/controls/boolean_control.dart';
-import 'package:flutter_design_system/src/controls/number_control.dart';
-import 'package:flutter_design_system/src/controls/options_control.dart';
-import 'package:flutter_design_system/src/controls/text_control.dart';
-import 'package:flutter_design_system/src/models/arguments.dart';
-import 'package:flutter_design_system/src/ui/utils/functions.dart';
+import '../models/arg_type.dart';
+import 'boolean_control.dart';
+import 'number_control.dart';
+import 'options_control.dart';
+import 'text_control.dart';
+import '../ui/utils/functions.dart';
 
 typedef ControlBuilder = Control Function(ArgType, dynamic);
 
