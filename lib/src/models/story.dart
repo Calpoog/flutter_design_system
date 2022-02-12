@@ -112,8 +112,10 @@ class Story extends ExplorerItem implements Documentable {
     for (final argType in component.argTypes.values) {
       if (argType.control is! NoControl) {
         var value = args[argType.name];
+        var initialValue = initial[argType.name];
         value = value != null ? argType.control.serialize(value) : null;
-        if (value != null) {
+        initialValue = initialValue != null ? argType.control.serialize(initialValue) : null;
+        if (value != null && value != initialValue) {
           serialized[argType.name] = value;
         }
       }
