@@ -38,19 +38,38 @@ class ComponentActions {
 /// is also not provided at the component level, it will be inherited from the
 /// configuration the [DesignSystem] level.
 class Component extends ExplorerItem implements Documentable {
+  /// A decorating wrapper for all [Story]s defined in the component.
   final Decorator? decorator;
+
+  /// Argument definitions for documentation and controls purposes.
   final ArgTypes argTypes = {};
+
+  /// A string path to a markdown file which must be accessible in the pubspec
+  /// assets.
   @override
   final String? markdownFile;
+
+  /// A string of markdown documentation.
   @override
   final String? markdownString;
+
+  /// A [Widget] to render as documentation for ultimate flexibility.
   @override
   final Widget? docWidget;
 
   // Compositional values for individual stories
+
+  /// The builder for the components stories.
+  ///
+  /// The builder allows you to construct a widget which can depend on values
+  /// given to args defined in each story, which can change with controls, and
+  /// can also use global values.
   final TemplateBuilder? builder;
+
+  /// Padding around all children [Story]s when viewed in the canvas.
   final EdgeInsets? componentPadding;
 
+  /// Creates a component.
   Component({
     required String name,
     this.builder,
