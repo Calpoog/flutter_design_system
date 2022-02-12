@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_design_system/src/tools/models/tool.dart';
 import '../models/arguments.dart';
 import '../models/story.dart';
 import 'canvas.dart';
@@ -77,13 +78,13 @@ class _AddOnsState extends State<AddOns> {
             if (!addOnsOpen) setState(() => addOnsOpen = true);
           },
           child: PanelGroup(
-            // tools: [
-            //   Tool(
-            //     name: 'close',
-            //     icon: addOnsOpen ? Icons.expand_more : Icons.expand_less,
-            //     onPressed: () => setState(() => addOnsOpen = !addOnsOpen),
-            //   ),
-            // ],
+            tools: [
+              Tool(
+                name: 'close',
+                icon: addOnsOpen ? Icons.expand_more : Icons.expand_less,
+                onPressed: () => setState(() => addOnsOpen = !addOnsOpen),
+              ),
+            ],
             panels: const [
               ControlsPanel(),
             ],
