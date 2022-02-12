@@ -22,6 +22,7 @@ class ViewportDecorator extends StatelessWidget {
           primary: false,
           scrollDirection: Axis.horizontal,
           child: Container(
+            constraints: BoxConstraints(minWidth: constraints.maxWidth),
             alignment: Alignment.topCenter,
             child: AnimatedContainer(
               margin: EdgeInsets.all(hasDevice ? 10 : 0),
