@@ -20,8 +20,8 @@ abstract class ExplorerItem {
   }) : isExpanded = isExpanded ?? true;
 }
 
-class RootItem extends ExplorerItem {
-  RootItem({
+class Root extends ExplorerItem {
+  Root({
     required String name,
     required List<ExplorerItem> children,
     bool? isExpanded,
@@ -32,12 +32,12 @@ class RootItem extends ExplorerItem {
         );
 }
 
-class RootItemWidget extends StatelessWidget {
-  final RootItem item;
+class RootWidget extends StatelessWidget {
+  final Root item;
   final int depth;
   final Widget? child;
 
-  const RootItemWidget({Key? key, required this.item, required this.depth, this.child}) : super(key: key);
+  const RootWidget({Key? key, required this.item, required this.depth, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +57,8 @@ class RootItemWidget extends StatelessWidget {
   }
 }
 
-class FolderItem extends ExplorerItem {
-  FolderItem({
+class Folder extends ExplorerItem {
+  Folder({
     required String name,
     required List<ExplorerItem> children,
     bool? isExpanded,
@@ -69,12 +69,12 @@ class FolderItem extends ExplorerItem {
         );
 }
 
-class FolderItemWidget extends StatelessWidget {
-  final FolderItem item;
+class FolderWidget extends StatelessWidget {
+  final Folder item;
   final int depth;
   final Widget? child;
 
-  const FolderItemWidget({Key? key, required this.item, required this.depth, this.child}) : super(key: key);
+  const FolderWidget({Key? key, required this.item, required this.depth, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

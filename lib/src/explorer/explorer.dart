@@ -218,16 +218,16 @@ class ExplorerBody extends StatelessWidget {
       child = Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          for (final child in item.children!) _buildItem(context, child, depth + (item.runtimeType == RootItem ? 0 : 1))
+          for (final child in item.children!) _buildItem(context, child, depth + (item.runtimeType == Root ? 0 : 1))
         ],
       );
     }
 
     switch (item.runtimeType) {
-      case RootItem:
-        return RootItemWidget(item: item as RootItem, depth: depth, child: child);
-      case FolderItem:
-        return FolderItemWidget(item: item as FolderItem, depth: depth, child: child);
+      case Root:
+        return RootWidget(item: item as Root, depth: depth, child: child);
+      case Folder:
+        return FolderWidget(item: item as Folder, depth: depth, child: child);
       case Documentation:
         return DocumentationItemWidget(
             item: item as Documentation,
