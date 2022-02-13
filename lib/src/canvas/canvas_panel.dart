@@ -49,7 +49,7 @@ class CanvasPanel extends Panel {
               ),
             ),
           ),
-          if (story.component.controlCount > 0) const AddOns(),
+          if (story.useControls && story.component.controlCount > 0) const AddOns(),
         ],
       ),
     );
