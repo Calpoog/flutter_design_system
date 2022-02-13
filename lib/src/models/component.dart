@@ -74,7 +74,7 @@ class Component extends ExplorerItem implements Documentable {
     required String name,
     this.builder,
     this.decorator,
-    required List<ArgType> argTypes,
+    List<ArgType>? argTypes,
     this.componentPadding,
     required List<Story> stories,
     bool? isExpanded,
@@ -86,7 +86,9 @@ class Component extends ExplorerItem implements Documentable {
           children: stories,
           isExpanded: isExpanded,
         ) {
-    this.argTypes.addEntries(argTypes.map((a) => MapEntry(a.name, a)));
+    if (argTypes != null) {
+      this.argTypes.addEntries(argTypes.map((a) => MapEntry(a.name, a)));
+    }
     for (final story in stories) {
       story.init(this);
     }
