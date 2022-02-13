@@ -8,11 +8,13 @@ import '../ui/utils/text.dart';
 import '../ui/utils/bordered.dart';
 
 class ControlsPanel extends Panel {
-  const ControlsPanel({Key? key}) : super(name: 'Controls', key: key);
+  const ControlsPanel({Key? key, this.story}) : super(name: 'Controls', key: key);
+
+  final Story? story;
 
   @override
   Widget build(BuildContext context) {
-    final Story story = context.watch<Story>();
+    final Story story = this.story ?? context.watch<Story>();
     return KeyedSubtree(
       key: ValueKey(story),
       child: SingleChildScrollView(
@@ -37,22 +39,23 @@ class ControlsPanel extends Panel {
                       flex: 2,
                       child: AppText.title('Default'),
                     ),
-                    _Cell(
-                      flex: 4,
-                      child: Row(
-                        children: [
-                          const AppText.title('Control'),
-                          const Expanded(child: SizedBox()),
-                          ToolButton(
-                            icon: Icons.replay,
-                            onPressed: () {
-                              context.read<Arguments>().reset();
-                            },
-                            name: 'Reset controls',
-                          ),
-                        ],
+                    if (story.useControls)
+                      _Cell(
+                        flex: 4,
+                        child: Row(
+                          children: [
+                            const AppText.title('Control'),
+                            const Expanded(child: SizedBox()),
+                            ToolButton(
+                              icon: Icons.replay,
+                              onPressed: () {
+                                context.read<Arguments>().reset();
+                              },
+                              name: 'Reset controls',
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -93,10 +96,11 @@ class ControlsPanel extends Panel {
                             child: CodeText(arg.defaultValue.toString()),
                           ),
                         ),
-                        _Cell(
-                          flex: 4,
-                          child: arg.control.build(context),
-                        ),
+                        if (story.useControls)
+                          _Cell(
+                            flex: 4,
+                            child: arg.control.build(context),
+                          ),
                       ],
                     ),
                   ),

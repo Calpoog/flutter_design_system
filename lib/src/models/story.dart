@@ -45,6 +45,16 @@ class Story extends ExplorerItem implements Documentable {
   @override
   final Widget? docWidget;
 
+  /// Whether to use controls for the args when viewing the story.
+  ///
+  /// `true` by default.
+  ///
+  /// In some cases you may have a customizable component, but a variant of it
+  /// that is used for some specific purpose. In this case, for the story showing
+  /// the important variant, you can turn off controls on a per-story basis so
+  /// its inputs can't be modified in the preview.
+  final bool useControls;
+
   /// Creates a Story.
   Story({
     required String name,
@@ -54,6 +64,7 @@ class Story extends ExplorerItem implements Documentable {
     this.markdownFile,
     this.markdownString,
     this.docWidget,
+    this.useControls = true,
   })  : args = Map.of(args ?? {}),
         initial = Map.of(args ?? {}),
         super(name: name);

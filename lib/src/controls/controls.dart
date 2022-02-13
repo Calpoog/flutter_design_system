@@ -6,8 +6,6 @@ import 'options_control.dart';
 import 'text_control.dart';
 import '../ui/utils/functions.dart';
 
-typedef ControlBuilder = Control Function(ArgType, dynamic);
-
 /// A collection of [Control]s which can be assigned to [ArgType]s for dynamic
 /// interaction when viewing [Story]s in the canvas.
 ///

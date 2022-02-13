@@ -111,9 +111,9 @@ class _PrimaryWidget extends StatelessWidget {
               children: [
                 DocCanvas(story: primary),
                 if (primary.component.argTypes.isNotEmpty)
-                  const Section(
-                    child: ControlsPanel(),
-                    margin: EdgeInsets.only(bottom: 20.0),
+                  Section(
+                    child: ControlsPanel(story: primary),
+                    margin: const EdgeInsets.only(bottom: 20.0),
                   ),
               ],
             ),
