@@ -28,6 +28,7 @@ class DocCanvas extends StatelessWidget {
               child: Toolbar(tools: tools),
             ),
             Canvas(
+              story: story,
               decorators: [
                 (context, child, globals) => ZoomDecorator(child: child),
               ],

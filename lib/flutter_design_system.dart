@@ -8,3 +8,4 @@ export 'src/consumer.dart';
 export 'src/models/documentation.dart';
 export 'src/controls/controls.dart';
 export 'src/explorer/explorer_items.dart';
+export 'src/canvas/sub_story.dart';
