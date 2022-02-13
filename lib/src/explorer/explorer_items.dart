@@ -46,12 +46,13 @@ class RootWidget extends StatelessWidget {
       depth: depth,
       child: child,
       isExpanded: item.isExpanded,
+      margin: const EdgeInsets.only(top: 10.0, bottom: 3.0),
       text: AppText(
         item.name.toUpperCase(),
-        weight: FontWeight.w900,
+        weight: FontWeight.w800,
         color: context.read<AppTheme>().unselected,
-        style: const TextStyle(letterSpacing: 3),
-        size: 11,
+        style: const TextStyle(letterSpacing: 4),
+        size: 12,
       ),
     );
   }
