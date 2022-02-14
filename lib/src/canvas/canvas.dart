@@ -43,6 +43,10 @@ class Canvas extends StatelessWidget {
       child = decorator(context, child, globals);
     }
 
-    return child;
+    // Wrap everything in a new theme so widgets don't inherit from design system theme
+    return Theme(
+      data: ThemeData.fallback(),
+      child: child,
+    );
   }
 }
