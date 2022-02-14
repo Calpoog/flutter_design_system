@@ -24,7 +24,7 @@ class Story extends ExplorerItem implements Documentable {
   final TemplateBuilder? builder;
 
   /// The initial arg values for a story.
-  final ArgValues initial;
+  late final ArgValues initial;
 
   /// The current arg values which can change as users interact with controls.
   late ArgValues args;
@@ -66,7 +66,6 @@ class Story extends ExplorerItem implements Documentable {
     this.docWidget,
     this.useControls = true,
   })  : args = Map.of(args ?? {}),
-        initial = Map.of(args ?? {}),
         super(name: name);
 
   /// Initializes the [Story] with a reference to its parent [Component] and
@@ -91,6 +90,7 @@ class Story extends ExplorerItem implements Documentable {
         return argType.mapping![value];
       }
     });
+    initial = Map.of(values);
   }
 
   /// Resets all current arg values back to their initial values.

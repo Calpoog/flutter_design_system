@@ -55,8 +55,6 @@ class RadioControl<T> extends OptionsControl<T> {
                         Transform.translate(
                           offset: const Offset(-7, 0),
                           child: Radio<T>(
-                            // contentPadding: EdgeInsets.zero,
-                            // title: AppText(option.key),
                             value: option.value,
                             groupValue: args.value(name),
                             onChanged: (T? value) {
@@ -65,10 +63,14 @@ class RadioControl<T> extends OptionsControl<T> {
                           ),
                         ),
                         Expanded(
+                          child: GestureDetector(
+                            onTap: () => args.update(name, option.value),
                             child: Padding(
-                          padding: const EdgeInsets.only(top: 7.0),
-                          child: AppText(option.key),
-                        )),
+                              padding: const EdgeInsets.only(top: 7.0),
+                              child: AppText(option.key),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
