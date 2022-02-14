@@ -26,6 +26,7 @@ class ViewportDecorator extends StatelessWidget {
             alignment: Alignment.topCenter,
             child: AnimatedContainer(
               margin: EdgeInsets.all(hasDevice ? 10 : 0),
+              padding: hasDevice ? const EdgeInsets.all(1.0) : null,
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
