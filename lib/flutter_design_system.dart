@@ -9,3 +9,5 @@ export 'src/models/documentation.dart';
 export 'src/controls/controls.dart';
 export 'src/explorer/explorer_items.dart';
 export 'src/canvas/sub_story.dart';
+export 'src/docs/doc_canvas.dart';
+export 'src/docs/docs.dart';

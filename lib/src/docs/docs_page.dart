@@ -46,24 +46,6 @@ class DocsPage extends StatelessWidget {
   }
 }
 
-class ReadingWidth extends StatelessWidget {
-  const ReadingWidth({Key? key, required this.child}) : super(key: key);
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => Center(
-        child: SizedBox(
-          width: min(800, constraints.maxWidth),
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
 class _StoryWidget extends StatelessWidget {
   const _StoryWidget({Key? key, required this.story}) : super(key: key);
 
@@ -76,11 +58,8 @@ class _StoryWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           H4(story.name, useRule: false),
-          ChangeNotifierProvider(
-            create: (context) => Arguments(story: story),
-            child: DocCanvas(story: story),
-          ),
-          DocsWidget(story),
+          DocCanvas(story: story),
+          Docs(story),
           const SizedBox(height: 30),
         ],
       ),
@@ -101,25 +80,16 @@ class _PrimaryWidget extends StatelessWidget {
         children: [
           H1(primary.component.name),
           // Component-level documentation
-          DocsWidget(primary.component),
+          Docs(primary.component),
           const SizedBox(height: 30),
           // The widget shown at the top is the "primary" aka first Story
           // and displays with the args list and controls
-          ChangeNotifierProvider(
-            create: (context) => Arguments(story: primary),
-            child: Column(
-              children: [
-                DocCanvas(story: primary),
-                if (primary.component.argTypes.isNotEmpty)
-                  Section(
-                    child: ControlsPanel(story: primary),
-                    margin: const EdgeInsets.only(bottom: 20.0),
-                  ),
-              ],
-            ),
+          DocCanvas(
+            story: primary,
+            showArgsTable: primary.component.argTypes.isNotEmpty,
           ),
           // Primary-story-specific documentation comes after
-          DocsWidget(primary),
+          Docs(primary),
           const SizedBox(height: 30),
         ],
       ),

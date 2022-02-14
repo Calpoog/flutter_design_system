@@ -22,12 +22,14 @@ class DocsPanel extends Panel {
     if (selectedStory is Documentation) {
       return SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
-        child: DocsWidget(selectedStory),
+        child: Docs(selectedStory),
       );
-    } else {
+    } else if (selectedStory.component.useDocsPage) {
       return DocsPage(
         story: selectedStory,
       );
+    } else {
+      return Docs(selectedStory.component);
     }
   }
 }

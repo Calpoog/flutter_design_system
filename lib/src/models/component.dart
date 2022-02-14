@@ -69,6 +69,13 @@ class Component extends ExplorerItem implements Documentable {
   /// Padding around all children [Story]s when viewed in the canvas.
   final EdgeInsets? componentPadding;
 
+  /// Whether to use an auto-generated DocsPage for this component.
+  ///
+  /// true by default. If set to false, the Docs tab for this component will
+  /// use only the `docWidget`, `markdownFile`, and `markdownString` (in that order
+  /// if each is provided).
+  final bool useDocsPage;
+
   /// Creates a component.
   Component({
     required String name,
@@ -81,6 +88,7 @@ class Component extends ExplorerItem implements Documentable {
     this.markdownFile,
     this.markdownString,
     this.docWidget,
+    this.useDocsPage = true,
   }) : super(
           name: name,
           children: stories,
