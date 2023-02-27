@@ -1,14 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import '../controls/controls_panel.dart';
 import 'doc_canvas.dart';
 import 'docs.dart';
 import '../models/story.dart';
-import '../models/arguments.dart';
-import '../ui/utils/section.dart';
-import '../ui/utils/text.dart';
-import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class DocsPage extends StatelessWidget {

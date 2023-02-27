@@ -29,7 +29,7 @@ class DocsPanel extends Panel {
         story: selectedStory,
       );
     } else {
-      return Docs(selectedStory.component);
+      return SingleChildScrollView(child: Docs(selectedStory.component));
     }
   }
 }
